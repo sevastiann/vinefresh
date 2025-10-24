@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - VineFresh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffd6a5, #ffaaa7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            width: 320px;
+        }
+        h2 { text-align: center; color: #b71c1c; }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #d32f2f; }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #c62828;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <h2>Crear cuenta</h2>
+        <input type="text" name="username" placeholder="Usuario" required>
+        <input type="email" name="email" placeholder="Correo electrónico" required>
+        <input type="password" name="password1" placeholder="Contraseña" required>
+        <input type="password" name="password2" placeholder="Confirmar contraseña" required>
+        <button type="submit">Registrarse</button>
+        <a href="{% url 'login' %}">¿Ya tienes cuenta? Inicia sesión</a>
+        <a href="{% url 'home' %}">Volver al inicio</a>
+    </form>
+</body>
+</html>

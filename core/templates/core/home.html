@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - VineFresh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #c2ffc2, #8affd1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 { color: #1b5e20; }
+        a {
+            text-decoration: none;
+            background-color: #1b5e20;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        a:hover { background-color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>Bienvenido a VineFresh 🌿</h1>
+    <p>Tu plataforma para una vida más natural.</p>
+
+    <div>
+        <a href="{% url 'login' %}">Iniciar sesión</a>
+        <a href="{% url 'registro' %}">Registrarse</a>
+    </div>
+</body>
+</html>
