@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión - VineFresh</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #4a0e0e, #7b1f1f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #3e2723;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #fdf6f0;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            width: 350px;
+            border: 2px solid #7b1f1f;
+            text-align: center;
+        }
+        .login-container img {
+            margin-bottom: 15px;
+        }
+        .login-h1 {
+            color: #4a0e0e;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+        .login-label {
+            display: block;
+            text-align: left;
+            color: #4a0e0e;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #b08b57;
+            border-radius: 5px;
+            background-color: #fff8f5;
+        }
+        .login-input:focus {
+            outline: none;
+            border-color: #7b1f1f;
+            box-shadow: 0 0 5px #7b1f1f;
+        }
+        .login-button {
+            width: 100%;
+            margin-top: 18px;
+            padding: 12px;
+            background-color: #7b1f1f;
+            color: #fdf6f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s ease;
+        }
+        .login-button:hover {
+            background-color: #5e1010;
+        }
+        .olvido, .registro {
+            margin-top: 12px;
+            color: #4a0e0e;
+            font-size: 0.95em;
+        }
+        .olvido a, .registro a {
+            color: #7b1f1f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .olvido a:hover, .registro a:hover {
+            text-decoration: underline;
+        }
+        .volver {
+            display: block;
+            margin-top: 15px;
+            color: #7b1f1f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .volver:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        {% load static %}
+        <img src="{% static 'img/vinefresh.PNG' %}" alt="logo" width="150px">
+        <h1 class="login-h1">Iniciar Sesión</h1>
+
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+<label class="login-label" for="usuario">Correo o Usuario:</label>
+<input class="login-input" type="text" id="usuario" name="usuario" placeholder="Introduce tu correo o usuario" required>
+
+    <label class="login-label" for="password">Contraseña:</label>
+    <input class="login-input" type="password" id="password" name="password" placeholder="Introduce tu contraseña" required>
+
+    <button class="login-button" type="submit">Entrar</button>
+
+    {% if mensaje %}
+        <p style="color: red;">{{ mensaje }}</p>
+    {% endif %}
+
+    <p class="olvido">¿Olvidaste tu contraseña? <a href="#">Pulsa aquí</a></p>
+    <p class="registro">¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
+    <a class="volver" href="{% url 'home' %}">Volver al inicio</a>
+</form>
+
+    </div>
+</body>
+</html>
