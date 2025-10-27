@@ -18,7 +18,7 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
-            width: 320px;
+            width: 340px;
         }
         h2 { text-align: center; color: #b71c1c; }
         input {
@@ -46,17 +46,34 @@
             color: #c62828;
             text-decoration: none;
         }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
     <form method="post">
         {% csrf_token %}
         <h2>Crear cuenta</h2>
-        <input type="text" name="username" placeholder="Usuario" required>
-        <input type="email" name="email" placeholder="Correo electrónico" required>
-        <input type="password" name="password1" placeholder="Contraseña" required>
-        <input type="password" name="password2" placeholder="Confirmar contraseña" required>
+
+        <input type="text" name="first_name" placeholder="Nombre" required>
+        <input type="text" name="last_name" placeholder="Apellido" required>
+        <input type="text" name="username" placeholder="Nombre de usuario" required>
+
+        <!-- Validación del email -->
+        <input type="email" name="email" placeholder="Correo electrónico (ej: usuario@gmail.com)" 
+               pattern="[a-zA-Z0-9._%+-]+@(gmail|hotmail|outlook|yahoo)\.[a-z]{2,}$" 
+               title="Debe ser un correo válido como @gmail, @hotmail, @outlook o @yahoo" 
+               required>
+
+        <input type="tel" name="phone" placeholder="Teléfono" pattern="[0-9]{7,10}" 
+               title="Debe contener entre 7 y 10 números" required>
+        <input type="text" name="address" placeholder="Dirección" required>
+
+        <!-- Contraseña con validación mínima -->
+        <input type="password" name="password1" placeholder="Contraseña (mínimo 8 caracteres)" minlength="8" required>
+        <input type="password" name="password2" placeholder="Confirmar contraseña" minlength="8" required>
+
         <button type="submit">Registrarse</button>
+
         <a href="{% url 'login' %}">¿Ya tienes cuenta? Inicia sesión</a>
         <a href="{% url 'home' %}">Volver al inicio</a>
     </form>

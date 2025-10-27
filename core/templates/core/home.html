@@ -5,36 +5,775 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - VineFresh</title>
     <style>
+        /* ================================
+           ESTILO GENERAL
+        ================================ */
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #c2ffc2, #8affd1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f8f5f0, #f3e5e5);
             margin: 0;
+            color: #3e2723;
         }
-        h1 { color: #1b5e20; }
-        a {
+        
+        /* ================================
+           ENCABEZADO
+        ================================ */
+        header {
+            background-color: #4a0e0e;
+            color: #fdf6f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+        }
+        
+        .logo span {
+            font-size: 1.4em;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        nav a {
+            color: #fdf6f0;
             text-decoration: none;
-            background-color: #1b5e20;
-            color: white;
-            padding: 10px 20px;
-            margin: 10px;
-            border-radius: 8px;
-            transition: background 0.3s;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: color 0.3s;
         }
-        a:hover { background-color: #2e7d32; }
-    </style>
+        
+        nav a:hover {
+            color: #e0b080;
+        }
+        
+        /* BOTONES LOGIN / REGISTRO */
+        .user-actions {
+            display: inline-flex;
+            gap: 8px;
+            margin-left: 15px;
+        }
+        
+        .user-actions a {
+            background-color: #7b1f1f;
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+        
+        .user-actions a:hover {
+            background-color: #5e1010;
+        }
+        
+        /* ================================
+           SECCIÓN PRINCIPAL
+        ================================ */
+        main {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        main h1 {
+            color: #4a0e0e;
+            margin-bottom: 15px;
+        }
+        
+        main p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #5c4033;
+        }
+        
+        /* ================================
+           CARRUSEL
+        ================================ */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .carousel-slide img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+        }
+        
+        .carousel-caption {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .carousel-caption h1, .carousel-caption h2 {
+            color: #fff;
+            margin: 5px 0;
+        }
+        
+        .carousel-caption h2.text-primary {
+            color: #e0b080;
+        }
+        
+        /* ================================
+           SOBRE NOSOTROS
+        ================================ */
+        .about-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .about-title h4 {
+            color: #e0b080;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+        
+        .about-title h1 {
+            color: #4a0e0e;
+            margin-bottom: 40px;
+        }
+        
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .about-text, .about-image, .about-extra {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        
+        .about-text h1, .about-extra h1 {
+            color: #4a0e0e;
+            margin-bottom: 15px;
+        }
+        
+        /* ================================
+           SERVICIOS
+        ================================ */
+        .service-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .service-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+        
+        .service-item img {
+            width: 120px;
+            border-radius: 10px;
+        }
+        
+        .service-item h4 {
+            margin: 0 0 5px 0;
+            color: #4a0e0e;
+        }
+        
+        .service-item p {
+            margin: 0;
+            color: #5c4033;
+        }
+        
+        /* ================================
+           OFERTAS
+        ================================ */
+        .offer-section {
+            background: rgba(74, 14, 14, 0.9);
+            color: #fff;
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+        }
+        
+        .offer-section h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .offer-section input[type="text"] {
+            padding: 15px;
+            width: 300px;
+            max-width: 80%;
+            border: none;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .offer-section button {
+            padding: 15px 25px;
+            border: none;
+            background-color: #e0b080;
+            color: #4a0e0e;
+            font-weight: bold;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        
+        .offer-section button:hover {
+            background-color: #c18b5a;
+        }
+        
+        /* ================================
+           MENÚ / TIPOS DE VINOS
+        ================================ */
+        .menu-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .menu-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            align-items: center;
+        }
+        
+        .menu-item img {
+            width: 100px;
+            border-radius: 50%;
+        }
+        
+        .menu-item h4 {
+            margin: 0 0 5px 0;
+            color: #4a0e0e;
+        }
+        
+        .menu-item p {
+            margin: 0;
+            color: #5c4033;
+        }
+        
+        /* ================================
+           RESERVA / OPINIÓN
+        ================================ */
+        .reservation-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .reservation-text, .reservation-form {
+            flex: 1;
+            min-width: 300px;
+            color: #fff;
+        }
+        
+        .reservation-form {
+            background: rgba(51, 33, 29, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .reservation-form input, .reservation-form .datetimepicker-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e0b080;
+            border-radius: 5px;
+            background: transparent;
+            color: #fff;
+        }
+        
+        /* ================================
+           TESTIMONIOS
+        ================================ */
+        .testimonial-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .testimonial-item {
+            margin-bottom: 30px;
+        }
+        
+        .testimonial-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        
+        .testimonial-item h4 {
+            margin: 0;
+            color: #4a0e0e;
+        }
+        
+        .testimonial-item i {
+            font-style: italic;
+            color: #5c4033;
+        }
+        
+        /* ================================
+           PIE DE PÁGINA
+        ================================ */
+        footer {
+            background-color: #4a0e0e;
+            color: #fdf6f0;
+            text-align: center;
+            padding: 25px 10px;
+            font-size: 0.9em;
+        }
+        
+        footer a {
+            color: #e0b080;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        </style>
+        
 </head>
 <body>
-    <h1>Bienvenido a VineFresh 🌿</h1>
-    <p>Tu plataforma para una vida más natural.</p>
 
-    <div>
-        <a href="{% url 'login' %}">Iniciar sesión</a>
-        <a href="{% url 'registro' %}">Registrarse</a>
+<!-- ENCABEZADO -->
+<header>
+    <div class="header-container">
+        <nav class="navbar">
+            <a href="/" class="logo">
+                <img src="" alt="Logo VineFresh" class="logo-img">
+                <span class="logo-text">VineFresh</span>
+            </a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarContent">
+                <span class="toggle-icon"></span>
+            </button>
+            <div class="collapse" id="navbarContent">
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Catálogo</a>
+                    <a href="#" class="nav-link">Información</a>
+                    <a href="#" class="nav-link">Soporte</a>
+                    <a href="#" class="nav-link">Carrito</a>
+                    <a href="#" class="nav-link">Favoritos</a>
+
+                    <div class="user-links">
+                        <a href="{% url 'login' %}" class="nav-link">Iniciar sesión</a>
+                        <a href="{% url 'registro' %}" class="nav-link">Registrarse</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
     </div>
+</header>
+
+
+<!-- Carousel Start -->
+<div class="carousel-container">
+    <div id="main-carousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="carousel-img" src="" alt="Imagen 1">
+                <div class="carousel-caption">
+                    <h2 class="carousel-subtitle">Sabor, Tradición y Pasión en Cada Copa</h2>
+                    <h1 class="carousel-title">VINEFRESH</h1>
+                    <h2 class="carousel-year">* DESDE 2025 *</h2>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="carousel-img" src="" alt="Imagen 2">
+                <div class="carousel-caption">
+                    <h2 class="carousel-subtitle">La Vida Sabe Mejor con</h2>
+                    <h1 class="carousel-title">VINEFRESH</h1>
+                    <h2 class="carousel-year">* DESDE 2025 *</h2>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-prev" href="#main-carousel" data-slide="prev">
+            <span class="carousel-prev-icon"></span>
+        </a>
+        <a class="carousel-next" href="#main-carousel" data-slide="next">
+            <span class="carousel-next-icon"></span>
+        </a>
+    </div>
+</div>
+<!-- Carousel End -->
+
+
+
+<!-- About Start -->
+<section class="about-section">
+    <div class="about-container">
+        <div class="section-header">
+            <h4 class="section-subtitle">Sobre Nosotros</h4>
+            <h1 class="section-title">Sirviendo Desde 2025</h1>
+        </div>
+        <div class="about-row">
+            <div class="about-col about-text">
+                <h2 class="about-heading">Nuestra Historia</h2>
+                <h5 class="about-subheading">En VineFresh cultivamos más que alimentos: cultivamos bienestar, confianza y el auténtico sabor de la naturaleza.</h5>
+                <p class="about-paragraph">
+                    De un pequeño huerto familiar nació VineFresh: una comunidad unida por la pasión por lo fresco y saludable. Cada producto es fruto del respeto por la tierra, la dedicación a los procesos artesanales y el compromiso con la calidad. Porque creemos que lo sencillo y natural es lo que realmente nos alimenta.
+                </p>
+                <a href="" class="btn btn-secondary about-btn">Leer Más</a>
+            </div>
+            <div class="about-col about-image">
+                <div class="image-wrapper">
+                    <img src="" alt="Nuestra Historia" class="about-img">
+                </div>
+            </div>
+            <div class="about-col about-text">
+                <h2 class="about-heading">Nuestra Misión y Visión</h2>
+                <p class="about-paragraph">
+                    Ofrecer productos frescos, naturales y de alta calidad que nutran el cuerpo y el espíritu, promoviendo un estilo de vida saludable y consciente. En VineFresh cultivamos bienestar, confianza y respeto por la tierra, llevando a cada hogar el sabor auténtico de lo natural.
+                </p>
+                <p class="about-paragraph">
+                    Ser reconocidos como una marca líder y referente en productos naturales y saludables, creando una comunidad comprometida con el bienestar, la sostenibilidad y el amor por la tierra. Aspiramos a transformar la forma en que las personas se alimentan y se conectan con la naturaleza, brindando experiencias únicas y memorables en cada elección.
+                </p>
+                <ul class="about-features">
+                    <li>Calidad y autenticidad</li>
+                    <li>Bienestar integral</li>
+                    <li>Amor por la tierra</li>
+                </ul>
+                <a href="" class="btn btn-primary about-btn">Leer Más</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- About End -->
+
+
+<!-- Services Start -->
+<section class="services-section">
+    <div class="services-container">
+        <div class="section-header">
+            <h4 class="section-subtitle">Nuestros Servicios</h4>
+            <h1 class="section-title">Frutos frescos, directo del campo a tu mesa.</h1>
+        </div>
+        <div class="services-row">
+            <div class="service-item">
+                <div class="service-content">
+                    <div class="service-img">
+                        <img src="" alt="Entrega Rápida" class="img-fluid">
+                    </div>
+                    <div class="service-text">
+                        <h4><i class="fa fa-truck service-icon"></i>Entrega Rápida a Tu Puerta</h4>
+                        <p>Disfruta de nuestros vinos y licores premium con entrega ágil y segura hasta tu hogar. Brindamos calidad sin esperas.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-item">
+                <div class="service-content">
+                    <div class="service-img">
+                        <img src="" alt="Vinos Frescos" class="img-fluid">
+                    </div>
+                    <div class="service-text">
+                        <h4><i class="fa fa-coffee service-icon"></i>Vinos Frescos y de Origen</h4>
+                        <p>Seleccionamos cuidadosamente cada botella para ofrecerte vinos con carácter, frescura y auténtico sabor desde su lugar de origen.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-item">
+                <div class="service-content">
+                    <div class="service-img">
+                        <img src="" alt="Calidad Premium" class="img-fluid">
+                    </div>
+                    <div class="service-text">
+                        <h4><i class="fa fa-award service-icon"></i>Calidad Premium Garantizada</h4>
+                        <p>Ofrecemos vinos galardonados y certificados, elaborados bajo altos estándares para brindar una experiencia inigualable en cada copa.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="service-item">
+                <div class="service-content">
+                    <div class="service-img">
+                        <img src="" alt="Reserva Catas" class="img-fluid">
+                    </div>
+                    <div class="service-text">
+                        <h4><i class="fa fa-table service-icon"></i>Reserva en Línea para Catas</h4>
+                        <p>Agenda fácilmente tu experiencia de cata desde cualquier lugar y asegura tu lugar para descubrir nuevos aromas y sabores.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Services End -->
+
+
+
+<!-- Offer Start -->
+<section class="offer-section">
+    <div class="offer-container text-center">
+        <h1 class="offer-discount">50% OFF</h1>
+        <h1 class="offer-title">Promoción Especial de Domingo</h1>
+        <h4 class="offer-subtitle">
+            Solo para Domingo del 1 de Enero al 30 de Enero de 2045 en vinos seleccionados
+        </h4>
+        <form class="offer-form">
+            <div class="offer-input-group">
+                <input type="text" class="offer-input" placeholder="Tu Correo Electrónico">
+                <button class="offer-btn" type="submit">Suscribirse</button>
+            </div>
+        </form>
+    </div>
+</section>
+<!-- Offer End -->
+
+
+
+<!-- Menu Start -->
+<section class="menu-section">
+    <div class="menu-container">
+        <div class="section-header">
+            <h4 class="section-subtitle">Tipos de vinos</h4>
+            <h1 class="section-title">Antójate de un buen vino</h1>
+        </div>
+        <div class="menu-row">
+            <div class="menu-col">
+                <h2 class="menu-category">Dulces y Amargos</h2>
+                <div class="menu-item">
+                    <div class="menu-img">
+                        <img src="" alt="Vino Reserva" class="menu-img-circle">
+                        <h5 class="menu-price">A</h5>
+                    </div>
+                    <div class="menu-text">
+                        <h4>Vino Reserva</h4>
+                        <p>Elaborado con uvas seleccionadas y añejado en barrica para un sabor profundo y equilibrado.</p>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-img">
+                        <img src="" alt="Vino Dulce de Cosecha Tardía" class="menu-img-circle">
+                        <h5 class="menu-price">D</h5>
+                    </div>
+                    <div class="menu-text">
+                        <h4>Vino Dulce de Cosecha Tardía</h4>
+                        <p>Un vino suave y afrutado, ideal para maridar con postres y cerrar con broche de oro cualquier velada.</p>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-img">
+                        <img src="" alt="Vino Blanco Afrutado" class="menu-img-circle">
+                        <h5 class="menu-price">F</h5>
+                    </div>
+                    <div class="menu-text">
+                        <h4>Vino Blanco Afrutado</h4>
+                        <p>Refrescante y ligero, perfecto para acompañar mariscos, ensaladas o una tarde soleada entre amigos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-col">
+                <h2 class="menu-category">Añejos y Frescos</h2>
+                <div class="menu-item">
+                    <div class="menu-img">
+                        <img src="" alt="Vino Tinto Seco" class="menu-img-circle">
+                        <h5 class="menu-price">A</h5>
+                    </div>
+                    <div class="menu-text">
+                        <h4>Vino Tinto Seco</h4>
+                        <p>Ideal para maridar con carnes rojas, de sabor intenso y notas afrutadas que destacan su origen.</p>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-img">
+                        <img src="" alt="Vino Dulce de Postre" class="menu-img-circle">
+                        <h5 class="menu-price">D</h5>
+                    </div>
+                    <div class="menu-text">
+                        <h4>Vino Dulce de Postre</h4>
+                        <p>Perfecto para acompañar postres, con un toque azucarado y aroma envolvente que deleita al paladar.</p>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-img">
+                        <img src="" alt="Vino Rosado Frutal" class="menu-img-circle">
+                        <h5 class="menu-price">F</h5>
+                    </div>
+                    <div class="menu-text">
+                        <h4>Vino Rosado Frutal</h4>
+                        <p>Refrescante y suave, ideal para climas cálidos o para maridar con platos ligeros y entradas frescas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Menu End -->
+
+
+<!-- Reservation Start -->
+<section class="reservation-section">
+    <div class="reservation-container">
+        <div class="reservation-row">
+            <div class="reservation-info">
+                <h1 class="reservation-title-primary">Tu Opinión</h1>
+                <h1 class="reservation-title-secondary">Es muy importante para nosotros</h1>
+                <p class="reservation-text">
+                    Llena las casillas con los datos correspondientes y cuéntanos tu experiencia. Esperamos cumplir con tus expectativas y haber brindado un servicio de calidad.
+                </p>
+            </div>
+            <div class="reservation-form-container">
+                <h1 class="reservation-form-title">Ingresa tu información</h1>
+                <form class="reservation-form">
+                    <div class="form-group">
+                        <input type="text" class="reservation-input" placeholder="Nombre y Apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="reservation-input" placeholder="Correo Electrónico" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="reservation-input" placeholder="Fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="reservation-input" placeholder="Tiempo" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="reservation-input" placeholder="Comentario" required>
+                    </div>
+                    <button type="submit" class="reservation-btn">Enviar Opinión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Reservation End -->
+
+
+<!-- Testimonial Start -->
+<section class="testimonial-section">
+    <div class="testimonial-container">
+        <div class="section-header">
+            <h4 class="section-subtitle">Testimonios</h4>
+            <h1 class="section-title">Lo Que Dicen Nuestros Clientes</h1>
+        </div>
+        <div class="testimonial-carousel">
+            <div class="testimonial-item">
+                <div class="testimonial-user">
+                    <img src="" alt="Elisa" class="testimonial-img">
+                    <div class="testimonial-user-info">
+                        <h4>Elisa</h4>
+                        <i>Profesora</i>
+                    </div>
+                </div>
+                <p class="testimonial-text">Me encanta, el vino es delicioso y la entrega es super rápida.</p>
+            </div>
+            <div class="testimonial-item">
+                <div class="testimonial-user">
+                    <img src="" alt="Jhon" class="testimonial-img">
+                    <div class="testimonial-user-info">
+                        <h4>Jhon</h4>
+                        <i>Empresario</i>
+                    </div>
+                </div>
+                <p class="testimonial-text">Disfrutó cada sorbo y destacó la calidad y sabor auténtico de nuestros vinos artesanales. Una experiencia para repetir.</p>
+            </div>
+            <div class="testimonial-item">
+                <div class="testimonial-user">
+                    <img src="" alt="Caroline" class="testimonial-img">
+                    <div class="testimonial-user-info">
+                        <h4>Caroline</h4>
+                        <i>Diseñadora</i>
+                    </div>
+                </div>
+                <p class="testimonial-text">Los vinos de VineFresh superaron mis expectativas: sabores intensos, aromas envolventes y una experiencia que recomiendo sin dudar.</p>
+            </div>
+            <div class="testimonial-item">
+                <div class="testimonial-user">
+                    <img src="" alt="Henry" class="testimonial-img">
+                    <div class="testimonial-user-info">
+                        <h4>Henry</h4>
+                        <i>CEO</i>
+                    </div>
+                </div>
+                <p class="testimonial-text">La calidad de los vinos es excepcional y el servicio al cliente es insuperable. ¡Altamente recomendado!</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonial End -->
+
+
+<!-- Footer Start -->
+<footer class="footer-section">
+    <div class="footer-container">
+        <div class="footer-row">
+            <!-- Contacto -->
+            <div class="footer-column contact-info">
+                <h4 class="footer-title">Ponte En Contacto Con Nosotros</h4>
+                <p><i class="fa fa-map-marker-alt"></i> Calle 123, Bogotá, Colombia</p>
+                <p><i class="fa fa-phone-alt"></i> (601) 5445321</p>
+                <p><i class="fa fa-phone-alt"></i> +57 300 123 4567</p>
+                <p><i class="fa fa-envelope"></i> atencion@vinefresh.com</p>
+            </div>
+
+            <!-- Redes Sociales -->
+            <div class="footer-column social-media">
+                <h4 class="footer-title">Síguenos</h4>
+                <p>Descubre lo mejor del vino en nuestras redes sociales y únete a nuestra comunidad.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <!-- Horarios -->
+            <div class="footer-column opening-hours">
+                <h4 class="footer-title">Horario de Atención</h4>
+                <div>
+                    <h6>Lunes - Viernes</h6>
+                    <p>10:00 AM - 07:00 PM</p>
+                    <h6>Sábado - Domingo</h6>
+                    <p>2:00 PM - 8:00 PM</p>
+                </div>
+            </div>
+
+            <!-- Boletín -->
+            <div class="footer-column newsletter">
+                <h4 class="footer-title">Boletín de Noticias</h4>
+                <p>Suscríbete para recibir las últimas noticias y ofertas especiales.</p>
+                <div class="newsletter-form">
+                    <input type="text" class="newsletter-input" placeholder="Tu Correo Electrónico" required>
+                    <button class="newsletter-btn">Suscribirse</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Derechos y créditos -->
+        <div class="footer-bottom">
+            <p>Copyright &copy; <a href="#">VineFresh</a>. Todos los derechos reservados.</p>
+            <p>Diseñado por <a href="https://htmlcodex.com">Equipo VineFresh</a></p>
+        </div>
+    </div>
+</footer>
+<!-- Footer End -->
+
 </body>
 </html>
