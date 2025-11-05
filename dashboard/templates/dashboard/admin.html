@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Panel del Administrador{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Bienvenido, Administrador {{ usuario.nombre_usuario }}</h2>
+    <p>Aquí puedes gestionar los productos, pedidos y usuarios.</p>
+
+    <ul>
+        <li><a href="{% url 'gestionar_productos' %}">Gestionar productos</a></li>
+        <li><a href="{% url 'ver_pedidos' %}">Ver pedidos</a></li>
+        <li><a href="{% url 'gestionar_usuarios' %}">Gestionar usuarios</a></li>
+    </ul>
+
+    <a href="{% url 'logout' %}" class="btn btn-danger mt-3">Cerrar sesión</a>
+</div>
+{% endblock %}

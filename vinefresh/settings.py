@@ -39,6 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'usuarios',
+    'catalogo',
+    'dashboard',
+    'envios',
+    'reseñas',
+    'soporte',
+    'ventas',
+
 ]
 
 MIDDLEWARE = [
@@ -49,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'usuarios.middleware.RedireccionRolMiddleware',
 ]
 
 ROOT_URLCONF = 'vinefresh.urls'

@@ -18,8 +18,23 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    # Panel de administración de Django
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),       # home y otras vistas de core
-    path('', include('usuarios.urls')),   # login, registro, logout SIN prefijo
+
+    # Página principal (home y vistas públicas)
+    path('', include('core.urls')),
+
+    # Autenticación y gestión de usuarios
+    path('usuarios/', include('usuarios.urls')),
+
+    # Dashboard compartido (cliente / administrador)
+    path('dashboard/', include('dashboard.urls')),
+
+    # Módulos del sistema
+    path('catalogo/', include('catalogo.urls')),   # productos + inventario
+    path('ventas/', include('ventas.urls')),       # carrito, pedidos, facturas
+    path('envios/', include('envios.urls')),       # seguimiento de envíos
+    path('soporte/', include('soporte.urls')),     # PQRS y contacto
+    path('reseñas/', include('reseñas.urls')),     # calificaciones
 ]
 

@@ -432,96 +432,64 @@
         
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'home' %}">VineFresh</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ml-auto">
-                {% if request.session.usuario_id %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Mi cuenta</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'registro' %}">Registrarse</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
-<!-- ENCABEZADO -->
-<header>
-    <div class="header-container">
-        <nav class="navbar">
-            {% load static %}
-            <img src="{% static 'img/vinefresh.PNG' %}" alt="logo" width="100px">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarContent">
-                <span class="toggle-icon"></span>
-            </button>
-            <div class="collapse" id="navbarContent">
-                <div class="nav-links">
-                    <a href="#" class="nav-link">Catálogo</a>
-                    <a href="#" class="nav-link">Información</a>
-                    <a href="#" class="nav-link">Soporte</a>
-                    <a href="#" class="nav-link">Carrito</a>
-                    <a href="#" class="nav-link">Favoritos</a>
 
-                    <div class="user-links">
+<!-- Navbar -->
+{% include 'core/navbar.html' %}
+
+<!-- Carousel Start -->
+<div class="container">
+    <div id="main-carousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="carousel-img" src="{% static 'img/carousel-1.jpg' %}" alt="Imagen 1">
+                <div class="carousel-caption d-none d-md-block">
+                    <h2 class="carousel-subtitle">Sabor, Tradición y Pasión en Cada Copa</h2>
+                    <h1 class="carousel-title">VINEFRESH</h1>
+                    <h2 class="carousel-year">* DESDE 2025 *</h2>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="carousel-img" src="{% static 'img/carousel-2.jpg' %}" alt="Imagen 2">
+                <div class="carousel-caption d-none d-md-block">
+                    <h2 class="carousel-subtitle">La Vida Sabe Mejor con</h2>
+                    <h1 class="carousel-title">VINEFRESH</h1>
+                    <h2 class="carousel-year">* DESDE 2025 *</h2>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#main-carousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#main-carousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+</div>
+<!-- Carousel End -->
+
+<!-- Dashboard / Bienvenida según rol -->
 {% if request.session.usuario_id %}
-    <a href="{% url 'home' %}">Mi cuenta</a>
-    <a href="{% url 'logout' %}">Cerrar sesión</a>
+    {% if request.session.usuario_rol == 'admin' %}
+        <section class="admin-dashboard">
+            <h1>Bienvenido Administrador {{ request.session.usuario_nombre }}</h1>
+            <p>Gestiona productos, usuarios y pedidos.</p>
+            <a href="" class="btn btn-primary">Ir al Panel de Administración</a>
+        </section>
+    {% else %}
+        <section class="client-dashboard">
+            <h1>Bienvenido {{ request.session.usuario_nombre }}</h1>
+            <p>Explora nuestros vinos y aprovecha tus descuentos.</p>
+            <a href="" class="btn btn-primary">Ver Catálogo</a>
+        </section>
+    {% endif %}
 {% else %}
-    <a href="{% url 'login' %}">Iniciar sesión</a>
-    <a href="{% url 'registro' %}">Registrarse</a>
+    <section class="guest-welcome">
+        <h1>Bienvenido a VineFresh</h1>
+        <p>Inicia sesión o regístrate para acceder a nuestras ofertas exclusivas.</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">Iniciar Sesión</a>
+        <a href="{% url 'registro' %}" class="btn btn-secondary">Registrarse</a>
+    </section>
 {% endif %}
-
-
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </div>
-</header>
-
-
-
-    <!-- Carousel Start -->
-    <div class="container">
-        <div id="main-carousel" class="carousel slide" data-ride="carousel" data-interval="3000">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="carousel-img" src="{% static 'img/carousel-1.jpg' %}" alt="Imagen 1">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h2 class="carousel-subtitle">Sabor, Tradición y Pasión en Cada Copa</h2>
-                        <h1 class="carousel-title">VINEFRESH</h1>
-                        <h2 class="carousel-year">* DESDE 2025 *</h2>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="carousel-img" src="{% static 'img/carousel-1.jpg' %}" alt="Imagen 2">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h2 class="carousel-subtitle">La Vida Sabe Mejor con</h2>
-                        <h1 class="carousel-title">VINEFRESH</h1>
-                        <h2 class="carousel-year">* DESDE 2025 *</h2>
-                    </div>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#main-carousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </a>
-            <a class="carousel-control-next" href="#main-carousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </a>
-        </div>
-    </div>
-    <!-- Carousel End -->
-
 
 
 <!-- About Start -->
@@ -534,31 +502,18 @@
         <div class="about-row">
             <div class="about-col about-text">
                 <h2 class="about-heading">Nuestra Historia</h2>
-                <h5 class="about-subheading">En VineFresh cultivamos más que alimentos: cultivamos bienestar, confianza y el auténtico sabor de la naturaleza.</h5>
+                <h5 class="about-subheading">
+                    En VineFresh cultivamos más que alimentos: cultivamos bienestar, confianza y el auténtico sabor de la naturaleza.
+                </h5>
                 <p class="about-paragraph">
-                    De un pequeño huerto familiar nació VineFresh: una comunidad unida por la pasión por lo fresco y saludable. Cada producto es fruto del respeto por la tierra, la dedicación a los procesos artesanales y el compromiso con la calidad. Porque creemos que lo sencillo y natural es lo que realmente nos alimenta.
+                    De un pequeño huerto familiar nació VineFresh: una comunidad unida por la pasión por lo fresco y saludable. Cada producto es fruto del respeto por la tierra, la dedicación a los procesos artesanales y el compromiso con la calidad.
                 </p>
-                <a href="" class="btn btn-secondary about-btn">Leer Más</a>
+                <a href="#" class="btn btn-secondary about-btn">Leer Más</a>
             </div>
             <div class="about-col about-image">
                 <div class="image-wrapper">
-                    <img src="" alt="Nuestra Historia" class="about-img">
+                    <img src="{% static 'img/nuestra_historia.jpg' %}" alt="Nuestra Historia" class="about-img">
                 </div>
-            </div>
-            <div class="about-col about-text">
-                <h2 class="about-heading">Nuestra Misión y Visión</h2>
-                <p class="about-paragraph">
-                    Ofrecer productos frescos, naturales y de alta calidad que nutran el cuerpo y el espíritu, promoviendo un estilo de vida saludable y consciente. En VineFresh cultivamos bienestar, confianza y respeto por la tierra, llevando a cada hogar el sabor auténtico de lo natural.
-                </p>
-                <p class="about-paragraph">
-                    Ser reconocidos como una marca líder y referente en productos naturales y saludables, creando una comunidad comprometida con el bienestar, la sostenibilidad y el amor por la tierra. Aspiramos a transformar la forma en que las personas se alimentan y se conectan con la naturaleza, brindando experiencias únicas y memorables en cada elección.
-                </p>
-                <ul class="about-features">
-                    <li>Calidad y autenticidad</li>
-                    <li>Bienestar integral</li>
-                    <li>Amor por la tierra</li>
-                </ul>
-                <a href="" class="btn btn-primary about-btn">Leer Más</a>
             </div>
         </div>
     </div>
@@ -725,43 +680,6 @@
 <!-- Menu End -->
 
 
-<!-- Reservation Start -->
-<section class="reservation-section">
-    <div class="reservation-container">
-        <div class="reservation-row">
-            <div class="reservation-info">
-                <h1 class="reservation-title-primary">Tu Opinión</h1>
-                <h1 class="reservation-title-secondary">Es muy importante para nosotros</h1>
-                <p class="reservation-text">
-                    Llena las casillas con los datos correspondientes y cuéntanos tu experiencia. Esperamos cumplir con tus expectativas y haber brindado un servicio de calidad.
-                </p>
-            </div>
-            <div class="reservation-form-container">
-                <h1 class="reservation-form-title">Ingresa tu información</h1>
-                <form class="reservation-form">
-                    <div class="form-group">
-                        <input type="text" class="reservation-input" placeholder="Nombre y Apellido" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="reservation-input" placeholder="Correo Electrónico" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="reservation-input" placeholder="Fecha" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="reservation-input" placeholder="Tiempo" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="reservation-input" placeholder="Comentario" required>
-                    </div>
-                    <button type="submit" class="reservation-btn">Enviar Opinión</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Reservation End -->
-
 
 <!-- Testimonial Start -->
 <section class="testimonial-section">
@@ -815,63 +733,9 @@
     </div>
 </section>
 <!-- Testimonial End -->
+{% include 'core/footer.html' %}
 
 
-<!-- Footer Start -->
-<footer class="footer-section">
-    <div class="footer-container">
-        <div class="footer-row">
-            <!-- Contacto -->
-            <div class="footer-column contact-info">
-                <h4 class="footer-title">Ponte En Contacto Con Nosotros</h4>
-                <p><i class="fa fa-map-marker-alt"></i> Calle 123, Bogotá, Colombia</p>
-                <p><i class="fa fa-phone-alt"></i> (601) 5445321</p>
-                <p><i class="fa fa-phone-alt"></i> +57 300 123 4567</p>
-                <p><i class="fa fa-envelope"></i> atencion@vinefresh.com</p>
-            </div>
-
-            <!-- Redes Sociales -->
-            <div class="footer-column social-media">
-                <h4 class="footer-title">Síguenos</h4>
-                <p>Descubre lo mejor del vino en nuestras redes sociales y únete a nuestra comunidad.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-
-            <!-- Horarios -->
-            <div class="footer-column opening-hours">
-                <h4 class="footer-title">Horario de Atención</h4>
-                <div>
-                    <h6>Lunes - Viernes</h6>
-                    <p>10:00 AM - 07:00 PM</p>
-                    <h6>Sábado - Domingo</h6>
-                    <p>2:00 PM - 8:00 PM</p>
-                </div>
-            </div>
-
-            <!-- Boletín -->
-            <div class="footer-column newsletter">
-                <h4 class="footer-title">Boletín de Noticias</h4>
-                <p>Suscríbete para recibir las últimas noticias y ofertas especiales.</p>
-                <div class="newsletter-form">
-                    <input type="text" class="newsletter-input" placeholder="Tu Correo Electrónico" required>
-                    <button class="newsletter-btn">Suscribirse</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Derechos y créditos -->
-        <div class="footer-bottom">
-            <p>Copyright &copy; <a href="#">VineFresh</a>. Todos los derechos reservados.</p>
-            <p>Diseñado por <a href="https://htmlcodex.com">Equipo VineFresh</a></p>
-        </div>
-    </div>
-</footer>
-<!-- Footer End -->
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>

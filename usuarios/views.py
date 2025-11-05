@@ -19,28 +19,31 @@ def home_view(request):
     else:
         return redirect('login')
 
-
 def login_view(request):
     mensaje = ''
     if request.method == 'POST':
-        usuario_input = request.POST.get('usuario')  
+        email = request.POST.get('usuario')  # El campo en el form sigue llamándose 'usuario'
         clave = request.POST.get('password')
 
-        if not usuario_input or not clave:
+        if not email or not clave:
             mensaje = 'Por favor completa todos los campos.'
         else:
-            user = Usuario.objects.filter(email=usuario_input).first() or \
-                   Usuario.objects.filter(nombre_usuario=usuario_input).first()
-            
+            # Buscar usuario solo por correo
+            user = Usuario.objects.filter(email=email).first()
+
             if user and check_password(clave, user.password):
+                # Guardamos los datos del usuario en la sesión
                 request.session['usuario_id'] = user.id
                 request.session['usuario_nombre'] = user.nombre_usuario
-                 
-                print("Sesión:", request.session.items())
+                request.session['usuario_rol'] = getattr(user, 'rol', 'cliente')  # Por si no existiera rol
 
-                return redirect('home') 
+                # Redirigir según rol
+                if user.rol == 'admin':
+                    return redirect('dashboard_admin')
+                else:
+                    return redirect('dashboard_cliente')
             else:
-                mensaje = 'Usuario o contraseña incorrectos.'
+                mensaje = 'Correo o contraseña incorrectos.'
 
     return render(request, 'usuarios/login.html', {'mensaje': mensaje})
 
@@ -99,7 +102,8 @@ def registro_view(request):
             telefono=datos['telefono'],
             pais=datos['pais'],
             nombre_usuario=datos['nombre_usuario'],
-            password=password_hash
+            password=password_hash,
+            rol='cliente'  # Asignar rol por defecto como 'cliente'
         )
         usuario.save()
         return JsonResponse({'success': True, 'message': 'Usuario registrado correctamente'})

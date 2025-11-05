@@ -13,5 +13,12 @@ class Usuario(models.Model):
     password = models.CharField(max_length=200)
     fecha_registro = models.DateTimeField(default=timezone.now)
 
+    # 🔑 Campo para roles
+    ROL_CHOICES = [
+        ('admin', 'Administrador'),
+        ('cliente', 'Cliente'),
+    ]
+    rol = models.CharField(max_length=10, choices=ROL_CHOICES, default='cliente')
+
     def __str__(self):
         return self.nombre_usuario
