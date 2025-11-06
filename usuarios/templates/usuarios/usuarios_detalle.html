@@ -1,0 +1,57 @@
+{% extends 'admin_panel/base_admin.html' %}
+{% block title %}Historial del Cliente{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 900px;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Información del Cliente</h2>
+    <a href="{% url 'usuarios_lista' %}" class="btn btn-secondary">← Volver a la lista</a>
+  </div>
+
+  <!-- Información del cliente -->
+  <div class="cliente-info bg-light p-4 rounded shadow-sm mb-4">
+    <h5 class="mb-3">📋 Detalles del cliente</h5>
+    <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+    <p><strong>Correo:</strong> {{ usuario.correo }}</p>
+    <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+    <p><strong>Dirección:</strong> {{ usuario.direccion }}</p>
+  </div>
+
+  <!-- Historial -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      🛒 Historial de Compras
+    </div>
+    <div class="card-body p-0">
+      {% if compras %}
+        <table class="table table-hover m-0 align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Producto</th>
+              <th>Fecha</th>
+              <th>Cantidad</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for compra in compras %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ compra.producto.nombre }}</td>
+                <td>{{ compra.fecha|date:"Y-m-d" }}</td>
+                <td>{{ compra.cantidad }}</td>
+                <td>${{ compra.total|floatformat:0 }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="p-4 text-center text-muted">
+          <em>Este cliente aún no tiene compras registradas.</em>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

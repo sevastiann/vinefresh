@@ -99,25 +99,31 @@
         <img src="{% static 'img/vinefresh.PNG' %}" alt="logo" width="150px">
         <h1 class="login-h1">Iniciar Sesión</h1>
 
-<form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-<label class="login-label" for="usuario">Correo o Usuario:</label>
-<input class="login-input" type="text" id="usuario" name="usuario" placeholder="Introduce tu correo o usuario" required>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <label class="login-label" for="usuario">Correo o Usuario:</label>
+            <input class="login-input" type="text" id="usuario" name="usuario" placeholder="Introduce tu correo o usuario" required>
 
-    <label class="login-label" for="password">Contraseña:</label>
-    <input class="login-input" type="password" id="password" name="password" placeholder="Introduce tu contraseña" required>
+            <label class="login-label" for="password">Contraseña:</label>
+            <input class="login-input" type="password" id="password" name="password" placeholder="Introduce tu contraseña" required>
 
-    <button class="login-button" type="submit">Entrar</button>
+            <button class="login-button" type="submit">Entrar</button>
 
-    {% if mensaje %}
-        <p style="color: red;">{{ mensaje }}</p>
-    {% endif %}
+            {% if mensaje %}
+                <p style="color: red;">{{ mensaje }}</p>
+            {% endif %}
 
-    <p class="olvido">¿Olvidaste tu contraseña? <a href="#">Pulsa aquí</a></p>
-    <p class="registro">¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
-    <a class="volver" href="{% url 'home' %}">Volver al inicio</a>
-</form>
+            <!-- ✅ Enlace corregido -->
+            <p class="olvido">¿Olvidaste tu contraseña? 
+                <a href="{% url 'olvidar_contrasena' %}">Pulsa aquí</a>
+            </p>
 
+            <p class="registro">¿No tienes cuenta? 
+                <a href="{% url 'registro' %}">Regístrate aquí</a>
+            </p>
+
+            <a class="volver" href="{% url 'home' %}">Volver al inicio</a>
+        </form>
     </div>
 </body>
 </html>
