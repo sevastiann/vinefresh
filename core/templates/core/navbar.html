@@ -1,54 +1,58 @@
 {% load static %}
 <!-- Navbar / Header -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">
         <!-- Logo -->
         <a class="navbar-brand" href="{% url 'home' %}">
             <img src="{% static 'img/vinefresh.PNG' %}" alt="logo" width="100px">
         </a>
 
-        <!-- Botón para navbar colapsable -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" 
+        <!-- Botón responsive -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
                 aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Links principales -->
+        <!-- Contenido del menú -->
         <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Sección izquierda -->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link" href="">Catálogo</a></li>
-                <li class="nav-item"><a class="nav-link" href="">Información</a></li>
-                <li class="nav-item"><a class="nav-link" href="">Soporte</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'nosotros' %}">Nosotros</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'contacto' %}">Contáctanos</a></li>
                 <li class="nav-item"><a class="nav-link" href="">Carrito</a></li>
             </ul>
 
-            <!-- Links de usuario según sesión y rol -->
+            <!-- Sección derecha: icono de usuario -->
             <ul class="navbar-nav ml-auto">
-                {% if request.session.usuario_id %}
-                    <!-- Mostrar menú según rol -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="{% static 'img/user_icon.png' %}" alt="Usuario" width="25px"> Mi cuenta
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                       role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src="{% static 'img/user_icon.png' %}" alt="Usuario" width="25" class="mr-1">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        {% if request.session.usuario_id %}
                             {% if request.session.usuario_rol == 'admin' %}
-                                <a class="dropdown-item" href="">Usuarios</a>
-                                <a class="dropdown-item" href="">Pedidos</a>
-                                <a class="dropdown-item" href="">Productos</a>
+                                <a class="dropdown-item" href="">Gestión de Usuarios</a>
+                                <a class="dropdown-item" href="">Gestión de Pedidos</a>
+                                <a class="dropdown-item" href="">Gestión de Productos</a>
+                                <a class="dropdown-item" href="">Soporte</a>
                             {% else %}
-                                <a class="dropdown-item" href="">Historial de compras</a>
+                                <a class="dropdown-item" href="">Configuración de Perfil</a>
+                                <a class="dropdown-item" href="">Historial de Compras</a>
                                 <a class="dropdown-item" href="">Soporte</a>
                                 <a class="dropdown-item" href="">Favoritos</a>
                             {% endif %}
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
-                        </div>
-                    </li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'registro' %}">Registrarse</a></li>
-                {% endif %}
+                            <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                            </a>
+                        {% else %}
+                            <a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a>
+                            <a class="dropdown-item" href="{% url 'registro' %}">Registrarse</a>
+                        {% endif %}
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
