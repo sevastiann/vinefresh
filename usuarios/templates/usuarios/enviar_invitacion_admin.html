@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Invitar Administrador - VineFresh</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #4a0e0e, #7b1f1f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: #4a0e0e;
+        }
+
+        .form-container {
+            background-color: #fdf6f0;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            width: 380px;
+            text-align: center;
+            border: 2px solid #7b1f1f;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #7b1f1f;
+        }
+
+        input[type="email"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #7b1f1f;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #7b1f1f;
+            color: #fdf6f0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #5e1010;
+        }
+
+        .mensaje {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #7b1f1f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Invitar nuevo administrador</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="Correo electrónico" required>
+            <button type="submit">Enviar invitación</button>
+        </form>
+
+        {% if mensaje %}
+            <p class="mensaje">{{ mensaje }}</p>
+        {% endif %}
+
+        <a href="{% url 'admin_dashboard' %}">⬅ Volver al panel</a>
+    </div>
+</body>
+</html>

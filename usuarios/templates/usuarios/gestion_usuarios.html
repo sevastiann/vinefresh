@@ -1,0 +1,38 @@
+
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Gestión de Usuarios</h1>
+
+    {% if usuarios %}
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.nombre }} {{ u.apellido }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.rol }}</td>
+                <td>
+                    <a href="{% url 'detalle_cliente' u.id %}" class="btn btn-info btn-sm">Ver</a>
+                    <a href="{% url 'eliminar_usuario' u.id %}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('¿Está seguro de eliminar este usuario?');">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No hay usuarios registrados.</p>
+    {% endif %}
+</div>
+{% endblock %}

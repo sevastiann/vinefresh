@@ -65,18 +65,19 @@ ROOT_URLCONF = 'vinefresh.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # correcto
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'usuarios.context_processors.usuario_logueado',  # agregado
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'vinefresh.wsgi.application'
 
@@ -126,8 +127,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'danielasanchezlaraaa@gmail.com'  # tu correo Gmail
-EMAIL_HOST_PASSWORD = 'yckdrkzfrmphxyst'  # tu contraseña de aplicación (sin espacios)
+EMAIL_HOST_USER = 'adm.vinefresh@gmail.com'  # tu correo Gmail
+EMAIL_HOST_PASSWORD = 'qnnzduyvjopugaqm'  # tu contraseña de aplicación (sin espacios)
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
@@ -135,3 +136,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # CLAVE PRIMARIA POR DEFECTO
 # -------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+

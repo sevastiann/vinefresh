@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Detalle del Cliente</h1>
+
+<table border="1" cellpadding="10" cellspacing="0">
+    <tr>
+        <th>Nombre:</th>
+        <td>{{ cliente.nombre }}</td>
+    </tr>
+    <tr>
+        <th>Apellido:</th>
+        <td>{{ cliente.apellido }}</td>
+    </tr>
+    <tr>
+        <th>Email:</th>
+        <td>{{ cliente.email }}</td>
+    </tr>
+    <tr>
+        <th>Usuario:</th>
+        <td>{{ cliente.nombre_usuario }}</td>
+    </tr>
+    <tr>
+        <th>Cédula:</th>
+        <td>{{ cliente.cedula }}</td>
+    </tr>
+    <tr>
+        <th>Teléfono:</th>
+        <td>{{ cliente.telefono }}</td>
+    </tr>
+    <tr>
+        <th>País:</th>
+        <td>{{ cliente.pais }}</td>
+    </tr>
+    <tr>
+        <th>Fecha Nacimiento:</th>
+        <td>{{ cliente.fecha_nacimiento }}</td>
+    </tr>
+</table>
+
+<a href="{% url 'gestion_usuarios' %}" style="margin-top:10px; display:inline-block;">Volver a la lista</a>
+{% endblock %}

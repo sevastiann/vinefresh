@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - VineFresh</title>
-    <link rel="icon" href="">
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -178,152 +177,154 @@
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <div class="form-header">
-            <h1 class="form-title">Registro</h1>
-            <p class="form-subtitle">Complete la información paso a paso</p>
-        </div>
-
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-
-        <div class="step-indicator">
-            <div class="step active" id="step1">1</div>
-            <div class="step" id="step2">2</div>
-            <div class="step" id="step3">3</div>
-            <div class="step" id="step4">4</div>
-        </div>
-<form method="post" action="{% url 'registro' %}" id="registrationForm">
-    {% csrf_token %}
-
-    <!-- SECCIÓN 1 -->
-    <div class="form-section active" id="section1">
-        <h2>Información Personal</h2>
-        <div class="form-group">
-            <label>Nombre</label>
-            <input type="text" name="nombre" required>
-        </div>
-        <div class="form-group">
-            <label>Apellido</label>
-            <input type="text" name="apellido" required>
-        </div>
-        <div class="form-group">
-            <label>Nombre de Usuario</label>
-            <input type="text" name="nombre_usuario" required>
-        </div>
-        <div class="form-group">
-            <label>Fecha de Nacimiento</label>
-            <input type="date" name="fecha_nacimiento" required>
-        </div>
+<div class="form-container">
+    <div class="form-header">
+        <h1 class="form-title">Registro</h1>
+        <p class="form-subtitle">Complete la información paso a paso</p>
     </div>
 
-    <!-- SECCIÓN 2 -->
-    <div class="form-section" id="section2">
-        <h2>Información de Contacto</h2>
-        <div class="form-group">
-            <label>Correo Electrónico</label>
-            <input type="email" name="email" 
-                   pattern="[a-zA-Z0-9._%+-]+@(gmail|hotmail|outlook|yahoo)\.[a-z]{2,}$" 
-                   title="Debe ser un correo válido como @gmail, @hotmail, @outlook o @yahoo" required>
-        </div>
-        <div class="form-group">
-            <label>Teléfono</label>
-            <input type="tel" name="telefono" pattern="[0-9]{7,10}" title="Debe contener entre 7 y 10 números" required>
-        </div>
-        <div class="form-group">
-            <label>País</label>
-            <input type="text" name="pais" required>
-        </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
     </div>
 
-    <!-- SECCIÓN 3 -->
-    <div class="form-section" id="section3">
-        <h2>Contraseña</h2>
-        <div class="form-group">
-            <label>Contraseña</label>
-            <input type="password" name="password1" minlength="8" required>
-        </div>
-        <div class="form-group">
-            <label>Confirmar Contraseña</label>
-            <input type="password" name="password2" minlength="8" required>
-        </div>
+    <div class="step-indicator">
+        <div class="step active" id="step1">1</div>
+        <div class="step" id="step2">2</div>
+        <div class="step" id="step3">3</div>
+        <div class="step" id="step4">4</div>
     </div>
 
-    <!-- SECCIÓN 4 -->
-    <div class="form-section" id="section4">
-        <h2>Confirmación</h2>
-        <div class="form-group">
-            <label><input type="checkbox" required> Acepto los términos y condiciones</label>
-        </div>
-        <p id="message"></p>
-    </div>
+    <form method="post" action="{% url 'registro' %}" id="registrationForm">
+        {% csrf_token %}
 
-    <!-- Botones de navegación dentro del form -->
-    <div class="form-navigation">
-        <button type="button" class="btn btn-secondary" id="prevBtn">Anterior</button>
-        <button type="button" class="btn btn-primary" id="nextBtn">Siguiente</button>
+        <!-- SECCIÓN 1 -->
+        <div class="form-section active" id="section1">
+            <h2>Información Personal</h2>
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label>Apellido</label>
+                <input type="text" name="apellido" required>
+            </div>
+            <div class="form-group">
+                <label>Nombre de Usuario</label>
+                <input type="text" name="nombre_usuario" required>
+            </div>
+            <div class="form-group">
+                <label>Cédula</label>
+                <input type="text" name="cedula" pattern="[0-9]{6,12}" 
+                       title="Ingrese una cédula válida (solo números, entre 6 y 12 dígitos)" required>
+            </div>
+            <div class="form-group">
+                <label>Fecha de Nacimiento</label>
+                <input type="date" name="fecha_nacimiento" required>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2 -->
+        <div class="form-section" id="section2">
+            <h2>Información de Contacto</h2>
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input type="email" name="email"
+                       pattern="[a-zA-Z0-9._%+-]+@(gmail|hotmail|outlook|yahoo)\.[a-z]{2,}$"
+                       title="Debe ser un correo válido como @gmail, @hotmail, @outlook o @yahoo" required>
+            </div>
+            <div class="form-group">
+                <label>Teléfono</label>
+                <input type="tel" name="telefono" pattern="[0-9]{7,10}" title="Debe contener entre 7 y 10 números" required>
+            </div>
+            <div class="form-group">
+                <label>País</label>
+                <input type="text" name="pais" required>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3 -->
+        <div class="form-section" id="section3">
+            <h2>Contraseña</h2>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" name="password1" minlength="8" required>
+            </div>
+            <div class="form-group">
+                <label>Confirmar Contraseña</label>
+                <input type="password" name="password2" minlength="8" required>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4 -->
+        <div class="form-section" id="section4">
+            <h2>Confirmación</h2>
+            <div class="form-group">
+                <label><input type="checkbox" required> Acepto los términos y condiciones</label>
+            </div>
+            <p id="message"></p>
+        </div>
+
+        <!-- Botones -->
+        <div class="form-navigation">
+            <button type="button" class="btn btn-secondary" id="prevBtn">Anterior</button>
+            <button type="button" class="btn btn-primary" id="nextBtn">Siguiente</button>
+        </div>
+
+        <div class="form-home-btn">
+            <a href="{% url 'home' %}" class="btn btn-secondary">Volver a Home</a>
+        </div>
+    </form>
+
+    <!-- Éxito -->
+    <div class="form-section" id="successSection" style="display: none;">
+        <div class="success-message">
+            <div class="success-icon">🍷</div>
+            <h2>¡Registro Completado!</h2>
+            <p>Su cuenta ha sido creada exitosamente.</p>
+            <button type="button" class="btn btn-primary" id="goToLoginBtn">Ir a Iniciar Sesión</button>
+        </div>
     </div>
-    <div class="form-home-btn">
-    <a href="{% url 'home' %}" class="btn btn-secondary">Volver a Home</a>
 </div>
-
-
-<!-- Sección de éxito -->
-<div class="form-section" id="successSection" style="display: none;">
-    <div class="success-message">
-        <div class="success-icon">🍷</div>
-        <h2>¡Registro Completado!</h2>
-        <p>Su cuenta ha sido creada exitosamente.</p>
-        <!-- Botón para ir al login -->
-        <button type="button" class="btn btn-primary" id="goToLoginBtn">
-            Ir a Iniciar Sesión
-        </button>
-    </div>
-</div>
-
 
 <script>
-    const formSections = document.querySelectorAll('.form-section');
-    const nextBtn = document.getElementById('nextBtn');
-    const prevBtn = document.getElementById('prevBtn');
-    const registrationForm = document.getElementById('registrationForm');
-    const message = document.getElementById('message');
-    const successSection = document.getElementById('successSection');
-    let currentStep = 0;
-
-    const goToLoginBtn = document.getElementById('goToLoginBtn');
+const formSections = document.querySelectorAll('.form-section');
+const nextBtn = document.getElementById('nextBtn');
+const prevBtn = document.getElementById('prevBtn');
+const registrationForm = document.getElementById('registrationForm');
+const message = document.getElementById('message');
+const successSection = document.getElementById('successSection');
+const goToLoginBtn = document.getElementById('goToLoginBtn');
+let currentStep = 0;
 
 goToLoginBtn.addEventListener('click', () => {
     window.location.href = "{% url 'login' %}";
 });
 
+function showStep(step) {
+    formSections.forEach((section, index) => {
+        section.classList.toggle('active', index === step);
+    });
+    prevBtn.style.display = step === 0 ? 'none' : 'inline-block';
+    nextBtn.textContent = step === formSections.length - 2 ? 'Finalizar' : 'Siguiente';
+}
 
-    function showStep(step) {
-        formSections.forEach((section, index) => {
-            section.classList.toggle('active', index === step);
-        });
-        prevBtn.style.display = step === 0 ? 'none' : 'inline-block';
-        nextBtn.textContent = step === formSections.length - 2 ? 'Finalizar' : 'Siguiente';
+nextBtn.addEventListener('click', () => {
+    if (currentStep < formSections.length - 2) {
+        currentStep++;
+        showStep(currentStep);
+    } else {
+        registrationForm.requestSubmit();
     }
+});
 
-    nextBtn.addEventListener('click', () => {
-        if (currentStep < formSections.length - 2) { // menos la sección de éxito
-            currentStep++;
-            showStep(currentStep);
-        } else {
-            registrationForm.requestSubmit();
-        }
-    });
+prevBtn.addEventListener('click', () => {
+    if (currentStep > 0) {
+        currentStep--;
+        showStep(currentStep);
+    }
+});
 
-    prevBtn.addEventListener('click', () => {
-        if (currentStep > 0) {
-            currentStep--;
-            showStep(currentStep);
-        }
-    });
-
-    registrationForm.addEventListener('submit', async function(e) {
+registrationForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     const pass1 = document.querySelector('input[name="password1"]').value;
     const pass2 = document.querySelector('input[name="password2"]').value;
@@ -346,17 +347,13 @@ goToLoginBtn.addEventListener('click', () => {
         const data = await response.json();
 
         if (data.success) {
-            // Mostrar mensaje de éxito
             registrationForm.style.display = 'none';
             message.style.color = 'green';
             message.textContent = '✅ ' + data.message;
             successSection.style.display = 'block';
-
-            // Redirigir al login después de 2 segundos
             setTimeout(() => {
                 window.location.href = "{% url 'login' %}";
             }, 2000);
-            
         } else {
             message.style.color = 'red';
             message.textContent = '⚠️ ' + data.error;
@@ -367,9 +364,7 @@ goToLoginBtn.addEventListener('click', () => {
     }
 });
 
-    showStep(currentStep);
+showStep(currentStep);
 </script>
-
-
 </body>
 </html>

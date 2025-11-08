@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Enviar invitación de administrador</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1b5e20, #66bb6a);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .form-card {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+        input[type="email"] {
+            width: 90%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            background: white;
+            color: #1b5e20;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #e8f5e9;
+        }
+        a {
+            color: #e0f2f1;
+            display: block;
+            margin-top: 15px;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-card">
+        <h1>Enviar invitación de administrador</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="Correo electrónico" required>
+            <button type="submit">Enviar invitación</button>
+        </form>
+        <a href="{% url 'admin_dashboard' %}">⬅ Volver al panel</a>
+    </div>
+</body>
+</html>
