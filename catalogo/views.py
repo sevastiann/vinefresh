@@ -1,29 +1,42 @@
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import get_object_or_404
-from .models import Producto, Categoria, Combo
+from django.shortcuts import render
+from django.core.paginator import Paginator
+from .models import Producto
+
 
 def lista_productos(request):
-    productos = list(Producto.objects.values())
-    return JsonResponse(productos, safe=False)
+    # --- FILTROS ---
+    productos = Producto.objects.all()
+
+    pais = request.GET.get('pais')
+    color = request.GET.get('color')
+    dulzura = request.GET.get('dulzura')
+    cuerpo = request.GET.get('cuerpo')
+
+    if pais:
+        productos = productos.filter(pais_origen__icontains=pais)
+
+    if color:
+        productos = productos.filter(categoria__color__icontains=color)
+
+    if dulzura:
+        productos = productos.filter(categoria__azucar__icontains=dulzura)
+
+    if cuerpo:
+        productos = productos.filter(categoria__gas_carbonico__icontains=cuerpo)
+
+    # --- PAGINACIÓN ---
+    paginator = Paginator(productos, 9)  # 9 productos por página
+    page_number = request.GET.get('page')
+    productos_pagina = paginator.get_page(page_number)
+
+    # --- MANDAR A TEMPLATE ---
+    return render(request, 'catalogo/catalogo.html', {
+        'productos': productos_pagina
+    })
+
 
 def detalle_producto(request, producto_id):
-    producto = get_object_or_404(Producto, id=producto_id)
-    data = {
-        "id": producto.id,
-        "nombre": producto.nom_producto,
-        "descripcion": producto.descripcion,
-        "precio_unid": float(producto.precio_unid),
-        "grado_alcohol": float(producto.grado_alcohol),
-        "tipo_fruto": producto.tipo_fruto,
-        "pais_origen": producto.pais_origen,
-        "categoria": producto.categoria.color,
-    }
-    return JsonResponse(data)
-
-def lista_categorias(request):
-    categorias = list(Categoria.objects.values())
-    return JsonResponse(categorias, safe=False)
-
-def lista_combos(request):
-    combos = list(Combo.objects.values())
-    return JsonResponse(combos, safe=False)
+    producto = Producto.objects.get(id=producto_id)
+    return render(request, 'catalogo/detalle.html', {
+        'producto': producto
+    })
