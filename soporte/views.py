@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Soporte
 from usuarios.models import Usuario
 
+# Listado general de soporte
 def lista_soporte(request):
     rol = request.session.get('usuario_rol', 'visitante')
     usuario_id = request.session.get('usuario_id')
@@ -15,6 +16,8 @@ def lista_soporte(request):
 
     return render(request, 'soporte/listar_soporte.html', {'soportes': soportes, 'rol': rol})
 
+
+# Crear nuevo soporte (PQRS)
 def crear_soporte(request):
     if request.method == 'POST':
         usuario_id = request.session.get('usuario_id')
@@ -27,12 +30,32 @@ def crear_soporte(request):
     
     return render(request, 'soporte/nuevo_soporte.html')
 
+
+# Ver detalle de una solicitud
 def detalle_soporte(request, soporte_id):
     soporte = get_object_or_404(Soporte, id=soporte_id)
     return render(request, 'soporte/detalle_soporte.html', {'soporte': soporte})
 
+
+# Cambiar estado (por el admin)
 def cambiar_estado_soporte(request, soporte_id, nuevo_estado):
     soporte = get_object_or_404(Soporte, id=soporte_id)
     soporte.estado = nuevo_estado
     soporte.save()
     return redirect('soporte:lista_soporte')
+
+
+# Panel del administrador para ver PQRS separados
+def panel_admin_soporte(request):
+    if request.session.get('usuario_rol') != 'admin':
+        return redirect('core:home')
+    
+    pqrs = {
+        'peticiones': Soporte.objects.filter(PQRS='peticion'),
+        'quejas': Soporte.objects.filter(PQRS='queja'),
+        'reclamos': Soporte.objects.filter(PQRS='reclamo'),
+        'solicitudes': Soporte.objects.filter(PQRS='solicitud'),
+    }
+
+    return render(request, 'soporte/panel_admin.html', {'pqrs': pqrs})
+

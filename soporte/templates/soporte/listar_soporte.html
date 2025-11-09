@@ -3,6 +3,7 @@
 <h2>Soportes / PQRS</h2>
 {% if rol == 'cliente' %}
   <a href="{% url 'soporte:crear_soporte' %}" class="btn btn-success mb-3">Crear nuevo PQRS</a>
+  <a href="{% url 'soporte:listar_soporte' %}" class="btn btn-success mb-3">Volver a mis PQRS</a>
 {% endif %}
 <table class="table table-striped">
   <tr><th>ID</th><th>Tipo</th><th>Estado</th><th>Fecha</th><th>Acción</th></tr>
