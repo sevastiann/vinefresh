@@ -1,66 +1,127 @@
-from django.db import models
-from usuarios.models import Usuario
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from .models import CarritoCompra, Pedido, Factura, Cupon
 from catalogo.models import Producto
-
-# --------------------------------------------------------
-# CARRITO DE COMPRA
-# --------------------------------------------------------
-class CarritoCompra(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='carrito')
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='en_carritos')
-    cantidad = models.PositiveIntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.usuario.nombre_completo} - {self.producto.nom_producto} ({self.cantidad})"
+from usuarios.models import Usuario
+from datetime import date
 
 
-# --------------------------------------------------------
-# FACTURA
-# --------------------------------------------------------
-class Factura(models.Model):
-    METODOS_PAGO = [
-        ('efectivo', 'Efectivo'),
-        ('tarjeta', 'Tarjeta'),
-        ('transferencia', 'Transferencia'),
-    ]
-    ESTADO_PAGO = [
-        ('pendiente', 'Pendiente'),
-        ('pagado', 'Pagado'),
-        ('cancelado', 'Cancelado'),
-    ]
+# -------------------------------------------------------------------
+#                           CARRITO
+# -------------------------------------------------------------------
 
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='facturas')
-    metodo_pago = models.CharField(max_length=20, choices=METODOS_PAGO)
-    estado_pago = models.CharField(max_length=20, choices=ESTADO_PAGO, default='pendiente')
-    fecha = models.DateTimeField(auto_now_add=True)
+def agregar_al_carrito(request, usuario_id, producto_id, cantidad):
+    """Agrega productos al carrito (sumando si ya existe)."""
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+    producto = get_object_or_404(Producto, id=producto_id)
 
-    def __str__(self):
-        return f"Factura #{self.id} - {self.usuario.nombre_completo}"
+    carrito, creado = CarritoCompra.objects.get_or_create(
+        usuario=usuario,
+        producto=producto
+    )
 
+    carrito.cantidad += int(cantidad)
+    carrito.save()
 
-# --------------------------------------------------------
-# CUPÓN
-# --------------------------------------------------------
-class Cupon(models.Model):
-    codigo = models.CharField(max_length=50, unique=True)
-    descuento = models.FloatField()
-    fecha_expiracion = models.DateField()
-    activo = models.BooleanField(default=True)
-    factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='cupones', null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.codigo} ({'Activo' if self.activo else 'Inactivo'})"
+    return JsonResponse({
+        "mensaje": f"{cantidad} unidad(es) agregadas al carrito.",
+        "carrito_id": carrito.id
+    })
 
 
-# --------------------------------------------------------
-# PEDIDO
-# --------------------------------------------------------
-class Pedido(models.Model):
-    carrito = models.ForeignKey(CarritoCompra, on_delete=models.CASCADE, related_name='pedidos')
-    cantidad = models.PositiveIntegerField(default=1)
-    precio = models.FloatField()
-    fecha_pedido = models.DateTimeField(auto_now_add=True)
-    factura = models.ForeignKey(Factura, on_delete=models.CASCADE, related_name='pedidos', null=True, blank=True)
+def ver_carrito(request, usuario_id):
+    """Devuelve todos los productos del carrito del usuario."""
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+    carrito = list(CarritoCompra.objects.filter(usuario=usuario).values())
 
-    def __str__(self):
-        return f"Pedido #{self.id} - {self.carrito.usuario.nombre_completo}"
+    return JsonResponse(carrito, safe=False)
+
+
+# -------------------------------------------------------------------
+#                           PEDIDOS
+# -------------------------------------------------------------------
+
+def crear_pedido(request, carrito_id, precio):
+    """Crea un pedido basado en un carrito existente."""
+    carrito = get_object_or_404(CarritoCompra, id=carrito_id)
+
+    pedido = Pedido.objects.create(
+        carrito=carrito,
+        cantidad=carrito.cantidad,
+        precio=float(precio)
+    )
+
+    return JsonResponse({
+        "mensaje": f"Pedido #{pedido.id} creado correctamente",
+        "pedido_id": pedido.id
+    })
+
+
+def ver_pedidos(request, usuario_id):
+    """Lista todos los pedidos pertenecientes a un usuario."""
+    pedidos = list(
+        Pedido.objects.filter(
+            carrito__usuario_id=usuario_id
+        ).values()
+    )
+
+    return JsonResponse(pedidos, safe=False)
+
+
+# -------------------------------------------------------------------
+#                           FACTURAS
+# -------------------------------------------------------------------
+
+def crear_factura(request, usuario_id, metodo_pago):
+    """Crea una factura para un usuario."""
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    factura = Factura.objects.create(
+        usuario=usuario,
+        metodo_pago=metodo_pago
+    )
+
+    return JsonResponse({
+        "mensaje": f"Factura #{factura.id} creada",
+        "factura_id": factura.id
+    })
+
+
+# -------------------------------------------------------------------
+#                           CUPONES
+# -------------------------------------------------------------------
+
+def validar_cupon(request, codigo):
+    """Valida si un cupón existe, está activo y no está expirado."""
+    cupon = get_object_or_404(Cupon, codigo=codigo)
+
+    if not cupon.activo:
+        return JsonResponse({"mensaje": "El cupón está desactivado"})
+
+    if cupon.fecha_expiracion < date.today():
+        return JsonResponse({"mensaje": "El cupón está expirado"})
+
+    return JsonResponse({
+        "mensaje": f"Cupón válido ({cupon.descuento}%)",
+        "descuento": cupon.descuento
+    })
+
+
+# -------------------------------------------------------------------
+#                           HTML PAGES
+# -------------------------------------------------------------------
+
+def ventas_home(request):
+    return render(request, "ventas/home.html")
+
+def ventas_carrito(request):
+    return render(request, "ventas/carrito.html")
+
+def ventas_pedidos(request):
+    return render(request, "ventas/pedidos.html")
+
+def ventas_facturas(request):
+    return render(request, "ventas/facturas.html")
+
+def ventas_cupones(request):
+    return render(request, "ventas/cupones.html")

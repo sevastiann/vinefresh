@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Lista de Envíos</h2>
+
+    <a href="{% url 'envios_crear' %}" class="btn btn-primary mb-3">Crear Envío</a>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if envios %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estado</th>
+                        <th>Fecha Envío</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for envio in envios %}
+                    <tr>
+                        <td>{{ envio.id }}</td>
+                        <td>{{ envio.estado }}</td>
+                        <td>{{ envio.fecha_envio|default:"Sin fecha" }}</td>
+                        <td>
+                            <a href="{% url 'envios_detalle' envio.id %}" class="btn btn-sm btn-info">Ver</a>
+                            <a href="{% url 'seguimiento' envio.id %}" class="btn btn-sm btn-warning">Seguimiento</a>
+                            <a href="{% url 'rutas' envio.id %}" class="btn btn-sm btn-secondary">Ruta</a>
+                            <a href="{% url 'envios_eliminar' envio.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No hay envíos registrados.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

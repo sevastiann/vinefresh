@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Cambiar Estado del Envío #{{ envio.id }}</h2>
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-body">
+            <p><strong>Estado actual:</strong> {{ envio.estado }}</p>
+            <p><strong>Resultado:</strong> {{ mensaje }}</p>
+
+            <a href="{% url 'envios_detalle' envio.id %}" class="btn btn-primary mt-3">Volver al detalle</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

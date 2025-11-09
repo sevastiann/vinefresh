@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Detalle del Envío #{{ envio.id }}</h2>
+
+    <div class="card mt-3 shadow-sm">
+        <div class="card-body">
+            <p><strong>Estado:</strong> {{ envio.estado }}</p>
+            <p><strong>Fecha Envío:</strong> {{ envio.fecha_envio|default:"Sin fecha" }}</p>
+
+            <hr>
+
+            <h5>Cambiar Estado</h5>
+            <div class="mt-2">
+                <a href="{% url 'envios_editar' envio.id 'pendiente' %}" class="btn btn-outline-secondary btn-sm">Pendiente</a>
+                <a href="{% url 'envios_editar' envio.id 'en_proceso' %}" class="btn btn-outline-primary btn-sm">En proceso</a>
+                <a href="{% url 'envios_editar' envio.id 'en_camino' %}" class="btn btn-outline-warning btn-sm">En camino</a>
+                <a href="{% url 'envios_editar' envio.id 'entregado' %}" class="btn btn-outline-success btn-sm">Entregado</a>
+                <a href="{% url 'envios_editar' envio.id 'cancelado' %}" class="btn btn-outline-danger btn-sm">Cancelado</a>
+            </div>
+
+            <hr>
+
+            <a href="{% url 'envios_listar' %}" class="btn btn-secondary mt-2">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
