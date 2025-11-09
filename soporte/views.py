@@ -36,3 +36,17 @@ def cambiar_estado_soporte(request, soporte_id, nuevo_estado):
     soporte.estado = nuevo_estado
     soporte.save()
     return redirect('soporte:lista_soporte')
+
+
+def panel_admin_soporte(request):
+    if request.session.get('usuario_rol') != 'admin':
+        return redirect('core:home')
+    
+    pqrs = {
+        'peticiones': Soporte.objects.filter(tipo='peticion'),
+        'quejas': Soporte.objects.filter(tipo='queja'),
+        'reclamos': Soporte.objects.filter(tipo='reclamo'),
+        'solicitudes': Soporte.objects.filter(tipo='solicitud'),
+    }
+    return render(request, 'soporte/panel_admin.html', {'pqrs': pqrs})
+

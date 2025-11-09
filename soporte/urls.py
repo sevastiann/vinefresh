@@ -8,4 +8,6 @@ urlpatterns = [
     path('crear/', views.crear_soporte, name='crear_soporte'),
     path('<int:soporte_id>/', views.detalle_soporte, name='detalle_soporte'),
     path('<int:soporte_id>/estado/<str:nuevo_estado>/', views.cambiar_estado_soporte, name='cambiar_estado_soporte'),
+    path('panel-admin/', views.panel_admin_soporte, name='panel_admin_soporte'),
+
 ]
