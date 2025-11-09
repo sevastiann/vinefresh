@@ -24,15 +24,8 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'core:contacto' %}">Contáctanos</a></li>
             </ul>
 
-            <!-- Sección derecha: favoritos, carrito y usuario -->
+            <!-- Sección derecha: carrito y usuario -->
             <ul class="navbar-nav ml-auto align-items-center">
-                <!-- Icono de favoritos -->
-                <li class="nav-item mr-3">
-                    <a class="nav-link" href="{% url 'ventas:favoritos' %}">
-                        <i class="fas fa-heart fa-lg text-danger"></i>
-                    </a>
-                </li>
-
                 <!-- Icono de carrito -->
                 <li class="nav-item mr-3">
                     <a class="nav-link" href="">
@@ -43,7 +36,7 @@
                 <!-- Dropdown de usuario -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
-                       role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img src="{% static 'img/user_icon.png' %}" alt="Usuario" width="25" class="mr-1">
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">

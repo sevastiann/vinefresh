@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Soportes / PQRS</h2>
+{% if rol == 'cliente' %}
+  <a href="{% url 'soporte:crear_soporte' %}" class="btn btn-success mb-3">Crear nuevo PQRS</a>
+{% endif %}
+<table class="table table-striped">
+  <tr><th>ID</th><th>Tipo</th><th>Estado</th><th>Fecha</th><th>Acción</th></tr>
+  {% for s in soportes %}
+    <tr>
+      <td>{{ s.id }}</td>
+      <td>{{ s.PQRS }}</td>
+      <td>{{ s.estado }}</td>
+      <td>{{ s.fecha|date:"Y-m-d H:i" }}</td>
+      <td><a href="{% url 'soporte:detalle_soporte' s.id %}">Ver</a></td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}
