@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Pedidos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Pedidos</h2>
+
+    <!-- Botón para crear pedido -->
+    <a href="{% url 'ventas_pedido_crear' %}" class="btn btn-primary mb-3">➕ Crear Pedido</a>
+
+    {% if pedidos %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Productos</th>
+                <th>Precio total</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido.id }}</td>
+                <td>{{ pedido.usuario.nombre_usuario }}</td>
+                <td>
+                    {% for item in pedido.items.all %}
+                        {{ item.producto.nombre }} ({{ item.cantidad }})<br>
+                    {% endfor %}
+                </td>
+                <td>{{ pedido.precio }}</td>
+                <td>{{ pedido.fecha }}</td>
+                <td>
+                    <a href="{% url 'ventas_pedido_ver' pedido.id %}" class="btn btn-sm btn-info">Ver</a>
+                    <a href="{% url 'ventas_pedido_eliminar' pedido.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="mt-3">No se han generado pedidos.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% load static %}
+<div id="modal-detalle-producto-{{ producto.id }}" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+
+        <!-- Imagen -->
+        {% if producto.imagen %}
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="modal-img">
+        {% endif %}
+
+        <h2>{{ producto.nombre }}</h2>
+        <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+        {% if producto.descripcion %}
+            <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+        {% endif %}
+
+        <!-- Categorías -->
+        {% if producto.categorias.exists %}
+            <p><strong>Categorías:</strong> 
+                {% for cat in producto.categorias.all %}
+                    {{ cat.nombre }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        <!-- Subcategorías -->
+        {% if producto.subcategorias.exists %}
+            <p><strong>Subcategorías:</strong> 
+                {% for sub in producto.subcategorias.all %}
+                    {{ sub.nombre }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* Fondo del modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; 
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+/* Contenido del modal */
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Botón cerrar */
+.close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-img {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+</style>
+
+<script>
+const modalProducto = document.getElementById("modal-detalle-producto-{{ producto.id }}");
+const closeBtnProducto = modalProducto.querySelector(".close");
+
+// Abrir modal
+function abrirModalProducto() {
+    modalProducto.style.display = "block";
+}
+
+// Cerrar modal al hacer click en "X"
+closeBtnProducto.onclick = function() {
+    modalProducto.style.display = "none";
+}
+
+// Cerrar modal al hacer click fuera del contenido
+window.onclick = function(event) {
+    if (event.target == modalProducto) {
+        modalProducto.style.display = "none";
+    }
+}
+</script>

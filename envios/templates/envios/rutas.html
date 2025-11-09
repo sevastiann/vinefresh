@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Ruta del Envío #{{ envio.id }}</h2>
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-body">
+            <p><strong>Estado:</strong> {{ envio.estado }}</p>
+
+            <p class="mt-3"><em>Aquí irá la planificación de rutas y puntos de entrega.</em></p>
+
+            <a href="{% url 'envios_listar' %}" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

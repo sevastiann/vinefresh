@@ -1,0 +1,94 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="catalogo-container">
+
+    <!-- Mini Navbar: Productos / Combos -->
+    <div class="mini-navbar">
+        <a href="{% url 'catalogo:lista_catalogo' %}?tipo=producto" 
+           class="{% if request.GET.tipo|default:'producto' == 'producto' %}activo{% endif %}">
+            Productos
+        </a>
+        <a href="{% url 'catalogo:lista_catalogo' %}?tipo=combo" 
+           class="{% if request.GET.tipo == 'combo' %}activo{% endif %}">
+            Combos
+        </a>
+    </div>
+
+    <div class="main-content">
+
+        <!-- Sidebar de Categorías -->
+        <div class="sidebar">
+            {% include 'catalogo/sidebar_categorias.html' with categorias=categorias %}
+        </div>
+
+        <!-- Contenido de Productos / Combos -->
+        <div class="catalogo-grid">
+
+            {% if request.GET.tipo|default:'producto' == 'producto' %}
+                {% for producto in productos %}
+                    <div class="card-element">
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nom_producto }}">
+                        <h4>{{ producto.nom_producto }}</h4>
+                        <p>{{ producto.descripcion|truncatechars:50 }}</p>
+                        <p>Precio: ${{ producto.precio_unid }}</p>
+                        <p>Grado de alcohol: {{ producto.grado_alcohol }}%</p>
+                        <div class="card-buttons">
+                            <!-- Ver detalle siempre disponible -->
+                            <a href="{% url 'catalogo:detalle_producto' producto.id %}" class="btn btn-info">Ver detalle</a>
+
+                            <!-- Botones según rol -->
+                            {% if request.user.es_Admin %}
+                                <a href="{% url 'catalogo:editar_producto' producto.id %}" class="btn btn-warning">Editar</a>
+                                <a href="{% url 'catalogo:eliminar_producto' producto.id %}" class="btn btn-danger">Eliminar</a>
+                            {% else %}
+                                <a href="{% url 'catalogo:agregar_carrito' producto.id %}" class="btn btn-success">Agregar al carrito</a>
+                                <a href="{% url 'catalogo:agregar_favoritos' producto.id %}" class="btn btn-secondary">Favoritos</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No hay productos disponibles.</p>
+                {% endfor %}
+
+            {% else %}
+                {% for combo in combos %}
+                    <div class="card-element">
+                        <img src="{{ combo.imagen.url }}" alt="{{ combo.nombre_combo }}">
+                        <h4>{{ combo.nombre_combo }}</h4>
+                        <p>{{ combo.descripcion|default_if_none:"Sin descripción"|truncatechars:50 }}</p>
+                        <p>Unidades: {{ combo.unidades }}</p>
+                        <div class="card-buttons">
+                            <a href="{% url 'catalogo:detalle_combo' combo.id %}" class="btn btn-info">Ver detalle</a>
+
+                            {% if request.user.es_Admin %}
+                                <a href="{% url 'catalogo:editar_combo' combo.id %}" class="btn btn-warning">Editar</a>
+                                <a href="{% url 'catalogo:eliminar_combo' combo.id %}" class="btn btn-danger">Eliminar</a>
+                            {% else %}
+                                <a href="{% url 'catalogo:agregar_carrito' combo.id %}" class="btn btn-success">Agregar al carrito</a>
+                                <a href="{% url 'catalogo:agregar_favoritos' combo.id %}" class="btn btn-secondary">Favoritos</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No hay combos disponibles.</p>
+                {% endfor %}
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<style>
+.catalogo-container { padding: 20px; }
+.mini-navbar a { margin-right: 10px; margin-bottom: 10px; }
+.mini-navbar .activo { font-weight: bold; text-decoration: underline; }
+.main-content { display: flex; gap: 20px; }
+.sidebar { width: 200px; }
+.catalogo-grid { display: flex; flex-wrap: wrap; gap: 15px; flex: 1; }
+.card-element { border: 1px solid #ccc; padding: 15px; border-radius: 8px; width: 250px; }
+.card-buttons { margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap; }
+</style>
+
+{% endblock %}

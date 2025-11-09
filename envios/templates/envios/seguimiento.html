@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Seguimiento del Envío #{{ envio.id }}</h2>
+
+    <div class="card mt-3 shadow-sm">
+        <div class="card-body">
+            <p><strong>Estado actual:</strong> {{ envio.estado }}</p>
+
+            <p class="mt-3"><em>Pronto agregaremos un mapa, historial y ubicación en tiempo real.</em></p>
+
+            <a href="{% url 'envios_listar' %}" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

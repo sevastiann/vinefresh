@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Transportadores</h2>
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-body">
+            <p>Aquí administraremos los transportadores y se asignarán envíos.</p>
+
+            <em>(Página base, lista para añadir funcionalidades.)</em>
+
+            <a href="{% url 'envios_listar' %}" class="btn btn-secondary mt-3">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

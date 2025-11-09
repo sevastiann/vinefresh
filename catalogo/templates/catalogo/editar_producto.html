@@ -1,0 +1,108 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Editar Producto</h2>
+
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Nombre -->
+        <div class="form-group">
+            <label for="nom_producto">Nombre del Producto:</label>
+            <input type="text" id="nom_producto" name="nom_producto" value="{{ producto.nom_producto }}" required>
+        </div>
+
+        <!-- Precio -->
+        <div class="form-group">
+            <label for="precio_unid">Precio:</label>
+            <input type="number" step="0.01" id="precio_unid" name="precio_unid" value="{{ producto.precio_unid }}" required>
+        </div>
+
+        <!-- Grado de alcohol -->
+        <div class="form-group">
+            <label for="grado_alcohol">Grado de alcohol:</label>
+            <input type="number" step="0.01" id="grado_alcohol" name="grado_alcohol" value="{{ producto.grado_alcohol }}" required>
+        </div>
+
+        <!-- Tipo de fruto -->
+        <div class="form-group">
+            <label for="tipo_fruto">Tipo de fruto:</label>
+            <input type="text" id="tipo_fruto" name="tipo_fruto" value="{{ producto.tipo_fruto }}">
+        </div>
+
+        <!-- País de origen -->
+        <div class="form-group">
+            <label for="pais_origen">País de origen:</label>
+            <input type="text" id="pais_origen" name="pais_origen" value="{{ producto.pais_origen }}">
+        </div>
+
+        <!-- Categorías principales -->
+        <div class="form-group">
+            <label>Categorías principales:</label>
+            {% for categoria in categorias_productos %}
+                <div>
+                    <input type="checkbox" class="categoria-principal" name="categorias" value="{{ categoria.id }}"
+                    {% if categoria.id in producto.categoria.all.values_list('id', flat=True) %} checked {% endif %}>
+                    <label>{{ categoria.nombre }}</label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Subcategorías -->
+        <div class="form-group">
+            <label>Subcategorías:</label>
+            <div id="subcategorias-container">
+                {% for sub in producto.subcategorias.all %}
+                    <div>
+                        <input type="checkbox" name="subcategorias" value="{{ sub.id }}" checked>
+                        <label>{{ sub.nombre }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Imagen -->
+        <div class="form-group">
+            <label for="imagen">Foto del Producto (opcional):</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*">
+            {% if producto.imagen %}
+                <p>Imagen actual: <img src="{{ producto.imagen.url }}" alt="Producto" width="100"></p>
+            {% endif %}
+        </div>
+
+        <!-- Botones -->
+        <div class="form-group botones">
+            <button type="submit" class="btn">Guardar cambios</button>
+            <a href="{% url 'catalogo:admin_lista_catalogo' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Manejar subcategorías dinámicamente
+    const subcategoriasData = {{ categorias_json|safe }};
+    const catCheckboxes = document.querySelectorAll('.categoria-principal');
+    const subContainer = document.getElementById('subcategorias-container');
+
+    function actualizarSubcategorias() {
+        subContainer.innerHTML = '';
+        catCheckboxes.forEach(c => {
+            if(c.checked && subcategoriasData[c.value]) {
+                subcategoriasData[c.value].forEach(sub => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <input type="checkbox" name="subcategorias" value="${sub.id}">
+                        <label>${sub.nombre}</label>
+                    `;
+                    subContainer.appendChild(div);
+                });
+            }
+        });
+    }
+
+    catCheckboxes.forEach(cb => cb.addEventListener('change', actualizarSubcategorias));
+</script>
+
+{% endblock %}

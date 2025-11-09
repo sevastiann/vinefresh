@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Crear Cupón{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>➕ Crear Cupón</h2>
+
+    <a href="{% url 'ventas_cupones' %}" class="btn btn-secondary mt-2">⬅ Volver</a>
+
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Código:</label>
+            <input type="text" name="codigo" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Descuento (%):</label>
+            <input type="number" name="descuento" min="1" max="100" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha de expiración:</label>
+            <input type="date" name="fecha_expiracion" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Activo:</label>
+            <select name="activo" class="form-select">
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">✅ Guardar cupón</button>
+    </form>
+</div>
+{% endblock %}

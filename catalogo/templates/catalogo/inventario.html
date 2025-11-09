@@ -1,0 +1,136 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="inventario-container">
+
+    <!-- Mini Navbar -->
+    <div class="mini-navbar">
+        <a href="#" class="activo">Productos</a>
+        <a href="#">Categorías</a>
+    </div>
+
+    <div class="main-content">
+        <!-- Sidebar de Filtros -->
+        <div class="sidebar">
+            <!-- Apartados superiores (los definirás luego) -->
+            <div class="apartado"> <!-- 1 -->
+                <!-- Contenido del apartado 1 -->
+            </div>
+            <div class="apartado"> <!-- 2 -->
+                <!-- Contenido del apartado 2 -->
+            </div>
+            <div class="apartado"> <!-- 3 -->
+                <!-- Contenido del apartado 3 -->
+            </div>
+
+            <!-- Buscador por nombre -->
+            <div class="buscador">
+                <input type="text" placeholder="Buscar por nombre">
+                <button class="btn-buscar">🔍</button>
+            </div>
+
+            <!-- Filtro por precio -->
+            <div class="filtro-precio">
+                <label><strong>Hasta:</strong> $150.000</label>
+                <div class="slider-control">
+                    <button>-</button>
+                    <input type="range" min="0" max="150000" value="150000">
+                    <button>+</button>
+                </div>
+            </div>
+
+            <!-- Otros filtros (estructura base) -->
+            <ul class="filtros-lista">
+                <li>Variedad de uva</li>
+                <li>Color</li>
+                <li>Nivel de dulzura</li>
+                <li>Cuerpo</li>
+                <li>Maridaje sugerido</li>
+            </ul>
+        </div>
+
+        <!-- Sección de productos -->
+        <div class="productos-grid">
+            <!-- Ejemplo de producto -->
+            <div class="card-producto">
+                <img src="{% static 'img/ejemplo_vino.jpg' %}" alt="Producto">
+                <h4>Nombre del Producto</h4>
+                <p class="precio">$123.000 <span class="precio-anterior">$145.000</span></p>
+                
+                <div class="acciones">
+                    <button class="btn-detalle">👁️ Detalle</button>
+                    <button class="btn-agregar">🛒 Agregar</button>
+                    <button class="btn-editar">✏️ Editar</button>
+                    <button class="btn-eliminar">🗑️ Eliminar</button>
+                </div>
+            </div>
+
+            <!-- Repite este bloque por cada producto -->
+        </div>
+    </div>
+</div>
+
+<!-- Estilos -->
+<style>
+.inventario-container { padding: 20px; background-color: #3b2f2f; color: #fff; }
+.mini-navbar { margin-bottom: 20px; }
+.mini-navbar a {
+    color: #fff; margin-right: 15px; text-decoration: none; font-weight: bold;
+    padding-bottom: 4px;
+}
+.mini-navbar a.activo { border-bottom: 2px solid #fff; }
+
+.main-content { display: flex; gap: 30px; }
+
+.sidebar { width: 250px; background-color: #2e2323; padding: 15px; border-radius: 8px; }
+
+.apartado { margin-bottom: 20px; padding: 10px; background-color: #443636; border-radius: 6px; }
+
+.buscador { display: flex; margin-bottom: 20px; }
+.buscador input {
+    flex: 1; padding: 8px; border: none; border-radius: 4px 0 0 4px;
+}
+.buscador .btn-buscar {
+    background-color: #d0a85c; border: none; padding: 0 10px; cursor: pointer;
+    border-radius: 0 4px 4px 0; color: #fff;
+}
+
+.filtro-precio { margin-bottom: 20px; }
+.slider-control { display: flex; align-items: center; gap: 8px; }
+.slider-control button {
+    background: #d0a85c; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; color: #fff;
+}
+.slider-control input[type=range] { flex: 1; }
+
+.filtros-lista { list-style: none; padding: 0; }
+.filtros-lista li {
+    margin-bottom: 10px; border-bottom: 1px solid #6b5b5b; padding-bottom: 8px;
+}
+
+.productos-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px; flex: 1;
+}
+
+.card-producto {
+    background-color: #fff; color: #000; border-radius: 6px; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between;
+}
+.card-producto img { width: 100%; height: 180px; object-fit: cover; }
+.card-producto h4 { margin: 10px; font-size: 1.1rem; }
+.precio { margin: 0 10px; font-weight: bold; }
+.precio-anterior { text-decoration: line-through; color: #888; font-size: 0.9rem; margin-left: 5px; }
+
+.acciones {
+    display: flex; justify-content: space-around;
+    background-color: #f7f2eb; padding: 10px;
+}
+.acciones button {
+    border: none; background: none; cursor: pointer;
+    font-weight: bold; color: #3b2f2f;
+}
+.acciones button:hover { color: #d0a85c; }
+</style>
+
+{% endblock %}

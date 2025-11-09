@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Eliminar Combo</h2>
+
+    <p>¿Estás seguro que deseas eliminar el combo <strong>{{ combo.nombre }}</strong>?</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a href="{% url 'catalogo:admin_lista_catalogo' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
