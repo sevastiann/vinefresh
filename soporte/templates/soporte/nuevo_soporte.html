@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Crear PQRS</h2>
+<form method="POST">
+  {% csrf_token %}
+  <label for="tipo">Tipo:</label>
+  <select name="tipo" class="form-control">
+    <option>Petición</option>
+    <option>Queja</option>
+    <option>Reclamo</option>
+    <option>Sugerencia</option>
+  </select>
+  <label for="mensaje">Mensaje:</label>
+  <textarea name="mensaje" class="form-control" required></textarea>
+  <button type="submit" class="btn btn-success mt-3">Enviar</button>
+</form>
+{% endblock %}

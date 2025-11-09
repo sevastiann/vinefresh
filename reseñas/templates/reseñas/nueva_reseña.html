@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Nueva Reseña</h2>
+<form method="POST">
+  {% csrf_token %}
+  <label>Producto:</label>
+  <select name="producto" class="form-control">
+    {% for p in productos %}
+      <option value="{{ p.id }}">{{ p.nom_producto }}</option>
+    {% endfor %}
+  </select>
+  <label>Calificación:</label>
+  <select name="calificacion" class="form-control">
+    {% for i in "12345" %}
+      <option value="{{ i }}">{{ i }} estrellas</option>
+    {% endfor %}
+  </select>
+  <label>Comentario:</label>
+  <textarea name="comentario" class="form-control"></textarea>
+  <button type="submit" class="btn btn-primary mt-3">Enviar</button>
+</form>
+{% endblock %}

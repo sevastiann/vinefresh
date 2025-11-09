@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Detalle de Reseña</h2>
+<p><strong>Producto:</strong> {{ reseña.producto.nom_producto }}</p>
+<p><strong>Usuario:</strong> {{ reseña.usuario.nombre }}</p>
+<p><strong>Calificación:</strong> ⭐{{ reseña.calificacion }}</p>
+<p><strong>Comentario:</strong> {{ reseña.comentario }}</p>
+<p><strong>Fecha:</strong> {{ reseña.fecha|date:"Y-m-d H:i" }}</p>
+{% endblock %}

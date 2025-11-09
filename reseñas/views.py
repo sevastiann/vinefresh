@@ -1,35 +1,28 @@
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from .models import Reseña
 from catalogo.models import Producto
 from usuarios.models import Usuario
 
-# Listar todas las reseñas
 def lista_reseñas(request):
-    reseñas = list(Reseña.objects.values())
-    return JsonResponse(reseñas, safe=False)
+    reseñas = Reseña.objects.select_related('producto', 'usuario').order_by('-fecha')
+    rol = request.session.get('usuario_rol', 'visitante')
+    return render(request, 'reseñas/listar_reseñas.html', {'reseñas': reseñas, 'rol': rol})
 
-# Detalle de una reseña específica
+def nueva_reseña(request):
+    if request.method == 'POST':
+        usuario_id = request.session.get('usuario_id')
+        usuario = get_object_or_404(Usuario, id=usuario_id)
+        producto_id = request.POST.get('producto')
+        calificacion = request.POST.get('calificacion')
+        comentario = request.POST.get('comentario')
+
+        producto = get_object_or_404(Producto, id=producto_id)
+        Reseña.objects.create(usuario=usuario, producto=producto, calificacion=calificacion, comentario=comentario)
+        return render(request, 'reseñas/confirmacion.html', {'mensaje': 'Reseña creada exitosamente.'})
+
+    productos = Producto.objects.all()
+    return render(request, 'reseñas/nueva_reseña.html', {'productos': productos})
+
 def detalle_reseña(request, reseña_id):
     reseña = get_object_or_404(Reseña, id=reseña_id)
-    data = {
-        "id": reseña.id,
-        "producto": reseña.producto.nom_producto,
-        "usuario": reseña.usuario.nombre_completo,
-        "calificacion": reseña.calificacion,
-        "comentario": reseña.comentario,
-        "fecha": reseña.fecha,
-    }
-    return JsonResponse(data)
-
-# Crear una nueva reseña (modo de prueba, sin formulario)
-def crear_reseña(request, producto_id, usuario_id, calificacion, comentario=""):
-    producto = get_object_or_404(Producto, id=producto_id)
-    usuario = get_object_or_404(Usuario, id=usuario_id)
-    reseña = Reseña.objects.create(
-        producto=producto,
-        usuario=usuario,
-        calificacion=calificacion,
-        comentario=comentario,
-    )
-    return JsonResponse({"mensaje": f"Reseña creada para {producto.nom_producto} por {usuario.nombre_completo}"})
+    return render(request, 'reseñas/detalle_reseña.html', {'reseña': reseña})

@@ -1,35 +1,38 @@
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Soporte
 from usuarios.models import Usuario
 
-# Listar todas las solicitudes de soporte
 def lista_soporte(request):
-    soportes = list(Soporte.objects.values())
-    return JsonResponse(soportes, safe=False)
+    rol = request.session.get('usuario_rol', 'visitante')
+    usuario_id = request.session.get('usuario_id')
 
-# Ver una solicitud específica
+    if rol == 'admin':
+        soportes = Soporte.objects.all().order_by('-fecha')
+    elif rol == 'cliente':
+        soportes = Soporte.objects.filter(usuario_id=usuario_id).order_by('-fecha')
+    else:
+        soportes = []
+
+    return render(request, 'soporte/listar_soporte.html', {'soportes': soportes, 'rol': rol})
+
+def crear_soporte(request):
+    if request.method == 'POST':
+        usuario_id = request.session.get('usuario_id')
+        usuario = get_object_or_404(Usuario, id=usuario_id)
+        tipo = request.POST.get('tipo')
+        mensaje = request.POST.get('mensaje')
+
+        Soporte.objects.create(usuario=usuario, PQRS=tipo, mensaje=mensaje)
+        return render(request, 'soporte/confirmacion.html', {'mensaje': 'Tu solicitud fue enviada con éxito.'})
+    
+    return render(request, 'soporte/nuevo_soporte.html')
+
 def detalle_soporte(request, soporte_id):
     soporte = get_object_or_404(Soporte, id=soporte_id)
-    data = {
-        "id": soporte.id,
-        "usuario": soporte.usuario.nombre_completo,
-        "tipo": soporte.PQRS,
-        "mensaje": soporte.mensaje,
-        "estado": soporte.estado,
-        "fecha": soporte.fecha,
-    }
-    return JsonResponse(data)
+    return render(request, 'soporte/detalle_soporte.html', {'soporte': soporte})
 
-# Crear una nueva solicitud
-def crear_soporte(request, usuario_id, tipo, mensaje):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
-    soporte = Soporte.objects.create(usuario=usuario, PQRS=tipo, mensaje=mensaje)
-    return JsonResponse({"mensaje": f"Soporte creado por {usuario.nombre_completo} de tipo {tipo}"})
-
-# Cambiar estado (por admin)
 def cambiar_estado_soporte(request, soporte_id, nuevo_estado):
     soporte = get_object_or_404(Soporte, id=soporte_id)
     soporte.estado = nuevo_estado
     soporte.save()
-    return JsonResponse({"mensaje": f"El soporte #{soporte.id} cambió a estado {nuevo_estado}"})
+    return redirect('soporte:lista_soporte')
