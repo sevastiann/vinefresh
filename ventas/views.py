@@ -1,9 +1,10 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from .models import CarritoCompra, Pedido, Factura, Cupon
 from catalogo.models import Producto
 from usuarios.models import Usuario
 from datetime import date
+
 
 # -----------------------------
 # CARRITO
@@ -13,7 +14,6 @@ def agregar_al_carrito(request, usuario_id, producto_id, cantidad):
     producto = get_object_or_404(Producto, id=producto_id)
 
     carrito, creado = CarritoCompra.objects.get_or_create(usuario=usuario, producto=producto)
-
     carrito.cantidad += int(cantidad)
     carrito.save()
 
@@ -57,12 +57,9 @@ def validar_cupon(request, codigo):
 # PEDIDOS
 # -----------------------------
 def crear_pedido(request, carrito_id, precio):
-    """
-    Crea un pedido a partir de un carrito.
-    El precio viene como string desde la URL, así que lo convertimos a float.
-    """
+    """Crea un pedido a partir de un carrito."""
     carrito = get_object_or_404(CarritoCompra, id=carrito_id)
-    precio = float(precio)  # ✅ Conversión necesaria si viene como string desde la URL
+    precio = float(precio)
 
     pedido = Pedido.objects.create(
         carrito=carrito,
@@ -78,3 +75,23 @@ def crear_pedido(request, carrito_id, precio):
 def ver_pedidos(request, usuario_id):
     pedidos = list(Pedido.objects.filter(carrito__usuario_id=usuario_id).values())
     return JsonResponse(pedidos, safe=False)
+
+
+
+# -----------------------------
+# FAVORITOS
+# -----------------------------
+def favoritos(request):
+    """Renderiza la página de favoritos (aunque esté vacía)."""
+    return render(request, 'core/home.html')
+
+
+def agregar_favorito(request, usuario_id, producto_id):
+    """Ejemplo de función para agregar a favoritos (sin romper si no hay modelo todavía)."""
+    try:
+        usuario = get_object_or_404(Usuario, id=usuario_id)
+        producto = get_object_or_404(Producto, id=producto_id)
+        # Si más adelante creas un modelo Favorito, aquí se guardaría.
+        return JsonResponse({"mensaje": f"{producto.nom_producto} agregado a favoritos de {usuario.nombre}"})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)

@@ -1,4 +1,6 @@
 from django.db import models
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from usuarios.models import Usuario
 from catalogo.models import Producto
 
@@ -64,3 +66,49 @@ class Pedido(models.Model):
 
     def __str__(self):
         return f"Pedido #{self.id} - {self.carrito.usuario.nombre_completo}"
+
+
+# --------------------------------------------------------
+# FAVORITOS
+# --------------------------------------------------------
+class Favorito(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='favoritos')
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name='en_favoritos')
+
+    class Meta:
+        unique_together = ('usuario', 'producto')  # evita duplicados
+
+    def __str__(self):
+        return f"{self.usuario.nombre_completo} - {self.producto.nom_producto}"
+
+
+# --------------------------------------------------------
+# VISTAS DE FAVORITOS
+# --------------------------------------------------------
+def favoritos(request):
+    """
+    Muestra la página de favoritos.
+    Si el usuario está logueado, se muestran sus productos guardados.
+    """
+    usuario_id = request.GET.get("usuario_id")
+    favoritos = []
+
+    if usuario_id:
+        favoritos = Favorito.objects.filter(usuario_id=usuario_id)
+
+    return render(request, 'ventas/favoritos.html', {'favoritos': favoritos})
+
+
+def agregar_favorito(request, usuario_id, producto_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+    producto = get_object_or_404(Producto, id=producto_id)
+
+    favorito, creado = Favorito.objects.get_or_create(usuario=usuario, producto=producto)
+
+    if not creado:
+        favorito.delete()
+        mensaje = f"{producto.nom_producto} eliminado de favoritos."
+    else:
+        mensaje = f"{producto.nom_producto} agregado a favoritos."
+
+    return JsonResponse({"mensaje": mensaje})

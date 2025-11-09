@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Mis Favoritos | VineFresh{% endblock %}
+
+{% block content %}
+<section class="py-12 bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-6 md:px-12 lg:px-20">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-green-700 mb-2">Mis Favoritos</h1>
+            <p class="text-gray-600">Aquí puedes ver los productos que marcaste como favoritos.</p>
+        </div>
+
+        <!-- Contenedor principal -->
+        <div id="favoritos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Mensaje cuando no hay favoritos -->
+            <div class="col-span-full text-center text-gray-500 py-10" id="sin-favoritos">
+                <img src="{% static 'img/empty-favorites.svg' %}" alt="Sin favoritos" class="mx-auto mb-6 w-32 opacity-70">
+                <p class="text-lg">Aún no tienes productos favoritos 💚</p>
+                <a href="{% url 'productos' %}" class="mt-4 inline-block bg-green-600 text-white py-2 px-6 rounded-lg shadow hover:bg-green-700 transition">
+                    Explorar productos
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Esto solo es una simulación para probar el diseño sin productos reales.
+    const ejemplo = false; // Cambia a true si quieres probar con un ejemplo.
+    const contenedor = document.getElementById("favoritos-container");
+    const sinFavoritos = document.getElementById("sin-favoritos");
+
+    if (ejemplo) {
+        sinFavoritos.style.display = "none";
+        contenedor.innerHTML = `
+            <div class="bg-white shadow-md rounded-2xl p-4 flex flex-col items-center text-center">
+                <img src="{% static 'img/producto-ejemplo.jpg' %}" alt="Producto ejemplo" class="w-32 h-32 object-cover mb-4 rounded-xl">
+                <h3 class="font-semibold text-lg text-gray-800">Producto de ejemplo</h3>
+                <p class="text-green-700 font-medium mt-2">$25.000</p>
+                <button class="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">Eliminar</button>
+            </div>
+        `;
+    }
+});
+</script>
+{% endblock %}
