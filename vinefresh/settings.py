@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'soporte',
     'ventas',
 
+
+    'django_extensions',  # para usar shell_plus
+
 ]
 
 

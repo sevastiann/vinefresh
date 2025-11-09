@@ -99,7 +99,7 @@
         <img src="{% static 'img/vinefresh.PNG' %}" alt="logo" width="150px">
         <h1 class="login-h1">Iniciar Sesión</h1>
 
-        <form method="post" action="{% url 'login' %}">
+        <form method="post" action="{% url 'usuarios:login' %}">
             {% csrf_token %}
             <label class="login-label" for="usuario">Correo o Usuario:</label>
             <input class="login-input" type="text" id="usuario" name="usuario" placeholder="Introduce tu correo o usuario" required>
@@ -115,14 +115,14 @@
 
             <!-- ✅ Enlace corregido -->
             <p class="olvido">¿Olvidaste tu contraseña? 
-                <a href="{% url 'olvidar_contrasena' %}">Pulsa aquí</a>
+                <a href="{% url 'usuarios:olvidar_contrasena' %}">Pulsa aquí</a>
             </p>
 
             <p class="registro">¿No tienes cuenta? 
-                <a href="{% url 'registro' %}">Regístrate aquí</a>
+                <a href="{% url 'usuarios:registro' %}">Regístrate aquí</a>
             </p>
 
-            <a class="volver" href="{% url 'home' %}">Volver al inicio</a>
+            <a class="volver" href="{% url 'core:home' %}">Volver al inicio</a>
         </form>
     </div>
 </body>

@@ -1,51 +1,86 @@
 {% extends 'core/base.html' %}
-{% load static %}
-
-{% block title %}Términos y Condiciones | VineFresh{% endblock %}
+{% block title %}Política de Privacidad y Términos | VineFresh{% endblock %}
 
 {% block content %}
-<section class="terms-section py-10">
-    <div class="container mx-auto px-6 md:px-12 lg:px-20">
-        <div class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-green-700 mb-2">Términos y Condiciones</h1>
-            <p class="text-gray-600">Última actualización: Noviembre de 2025</p>
-        </div>
+<section class="policy-section py-10">
+  <div class="container mx-auto px-6 md:px-12 lg:px-20">
+    <!-- Política de Privacidad -->
+    <h1 class="text-4xl font-bold text-green-700 mb-4">Política de Privacidad</h1>
+    <p class="text-gray-700 mb-6">
+      En <strong>VineFresh</strong> valoramos tu privacidad. Esta política explica cómo recopilamos,
+      usamos y protegemos tus datos personales.
+    </p>
 
-        <div class="terms-content text-gray-800 leading-relaxed space-y-6">
-            <p>Bienvenido a <strong>VineFresh</strong>. Al acceder y utilizar nuestro sitio web, usted acepta cumplir con los siguientes términos y condiciones. Le recomendamos leer este documento detenidamente antes de usar nuestros servicios.</p>
+    <h2 class="text-2xl font-semibold text-green-700">1. Datos que recopilamos</h2>
+    <p class="mb-4">
+      Recopilamos información personal como nombre, correo electrónico, dirección y teléfono
+      cuando te registras o realizas una compra.
+    </p>
 
-            <h2 class="text-2xl font-semibold text-green-700">1. Uso del sitio</h2>
-            <p>El usuario se compromete a hacer un uso adecuado y responsable de los contenidos, productos y servicios ofrecidos en este sitio web. Queda prohibido el uso con fines ilícitos, fraudulentos o que puedan dañar la imagen de VineFresh o de terceros.</p>
+    <h2 class="text-2xl font-semibold text-green-700">2. Uso de la información</h2>
+    <p class="mb-4">
+      Usamos tus datos para procesar pedidos, brindar soporte y enviarte información relevante
+      sobre nuestros productos y promociones.
+    </p>
 
-            <h2 class="text-2xl font-semibold text-green-700">2. Propiedad intelectual</h2>
-            <p>Todos los contenidos, imágenes, logotipos, textos y diseños presentes en el sitio son propiedad exclusiva de VineFresh o de sus respectivos autores con licencia. Queda prohibida su reproducción, distribución o modificación sin autorización previa por escrito.</p>
+    <h2 class="text-2xl font-semibold text-green-700">3. Protección de datos</h2>
+    <p class="mb-4">
+      Implementamos medidas técnicas y organizativas para proteger tu información frente a accesos
+      no autorizados o pérdidas accidentales.
+    </p>
 
-            <h2 class="text-2xl font-semibold text-green-700">3. Compras y pedidos</h2>
-            <p>Los precios, descripciones y disponibilidad de los productos pueden variar sin previo aviso. VineFresh se reserva el derecho de rechazar o cancelar pedidos en caso de errores en la información o de comportamiento sospechoso por parte del usuario.</p>
+    <h2 class="text-2xl font-semibold text-green-700">4. Política de cookies</h2>
+    <p class="mb-4">
+      Este sitio utiliza cookies para mejorar tu experiencia de navegación y analizar el tráfico.
+      Puedes configurar o rechazar el uso de cookies desde tu navegador.
+    </p>
 
-            <h2 class="text-2xl font-semibold text-green-700">4. Envíos y devoluciones</h2>
-            <p>Los tiempos de entrega pueden variar según la ubicación. VineFresh no será responsable por demoras causadas por terceros o por fuerza mayor. Las devoluciones se aceptarán conforme a nuestra política de reembolsos publicada en el sitio.</p>
+    <h2 class="text-2xl font-semibold text-green-700">5. Contacto</h2>
+    <p class="mb-8">
+      Si tienes dudas sobre nuestras políticas, escríbenos a 
+      <a href="mailto:atencion@vinefresh.com" class="text-green-600 underline hover:text-green-800">
+        atencion@vinefresh.com
+      </a>.
+    </p>
 
-            <h2 class="text-2xl font-semibold text-green-700">5. Cuentas de usuario</h2>
-            <p>El usuario es responsable de mantener la confidencialidad de su cuenta y contraseña, así como de todas las actividades que ocurran bajo su cuenta. VineFresh se reserva el derecho de suspender cuentas que incumplan las normas de uso.</p>
+    <!-- Términos y Condiciones -->
+    <h1 class="text-4xl font-bold text-green-700 mb-4 mt-10">Términos y Condiciones</h1>
+    <p class="text-gray-600 mb-6">Última actualización: Noviembre de 2025</p>
 
-            <h2 class="text-2xl font-semibold text-green-700">6. Protección de datos personales</h2>
-            <p>El tratamiento de los datos personales se realizará conforme a nuestra <a href="{% url 'politica_privacidad' %}" class="text-green-600 underline hover:text-green-800">Política de Privacidad</a>, cumpliendo con la Ley 1581 de 2012 y el Decreto 1377 de 2013 sobre protección de datos en Colombia.</p>
+    <div class="terms-content text-gray-800 leading-relaxed space-y-6">
+        <p>Bienvenido a <strong>VineFresh</strong>. Al acceder y utilizar nuestro sitio web, usted acepta cumplir con los siguientes términos y condiciones.</p>
 
-            <h2 class="text-2xl font-semibold text-green-700">7. Limitación de responsabilidad</h2>
-            <p>VineFresh no se hace responsable de posibles daños directos o indirectos derivados del uso del sitio, interrupciones del servicio o errores en los contenidos publicados.</p>
+        <h2 class="text-2xl font-semibold text-green-700">1. Uso del sitio</h2>
+        <p>El usuario se compromete a hacer un uso adecuado y responsable de los contenidos, productos y servicios ofrecidos en este sitio web.</p>
 
-            <h2 class="text-2xl font-semibold text-green-700">8. Modificaciones</h2>
-            <p>Nos reservamos el derecho de actualizar estos términos en cualquier momento. Cualquier cambio será publicado en esta misma página y entrará en vigor desde su publicación.</p>
+        <h2 class="text-2xl font-semibold text-green-700">2. Propiedad intelectual</h2>
+        <p>Todos los contenidos, imágenes, logotipos, textos y diseños son propiedad exclusiva de VineFresh o de sus respectivos autores.</p>
 
-            <h2 class="text-2xl font-semibold text-green-700">9. Ley aplicable</h2>
-            <p>Estos Términos y Condiciones se rigen por las leyes de la República de Colombia. Cualquier controversia será resuelta ante los tribunales competentes de la ciudad de Bogotá D.C.</p>
+        <h2 class="text-2xl font-semibold text-green-700">3. Compras y pedidos</h2>
+        <p>Los precios, descripciones y disponibilidad de los productos pueden variar sin previo aviso.</p>
 
-            <h2 class="text-2xl font-semibold text-green-700">10. Contacto</h2>
-            <p>Si tiene preguntas sobre estos términos, puede escribirnos a:<br>
-            <strong>📧 atencion@vinefresh.com</strong><br>
-            <strong>📞 (601) 544 5321</strong></p>
-        </div>
+        <h2 class="text-2xl font-semibold text-green-700">4. Envíos y devoluciones</h2>
+        <p>Los tiempos de entrega pueden variar según la ubicación y VineFresh no será responsable por demoras de terceros.</p>
+
+        <h2 class="text-2xl font-semibold text-green-700">5. Cuentas de usuario</h2>
+        <p>El usuario es responsable de mantener la confidencialidad de su cuenta y contraseña.</p>
+
+        <h2 class="text-2xl font-semibold text-green-700">6. Protección de datos personales</h2>
+        <p>El tratamiento de los datos personales se realizará conforme a nuestra 
+        <a href="{% url 'core:terminos' %}" class="text-green-600 underline hover:text-green-800">Política de Privacidad</a>.</p>
+
+        <h2 class="text-2xl font-semibold text-green-700">7. Limitación de responsabilidad</h2>
+        <p>VineFresh no se hace responsable de posibles daños directos o indirectos derivados del uso del sitio.</p>
+
+        <h2 class="text-2xl font-semibold text-green-700">8. Modificaciones</h2>
+        <p>Nos reservamos el derecho de actualizar estos términos en cualquier momento.</p>
+
+        <h2 class="text-2xl font-semibold text-green-700">9. Ley aplicable</h2>
+        <p>Estos Términos y Condiciones se rigen por las leyes de la República de Colombia.</p>
+
+        <h2 class="text-2xl font-semibold text-green-700">10. Contacto</h2>
+        <p>Si tiene preguntas sobre estos términos, puede escribirnos a: <strong>📧 atencion@vinefresh.com</strong></p>
     </div>
+  </div>
 </section>
 {% endblock %}

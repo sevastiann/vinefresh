@@ -65,7 +65,7 @@ def login_view(request):
                 request.session['usuario_id'] = user.id
                 request.session['usuario_nombre'] = user.nombre_usuario
                 request.session['usuario_rol'] = user.rol
-                return redirect('home')
+                return redirect('core:home')
             else:
                 mensaje = 'Usuario o contraseña incorrectos.'
     return render(request, 'usuarios/login.html', {'mensaje': mensaje})
@@ -75,7 +75,7 @@ def login_view(request):
 # -------------------------
 def logout_view(request):
     request.session.flush()
-    return redirect('login')
+    return redirect('usuarios:login')
 
 # -------------------------
 # REGISTRO CLIENTE
@@ -288,16 +288,21 @@ def eliminar_usuario(request, id):
 
 def gestion_usuarios(request):
     if not usuario_logueado(request) or not es_admin(request):
-        return redirect('home')
+        return redirect('core:home')
 
-    usuarios = Usuario.objects.filter(solicitud_eliminacion=True).order_by('apellido')
+    # Traer todos los usuarios (o aplica tu filtro de roles)
+    usuarios = Usuario.objects.all().order_by('apellido')
 
     if request.method == 'POST':
         usuario_id = request.POST.get('usuario_id')
-        usuario = Usuario.objects.filter(id=usuario_id, solicitud_eliminacion=True).first()
+        usuario = Usuario.objects.filter(id=usuario_id).first()
         if usuario:
             usuario.delete()
             messages.success(request, f'Usuario {usuario.nombre_usuario} eliminado correctamente.')
-        return redirect('gestion_usuarios')
+        return redirect('usuarios:gestion_usuarios')
 
     return render(request, 'usuarios/gestion_usuarios.html', {'usuarios': usuarios})
+
+def enviar_invitacion_view(request):
+    # lógica para el formulario
+    return render(request, 'usuarios/enviar_invitacion.html')

@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">
         <!-- Logo -->
-        <a class="navbar-brand" href="{% url 'home' %}">
+        <a class="navbar-brand" href="{% url 'core:home' %}">
             <img src="{% static 'img/vinefresh.PNG' %}" alt="logo" width="100px">
         </a>
 
@@ -18,42 +18,52 @@
             <!-- Sección izquierda -->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item"><a class="nav-link" href="">Catálogo</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'nosotros' %}">Nosotros</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'contacto' %}">Contáctanos</a></li>
-                <li class="nav-item"><a class="nav-link" href="">Carrito</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'core:nosotros' %}">Nosotros</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'core:terminos' %}">Términos</a></li>
+                <li class="nav-item"><a class="nav-link" href="">Reseñas</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'core:contacto' %}">Contáctanos</a></li>
             </ul>
 
-            <!-- Sección derecha: icono de usuario -->
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
-                       role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="{% static 'img/user_icon.png' %}" alt="Usuario" width="25" class="mr-1">
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                        {% if request.session.usuario_id %}
-                            {% if request.session.usuario_rol == 'admin' %}
-                                <a class="dropdown-item" href="">Gestión de Usuarios</a>
-                                <a class="dropdown-item" href="">Gestión de Pedidos</a>
-                                <a class="dropdown-item" href="">Gestión de Productos</a>
-                                <a class="dropdown-item" href="">Soporte</a>
-                            {% else %}
-                                <a class="dropdown-item" href="">Configuración de Perfil</a>
-                                <a class="dropdown-item" href="">Historial de Compras</a>
-                                <a class="dropdown-item" href="">Soporte</a>
-                                <a class="dropdown-item" href="">Favoritos</a>
-                            {% endif %}
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="{% url 'logout' %}">
-                                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-                            </a>
-                        {% else %}
-                            <a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a>
-                            <a class="dropdown-item" href="{% url 'registro' %}">Registrarse</a>
-                        {% endif %}
-                    </div>
-                </li>
-            </ul>
+<!-- Sección derecha: carrito y usuario -->
+<ul class="navbar-nav ml-auto align-items-center">
+    <!-- Icono de carrito -->
+    <li class="nav-item mr-3">
+        <a class="nav-link" href="">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+        </a>
+    </li>
+
+    <!-- Dropdown de usuario -->
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+           role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'img/user_icon.png' %}" alt="Usuario" width="25" class="mr-1">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            {% if request.session.usuario_id %}
+                {% if request.session.usuario_rol == 'admin' %}
+                    <a class="dropdown-item" href="{% url 'usuarios:gestion_usuarios' %}">Gestión de Usuarios</a>
+                    <a class="dropdown-item" href="">Gestión de Pedidos</a>
+                    <a class="dropdown-item" href="{% url 'usuarios:enviar_invitacion' %}">Invitar Admin</a>
+                    <a class="dropdown-item" href="">Soporte</a>
+                {% else %}
+                    <a class="dropdown-item" href="">Configuración de Perfil</a>
+                    <a class="dropdown-item" href="">Historial de Compras</a>
+                    <a class="dropdown-item" href="">Soporte</a>
+                    <a class="dropdown-item" href="">Favoritos</a>
+                {% endif %}
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-danger" href="{% url 'usuarios:logout' %}">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                </a>
+            {% else %}
+                <a class="dropdown-item" href="{% url 'usuarios:login' %}">Iniciar sesión</a>
+                <a class="dropdown-item" href="{% url 'usuarios:registro' %}">Registrarse</a>
+            {% endif %}
+        </div>
+    </li>
+</ul>
+
         </div>
     </div>
 </nav>

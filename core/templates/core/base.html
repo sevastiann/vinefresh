@@ -14,31 +14,114 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-    <!-- Favicon (opcional) -->
+    <!-- Favicon -->
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
+
+    <style>
+      /* Banner de cookies */
+      #cookie-banner {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #fff8f5;
+        border-top: 3px solid #7b1f1f;
+        box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+        padding: 20px;
+        z-index: 9999;
+        font-family: 'Georgia', serif;
+        color: #3e2723;
+      }
+      #cookie-banner p {
+        margin: 0 0 10px 0;
+        font-size: 1.1em;
+      }
+      #cookie-banner a {
+        color: #7b1f1f;
+        text-decoration: underline;
+        font-weight: bold;
+      }
+      #cookie-banner button {
+        margin-right: 10px;
+        padding: 8px 16px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      #cookie-banner .btn-accept {
+        background-color: #7b1f1f;
+        color: #fff;
+      }
+      #cookie-banner .btn-reject {
+        background-color: #b08b57;
+        color: #fff;
+      }
+      #cookie-banner .btn-accept:hover {
+        background-color: #5e1010;
+      }
+      #cookie-banner .btn-reject:hover {
+        background-color: #9c7a43;
+      }
+    </style>
 </head>
 
 <body>
-
-    <!-- Navbar global -->
     {% include 'core/navbar.html' %}
 
-    <!-- Contenido dinámico de cada página -->
+    <!-- Banner de cookies solo para visitantes no registrados -->
+    {% if not request.user.is_authenticated %}
+    <div id="cookie-banner">
+      <p>
+        🍪 <strong>VineFresh</strong> utiliza cookies para mejorar tu experiencia, analizar el tráfico y ofrecer contenido personalizado.
+        Puedes aceptar su uso o rechazarlo si prefieres no compartir tu información.
+        <a href="{% url 'core:privacidad' %}">Leer más sobre nuestra política de privacidad</a>.
+      </p>
+      <div>
+        <button id="accept-cookies" class="btn-accept">Aceptar</button>
+        <button id="reject-cookies" class="btn-reject">Rechazar</button>
+      </div>
+    </div>
+    {% endif %}
+
     <main class="main-content py-4">
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer global -->
     {% include 'core/footer.html' %}
 
-    <!-- Scripts globales -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const banner = document.getElementById('cookie-banner');
+        const btnAccept = document.getElementById('accept-cookies');
+        const btnReject = document.getElementById('reject-cookies');
+
+        if (banner && !localStorage.getItem('cookiesDecision')) {
+          banner.style.display = 'flex';
+        }
+
+        if (btnAccept) {
+          btnAccept.addEventListener('click', () => {
+            localStorage.setItem('cookiesDecision', 'accepted');
+            banner.style.display = 'none';
+            console.log("Cookies aceptadas ✅");
+          });
+        }
+
+        if (btnReject) {
+          btnReject.addEventListener('click', () => {
+            localStorage.setItem('cookiesDecision', 'rejected');
+            banner.style.display = 'none';
+            console.log("Cookies rechazadas ❌");
+          });
+        }
+      });
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bloque de scripts personalizados por página -->
-    {% block scripts %}
-    {% endblock %}
-
+    {% block scripts %}{% endblock %}
 </body>
 </html>

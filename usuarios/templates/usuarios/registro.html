@@ -194,7 +194,7 @@
         <div class="step" id="step4">4</div>
     </div>
 
-    <form method="post" action="{% url 'registro' %}" id="registrationForm">
+    <form method="post" action="{% url 'usuarios:registro' %}" id="registrationForm">
         {% csrf_token %}
 
         <!-- SECCIÓN 1 -->
@@ -271,7 +271,7 @@
         </div>
 
         <div class="form-home-btn">
-            <a href="{% url 'home' %}" class="btn btn-secondary">Volver a Home</a>
+            <a href="{% url 'core:home' %}" class="btn btn-secondary">Volver a Home</a>
         </div>
     </form>
 
@@ -297,7 +297,7 @@ const goToLoginBtn = document.getElementById('goToLoginBtn');
 let currentStep = 0;
 
 goToLoginBtn.addEventListener('click', () => {
-    window.location.href = "{% url 'login' %}";
+    window.location.href = "{% url 'usuarios:login' %}";
 });
 
 function showStep(step) {
@@ -339,7 +339,7 @@ registrationForm.addEventListener('submit', async function(e) {
     formData.append('password', pass1);
 
     try {
-        const response = await fetch("{% url 'registro' %}", {
+        const response = await fetch("{% url 'usuarios:registro' %}", {
             method: "POST",
             body: formData,
         });
@@ -352,7 +352,7 @@ registrationForm.addEventListener('submit', async function(e) {
             message.textContent = '✅ ' + data.message;
             successSection.style.display = 'block';
             setTimeout(() => {
-                window.location.href = "{% url 'login' %}";
+                window.location.href = "{% url 'usuarios:login' %}";
             }, 2000);
         } else {
             message.style.color = 'red';

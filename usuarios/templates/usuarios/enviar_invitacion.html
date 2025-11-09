@@ -1,70 +1,22 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Enviar invitación de administrador</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1b5e20, #66bb6a);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .form-card {
-            background: rgba(255,255,255,0.1);
-            padding: 40px;
-            border-radius: 20px;
-            width: 400px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-        }
-        h1 {
-            margin-bottom: 25px;
-            font-size: 1.8em;
-        }
-        input[type="email"] {
-            width: 90%;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        button {
-            background: white;
-            color: #1b5e20;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover {
-            background: #e8f5e9;
-        }
-        a {
-            color: #e0f2f1;
-            display: block;
-            margin-top: 15px;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="form-card">
-        <h1>Enviar invitación de administrador</h1>
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Enviar invitación de administrador | VineFresh{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="form-card p-4 rounded shadow" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); max-width: 400px; width: 100%;">
+        <h1 class="text-center mb-4" style="color: #e0f2f1;">Enviar invitación de administrador</h1>
         <form method="POST">
             {% csrf_token %}
-            <input type="email" name="email" placeholder="Correo electrónico" required>
-            <button type="submit">Enviar invitación</button>
+            <input type="email" name="email" placeholder="Correo electrónico" required class="form-control mb-3">
+            <button type="submit" class="btn btn-light btn-block font-weight-bold">Enviar invitación</button>
         </form>
-        <a href="{% url 'admin_dashboard' %}">⬅ Volver al panel</a>
+        <!-- Enlace corregido: a la gestión de usuarios en lugar de admin_dashboard -->
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Scripts personalizados si se necesitan -->
+{% endblock %}
