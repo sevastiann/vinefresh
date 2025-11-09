@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Catálogo - VineFresh</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Icono -->
+    <link href="{% static 'catalogo/img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Iconos -->
+    <link href="{% static 'catalogo/lib/flaticon/font/flaticon.css' %}" rel="stylesheet">
+
+    <!-- Librerías -->
+    <link href="{% static 'catalogo/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- CSS -->
+    <link href="{% static 'catalogo/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Spinner (opcional) -->
+    <div id="spinner" class="show">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Navbar -->
+    {% include 'core/navbar.html' %}
+
+    <!-- Encabezado -->
+    <div class="container-fluid page-header py-5">
+        <div class="container py-5 text-center">
+            <h1 class="display-3 text-white">Catálogo</h1>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container py-5">
+
+        <div class="row g-5">
+            <!-- Sidebar filtros -->
+            <div class="col-lg-3">
+                <div class="bg-light rounded p-4 mb-4">
+                    <h4 class="mb-3">Filtros</h4>
+
+                    <form method="GET">
+
+                        <!-- País -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">País</label>
+                            <select name="pais" class="form-select">
+                                <option value="">Todos</option>
+                                <option>Argentina</option>
+                                <option>Chile</option>
+                                <option>España</option>
+                                <option>Italia</option>
+                                <option>Francia</option>
+                            </select>
+                        </div>
+
+                        <!-- Color -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Color</label>
+                            <select name="color" class="form-select">
+                                <option value="">Todos</option>
+                                <option>Tinto</option>
+                                <option>Blanco</option>
+                                <option>Rosado</option>
+                            </select>
+                        </div>
+
+                        <!-- Dulzura -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Dulzura</label>
+                            <select name="dulzura" class="form-select">
+                                <option value="">Todos</option>
+                                <option>Seco</option>
+                                <option>Dulce</option>
+                                <option>Semi-seco</option>
+                            </select>
+                        </div>
+
+                        <!-- Cuerpo -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Cuerpo</label>
+                            <select name="cuerpo" class="form-select">
+                                <option value="">Todos</option>
+                                <option>Ligero</option>
+                                <option>Medio</option>
+                                <option>Robusto</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-dark w-100">Aplicar filtros</button>
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Productos -->
+            <div class="col-lg-9">
+
+                <div class="row g-4">
+                    {% for producto in productos %}
+                    <div class="col-md-4 col-sm-6">
+                        <div class="product-card p-3 rounded shadow-sm">
+                            <img src="{{ producto.imagen.url }}" class="img-fluid mb-3 rounded" alt="{{ producto.nom_producto }}">
+
+                            <h6 class="fw-bold">{{ producto.nom_producto }}</h6>
+                            <p class="mb-1 text-muted">{{ producto.pais_origen }}</p>
+
+                            <div class="d-flex justify-content-between mt-2">
+                                <span class="fw-bold">${{ producto.precio_unid }}</span>
+                                <a href="{% url 'producto_detalle' producto.id %}" class="btn btn-sm btn-outline-dark">Ver más</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-center">No hay productos disponibles.</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Paginación -->
+                {% if productos.has_other_pages %}
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if productos.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ productos.previous_page_number }}">Anterior</a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in productos.paginator.page_range %}
+                        <li class="page-item {% if productos.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+
+                        {% if productos.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ productos.next_page_number }}">Siguiente</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    {% include 'core/footer.html' %}
+
+    <!-- Scripts -->
+    <script src="{% static 'catalogo/lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'catalogo/lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'catalogo/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'catalogo/js/main.js' %}"></script>
+
+</body>
+</html>

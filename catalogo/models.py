@@ -1,16 +1,6 @@
 from django.db import models
 
-class Inventario(models.Model):
-    cantidad = models.IntegerField()
-    stock_min = models.IntegerField()
-    stock_max = models.IntegerField()
-
-    def __str__(self):
-        return f"Inventario #{self.id} - Cantidad: {self.cantidad}"
-
-
 class Categoria(models.Model):
-    inventario = models.ForeignKey(Inventario, on_delete=models.CASCADE)
     color = models.CharField(max_length=50)
     azucar = models.CharField(max_length=50)
     gas_carbonico = models.CharField(max_length=50)
