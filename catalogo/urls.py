@@ -1,9 +1,21 @@
 from django.urls import path
 from . import views
 
+app_name = 'catalogo'
+
 urlpatterns = [
-    path('', views.lista_productos, name='lista_productos'),
-    path('detalle/<int:producto_id>/', views.detalle_producto, name='detalle_producto'),
-    path('categorias/', views.lista_categorias, name='lista_categorias'),
-    path('combos/', views.lista_combos, name='lista_combos'),
+    # Inventario para administradores
+    path('inventario/', views.inventario, name='inventario'),
+    path('agregar-categoria/', views.agregar_categoria, name='agregar_categoria'),
+    path('eliminar-categoria/', views.eliminar_categoria, name='eliminar_categoria'),
+    path('editar-categoria/', views.editar_categoria, name='editar_categoria'),
+
+    
+    #path('sidebar/', views.sidebar, name='sidebar'),
+
+    # Catálogo para clientes
+    #path('cliente/', views.catalogo_cliente, name='catalogo_cliente'),
+
+    # Catálogo público (sin login)
+    #path('publico/', views.catalogo_publico, name='catalogo_publico'),
 ]

@@ -1,0 +1,184 @@
+<!-- 🗑️ Modal Eliminar Subcategoría -->
+<div id="modalEliminarSubcategoria" class="modal-overlay">
+    <div class="modal-content">
+        <span id="cerrarModalEliminar" class="cerrar-modal">&times;</span>
+        <h2>Eliminar Subcategoría</h2>
+
+        <form method="POST" action="{% url 'catalogo:eliminar_subcategoria' %}">
+            {% csrf_token %}
+
+            <!-- Nivel 1: Sección -->
+            <div class="form-group">
+                <label for="seccionEliminar">Sección:</label>
+                <select id="seccionEliminar" name="seccion" required>
+                    <option value="">-- Selecciona una sección --</option>
+                    <option value="productos">Productos</option>
+                    <option value="combos">Combos</option>
+                </select>
+            </div>
+
+            <!-- Nivel 2: Categoría principal -->
+            <div class="form-group" id="categoria-container-eliminar" style="display:none;">
+                <label for="categoriaEliminar">Categoría principal:</label>
+                <select id="categoriaEliminar" name="categoria_principal" required></select>
+            </div>
+
+            <!-- Nivel 3: Subcategoría a eliminar -->
+            <div class="form-group" id="subcategoria-container-eliminar" style="display:none;">
+                <label for="subcategoriaEliminar">Subcategoría:</label>
+                <select id="subcategoriaEliminar" name="subcategoria_id" required></select>
+            </div>
+
+            <div class="botones-modal">
+                <button type="submit" class="btn-eliminar">Eliminar</button>
+                <button type="button" id="cerrarModalEliminar2" class="btn-cancelar">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 🎨 Estilos -->
+<style>
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: #fff;
+    color: #333;
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    position: relative;
+}
+.cerrar-modal {
+    position: absolute;
+    top: 10px; right: 15px;
+    cursor: pointer;
+    font-size: 1.4em;
+    color: #888;
+}
+.cerrar-modal:hover { color: #000; }
+.btn-eliminar {
+    background: #a12a2a;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn-eliminar:hover { background: #7e1e1e; }
+.btn-cancelar {
+    background: #aaa; color: #fff;
+    border: none; padding: 8px 12px;
+    border-radius: 5px; cursor: pointer;
+}
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+.form-group select {
+    width: 100%; padding: 8px;
+    border: 1px solid #ccc; border-radius: 5px;
+}
+.botones-modal {
+    display: flex; justify-content: flex-end; gap: 10px;
+}
+</style>
+
+<!-- ⚙️ Script -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const abrirEliminar = document.getElementById("abrirModalEliminar");
+    const modalEliminar = document.getElementById("modalEliminarSubcategoria");
+    const cerrarEliminar = document.getElementById("cerrarModalEliminar");
+    const cerrarEliminar2 = document.getElementById("cerrarModalEliminar2");
+
+    const seccionEliminar = document.getElementById("seccionEliminar");
+    const categoriaSelectEliminar = document.getElementById("categoriaEliminar");
+    const subcategoriaSelectEliminar = document.getElementById("subcategoriaEliminar");
+    const categoriaContainerEliminar = document.getElementById("categoria-container-eliminar");
+    const subcategoriaContainerEliminar = document.getElementById("subcategoria-container-eliminar");
+
+    // Abrir / cerrar modal
+    if (abrirEliminar && modalEliminar) {
+        abrirEliminar.onclick = () => modalEliminar.style.display = "flex";
+        cerrarEliminar.onclick = () => modalEliminar.style.display = "none";
+        cerrarEliminar2.onclick = () => modalEliminar.style.display = "none";
+    }
+    window.onclick = e => { if (e.target === modalEliminar) modalEliminar.style.display = "none"; };
+
+    // Cargar categorías desde Django
+    const categoriasData = JSON.parse('{{ categorias_json|escapejs }}');
+    const subcategoriasData = JSON.parse('{{ subcategorias_json|escapejs }}');
+
+    // Paso 1: Sección → Categorías principales
+    seccionEliminar.addEventListener('change', () => {
+        const seccion = seccionEliminar.value;
+        categoriaSelectEliminar.innerHTML = '';
+        subcategoriaSelectEliminar.innerHTML = '';
+        subcategoriaContainerEliminar.style.display = 'none';
+
+        if (!seccion) {
+            categoriaContainerEliminar.style.display = 'none';
+            return;
+        }
+
+        categoriaContainerEliminar.style.display = 'block';
+        const defaultOption = document.createElement('option');
+        defaultOption.text = '-- Selecciona una categoría principal --';
+        defaultOption.value = '';
+        categoriaSelectEliminar.appendChild(defaultOption);
+
+        if (categoriasData[seccion]) {
+            categoriasData[seccion].forEach(([valor, nombre]) => {
+                const opt = document.createElement('option');
+                opt.value = valor;
+                opt.text = nombre;
+                categoriaSelectEliminar.appendChild(opt);
+            });
+        }
+    });
+
+    // Paso 2: Categoría principal → Subcategorías reales
+    categoriaSelectEliminar.addEventListener('change', () => {
+        const seccion = seccionEliminar.value;
+        const categoria = categoriaSelectEliminar.value;
+        subcategoriaSelectEliminar.innerHTML = '';
+
+        if (!categoria) {
+            subcategoriaContainerEliminar.style.display = 'none';
+            return;
+        }
+
+        subcategoriaContainerEliminar.style.display = 'block';
+        const defaultOption = document.createElement('option');
+        defaultOption.text = '-- Selecciona una subcategoría --';
+        defaultOption.value = '';
+        subcategoriaSelectEliminar.appendChild(defaultOption);
+
+        const subcats = subcategoriasData.filter(
+            s => s.seccion === seccion && s.categoria_principal === categoria
+        );
+
+        if (subcats.length > 0) {
+            subcats.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.text = s.nombre;
+                subcategoriaSelectEliminar.appendChild(opt);
+            });
+        } else {
+            const noOpt = document.createElement('option');
+            noOpt.text = '(No hay subcategorías disponibles)';
+            noOpt.disabled = true;
+            subcategoriaSelectEliminar.appendChild(noOpt);
+        }
+    });
+});
+</script>

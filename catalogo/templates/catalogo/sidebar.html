@@ -1,0 +1,89 @@
+<!-- catalogo/sidebar.html -->
+<div class="sidebar">
+    <!-- 🔧 Botones administrativos -->
+    <div class="apartado admin-botones">
+        <button id="abrirModal" class="btn-agregar-categoria">➕ Agregar Categoría</button>
+        <button id="abrirModalEditar" class="btn-editar-categoria">✏️ Editar Categoría</button>
+        <button id="abrirModalEliminar" class="btn-eliminar-categoria">🗑️ Eliminar Categoría</button>
+
+    </div>
+
+    <!-- 🔍 Buscador -->
+    <div class="buscador">
+        <input type="text" placeholder="Buscar por nombre...">
+        <button class="btn-buscar">🔍</button>
+    </div>
+
+    <!-- 💰 Filtro de precio -->
+    <div class="filtro-precio">
+        <label>Hasta: $150.000</label>
+        <div class="slider-control">
+            <button>-</button>
+            <input type="range" min="0" max="150000" value="75000">
+            <button>+</button>
+        </div>
+    </div>
+
+    <!-- 🧩 Filtros dinámicos (categorías con subcategorías) -->
+    <ul class="filtros-lista">
+        {% for categoria in categorias %}
+            <li>
+                <strong>{{ categoria.nombre }}</strong>
+                <select>
+                    <option value="">Seleccionar...</option>
+                    {% for sub in categoria.subcategorias.all %}
+                        <option value="{{ sub.id }}">{{ sub.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </li>
+        {% empty %}
+            <li>No hay categorías registradas aún.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- 🎨 Estilos opcionales -->
+<style>
+.sidebar {
+    background-color: #fffaf2;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.admin-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+.btn-agregar-categoria, .btn-editar-categoria, .btn-eliminar-categoria {
+    background: #d0a85c;
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-agregar-categoria:hover,
+.btn-editar-categoria:hover,
+.btn-eliminar-categoria:hover {
+    background: #b78e4e;
+}
+.filtros-lista {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+.filtros-lista li {
+    margin-bottom: 10px;
+}
+.filtros-lista select {
+    width: 100%;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff7f0;
+}
+</style>

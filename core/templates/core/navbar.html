@@ -17,7 +17,25 @@
         <div class="collapse navbar-collapse" id="navbarContent">
             <!-- Sección izquierda -->
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="">Catálogo</a></li>
+{% if request.session.usuario_id %}
+    {% if request.session.usuario_rol == 'admin' %}
+        <!-- Si el usuario es admin -->
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'catalogo:inventario' %}">Inventario</a>
+        </li>
+    {% elif request.session.usuario_rol == 'cliente' %}
+        <!-- Si es cliente -->
+        <li class="nav-item">
+            <a class="nav-link" href="">Catálogo</a>
+        </li>
+    {% endif %}
+{% else %}
+    <!-- Si no hay sesión activa -->
+    <li class="nav-item">
+        <a class="nav-link" href="">Catálogo</a>
+    </li>
+{% endif %}
+
                 <li class="nav-item"><a class="nav-link" href="{% url 'core:nosotros' %}">Nosotros</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'core:terminos' %}">Términos</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'reseñas:lista_reseñas' %}">Reseñas</a></li>

@@ -4,133 +4,256 @@
 {% block content %}
 <div class="inventario-container">
 
-    <!-- Mini Navbar -->
+<!-- Mini Navbar -->
+<div align="center">
     <div class="mini-navbar">
-        <a href="#" class="activo">Productos</a>
-        <a href="#">Categorías</a>
-    </div>
-
-    <div class="main-content">
-        <!-- Sidebar de Filtros -->
-        <div class="sidebar">
-            <!-- Apartados superiores (los definirás luego) -->
-            <div class="apartado"> <!-- 1 -->
-                <!-- Contenido del apartado 1 -->
-            </div>
-            <div class="apartado"> <!-- 2 -->
-                <!-- Contenido del apartado 2 -->
-            </div>
-            <div class="apartado"> <!-- 3 -->
-                <!-- Contenido del apartado 3 -->
-            </div>
-
-            <!-- Buscador por nombre -->
-            <div class="buscador">
-                <input type="text" placeholder="Buscar por nombre">
-                <button class="btn-buscar">🔍</button>
-            </div>
-
-            <!-- Filtro por precio -->
-            <div class="filtro-precio">
-                <label><strong>Hasta:</strong> $150.000</label>
-                <div class="slider-control">
-                    <button>-</button>
-                    <input type="range" min="0" max="150000" value="150000">
-                    <button>+</button>
-                </div>
-            </div>
-
-            <!-- Otros filtros (estructura base) -->
-            <ul class="filtros-lista">
-                <li>Variedad de uva</li>
-                <li>Color</li>
-                <li>Nivel de dulzura</li>
-                <li>Cuerpo</li>
-                <li>Maridaje sugerido</li>
-            </ul>
-        </div>
-
-        <!-- Sección de productos -->
-        <div class="productos-grid">
-            <!-- Ejemplo de producto -->
-            <div class="card-producto">
-                <img src="{% static 'img/ejemplo_vino.jpg' %}" alt="Producto">
-                <h4>Nombre del Producto</h4>
-                <p class="precio">$123.000 <span class="precio-anterior">$145.000</span></p>
-                
-                <div class="acciones">
-                    <button class="btn-detalle">👁️ Detalle</button>
-                    <button class="btn-agregar">🛒 Agregar</button>
-                    <button class="btn-editar">✏️ Editar</button>
-                    <button class="btn-eliminar">🗑️ Eliminar</button>
-                </div>
-            </div>
-
-            <!-- Repite este bloque por cada producto -->
-        </div>
+        <a href="#" class="nav-item activo">Vinos</a>
+        <a href="#" class="nav-item">Combos</a>
     </div>
 </div>
 
+
+
+<div class="main-content">
+    {% include 'catalogo/sidebar.html' with categorias=categorias %}
+    {% include 'catalogo/agregar_categoria.html' %}
+    {% include 'catalogo/editar_categoria.html' %}
+    {% include 'catalogo/eliminar_categoria.html' %}
+
+
+        <!-- Sección de productos -->
+<!-- Sección de productos -->
+<div class="productos-section">
+
+    {% if request.session.usuario_rol == 'admin' %}
+        <!-- Botón de agregar (solo visible para admin) -->
+        <div class="acciones-admin-superior">
+            <button class="btn-agregar-producto">➕ Agregar producto</button>
+        </div>
+    {% endif %}
+
+<!-- Sección de productos -->
+<div class="productos-section">
+
+    <!-- Botón de agregar (independiente del grid) -->
+    <div class="acciones-superior">
+        <button class="btn-agregar-producto">➕ Agregar producto</button>
+    </div>
+
+    <!-- Grid de productos -->
+    <div class="productos-grid">
+
+        <!-- Ejemplo de producto -->
+        <div class="card-producto">
+            <img src="{% static 'img/ejemplo_vino.jpg' %}" alt="Producto">
+            <h4>Nombre del Producto</h4>
+            <p class="precio">$123.000 <span class="precio-anterior">$145.000</span></p>
+
+            <div class="acciones-producto">
+                <button class="btn-detalle">👁️ Detalle</button>
+                <button class="btn-editar">✏️ Editar</button>
+                <button class="btn-eliminar">🗑️ Eliminar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
 <!-- Estilos -->
 <style>
-.inventario-container { padding: 20px; background-color: #3b2f2f; color: #fff; }
-.mini-navbar { margin-bottom: 20px; }
+body {
+    background-color: #fdf9f6;
+    font-family: 'Poppins', sans-serif;
+    color: #3b2f2f;
+}
+
+/* Contenedor principal */
+.inventario-container {
+    padding: 40px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Mini Navbar */
+.mini-navbar {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-bottom: 35px;
+}
 .mini-navbar a {
-    color: #fff; margin-right: 15px; text-decoration: none; font-weight: bold;
-    padding-bottom: 4px;
+    text-decoration: none;
+    color: #5a2a27;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding-bottom: 6px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
 }
-.mini-navbar a.activo { border-bottom: 2px solid #fff; }
+.mini-navbar a:hover {
+    border-color: #c18b5b;
+    color: #c18b5b;
+}
+.mini-navbar a.activo {
+    border-color: #5a2a27;
+}
 
-.main-content { display: flex; gap: 30px; }
+/* Contenido principal */
+.main-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
 
-.sidebar { width: 250px; background-color: #2e2323; padding: 15px; border-radius: 8px; }
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background-color: #fff;
+    border: 1px solid #e7ded3;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+}
 
-.apartado { margin-bottom: 20px; padding: 10px; background-color: #443636; border-radius: 6px; }
+/* Botones de categoría */
+.sidebar .apartado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #f6ede3;
+    border-radius: 8px;
+    color: #5a2a27;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.sidebar .apartado:hover {
+    background-color: #e8d7c2;
+}
 
-.buscador { display: flex; margin-bottom: 20px; }
+/* Buscador */
+.buscador {
+    display: flex;
+    margin: 20px 0;
+}
 .buscador input {
-    flex: 1; padding: 8px; border: none; border-radius: 4px 0 0 4px;
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #d6c7b5;
+    border-radius: 6px 0 0 6px;
 }
-.buscador .btn-buscar {
-    background-color: #d0a85c; border: none; padding: 0 10px; cursor: pointer;
-    border-radius: 0 4px 4px 0; color: #fff;
+.buscador button {
+    background-color: #c18b5b;
+    border: none;
+    color: white;
+    padding: 0 10px;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
 }
 
-.filtro-precio { margin-bottom: 20px; }
-.slider-control { display: flex; align-items: center; gap: 8px; }
-.slider-control button {
-    background: #d0a85c; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; color: #fff;
+/* Filtros */
+.filtros-lista {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
 }
-.slider-control input[type=range] { flex: 1; }
-
-.filtros-lista { list-style: none; padding: 0; }
 .filtros-lista li {
-    margin-bottom: 10px; border-bottom: 1px solid #6b5b5b; padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+.filtros-lista select {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #d6c7b5;
+    border-radius: 5px;
+    background-color: #fffaf6;
 }
 
+/* Grid de productos */
 .productos-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px; flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+    flex: 1;
 }
 
+/* Tarjeta de producto */
 .card-producto {
-    background-color: #fff; color: #000; border-radius: 6px; overflow: hidden;
-    display: flex; flex-direction: column; justify-content: space-between;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2dcd3;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
-.card-producto img { width: 100%; height: 180px; object-fit: cover; }
-.card-producto h4 { margin: 10px; font-size: 1.1rem; }
-.precio { margin: 0 10px; font-weight: bold; }
-.precio-anterior { text-decoration: line-through; color: #888; font-size: 0.9rem; margin-left: 5px; }
+.card-producto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+}
+.card-producto img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+}
+.card-producto h4 {
+    margin: 12px 15px 5px;
+    font-size: 1.05rem;
+    color: #5a2a27;
+}
+.precio {
+    margin: 0 15px 12px;
+    font-weight: bold;
+}
+.precio-anterior {
+    text-decoration: line-through;
+    color: #999;
+    margin-left: 8px;
+    font-size: 0.9rem;
+}
 
+/* Botones */
 .acciones {
-    display: flex; justify-content: space-around;
-    background-color: #f7f2eb; padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-top: 1px solid #eae0d5;
+    background-color: #fdfaf7;
 }
 .acciones button {
-    border: none; background: none; cursor: pointer;
-    font-weight: bold; color: #3b2f2f;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #5a2a27;
+    font-weight: 600;
+    transition: 0.2s;
 }
-.acciones button:hover { color: #d0a85c; }
+.acciones button:hover {
+    color: #c18b5b;
+}
+
+/* Botón agregar aparte */
+.btn-agregar-producto {
+    display: block;
+    background-color: #5a2a27;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 25px;
+    transition: background 0.3s;
+}
+.btn-agregar-producto:hover {
+    background-color: #7a3b35;
+}
 </style>
+<script>window.categoriasData = JSON.parse('{{ categorias_json|escapejs }}');</script>
+<script src="{% static 'js/modal_categoria.js' %}"></script>
+
 
 {% endblock %}

@@ -1,0 +1,151 @@
+<!-- 🪟 Modal Agregar Subcategoría -->
+<div id="modalCategoria" class="modal-overlay">
+    <div class="modal-content">
+        <span class="cerrar-modal" id="cerrarModal">&times;</span>
+        <h2>Agregar Subcategoría</h2>
+
+        <form method="POST" action="{% url 'catalogo:agregar_subcategoria' %}">
+            {% csrf_token %}
+
+            <!-- Nivel 1: Sección -->
+            <div class="form-group">
+                <label for="seccion">Sección:</label>
+                <select id="seccion" name="seccion" required>
+                    <option value="">-- Selecciona una sección --</option>
+                    <option value="productos">Productos</option>
+                    <option value="combos">Combos</option>
+                </select>
+            </div>
+
+            <!-- Nivel 2: Categoría principal (según sección) -->
+            <div class="form-group" id="categoria-container" style="display:none;">
+                <label for="categoria">Categoría principal:</label>
+                <select id="categoria" name="categoria_principal"></select>
+            </div>
+
+            <!-- Nivel 3: Nueva subcategoría -->
+            <div class="form-group">
+                <label for="subcategoria">Nombre de la nueva subcategoría:</label>
+                <input type="text" id="subcategoria" name="nombre" required>
+            </div>
+
+            <div class="botones-modal">
+                <button type="submit" class="btn-guardar">Guardar</button>
+                <button type="button" id="cerrarModal2" class="btn-cancelar">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ⚙️ Script -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // === Referencias ===
+    const abrirModal = document.getElementById("abrirModalCategoria");
+    const modal = document.getElementById("modalCategoria");
+    const cerrarModal = document.getElementById("cerrarModal");
+    const cerrarModal2 = document.getElementById("cerrarModal2");
+    const seccionSelect = document.getElementById("seccion");
+    const categoriaContainer = document.getElementById("categoria-container");
+    const categoriaSelect = document.getElementById("categoria");
+
+    // === Mostrar / Ocultar modal ===
+    if (abrirModal && modal) {
+        abrirModal.onclick = () => modal.style.display = "flex";
+        cerrarModal.onclick = () => modal.style.display = "none";
+        cerrarModal2.onclick = () => modal.style.display = "none";
+    }
+
+    // Cerrar al hacer clic fuera del modal
+    window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
+
+    // === Cargar categorías dinámicamente ===
+    // Datos enviados desde Django (diccionario { 'productos': [...], 'combos': [...] })
+    const categoriasData = JSON.parse('{{ categorias_json|escapejs }}');
+
+    seccionSelect.addEventListener("change", () => {
+        const seccion = seccionSelect.value;
+        categoriaSelect.innerHTML = '';
+
+        if (!seccion) {
+            categoriaContainer.style.display = "none";
+            return;
+        }
+
+        categoriaContainer.style.display = "block";
+
+        const defaultOption = document.createElement("option");
+        defaultOption.text = "-- Selecciona una categoría --";
+        defaultOption.value = "";
+        categoriaSelect.appendChild(defaultOption);
+
+        // Si no hay categorías disponibles
+        if (!categoriasData[seccion] || categoriasData[seccion].length === 0) {
+            const noOption = document.createElement("option");
+            noOption.text = "(No hay categorías disponibles)";
+            categoriaSelect.appendChild(noOption);
+            return;
+        }
+
+        // Agregar las categorías reales
+        categoriasData[seccion].forEach(cat => {
+            const opt = document.createElement("option");
+            opt.value = cat.id;
+            opt.text = cat.nombre;
+            categoriaSelect.appendChild(opt);
+        });
+    });
+});
+</script>
+
+<!-- 🎨 Estilos -->
+<style>
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: #fff;
+    color: #333;
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+.cerrar-modal {
+    position: absolute;
+    top: 10px; right: 15px;
+    cursor: pointer;
+    font-size: 1.4em;
+    color: #888;
+}
+.cerrar-modal:hover { color: #000; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+.form-group input, .form-group select {
+    width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;
+}
+.botones-modal {
+    display: flex; justify-content: flex-end; gap: 10px;
+}
+.btn-guardar {
+    background: #3b2f2f; color: #fff; border: none;
+    padding: 8px 12px; border-radius: 5px; cursor: pointer;
+}
+.btn-cancelar {
+    background: #aaa; color: #fff; border: none;
+    padding: 8px 12px; border-radius: 5px; cursor: pointer;
+}
+</style>
