@@ -4,65 +4,57 @@
 {% block content %}
 <div class="inventario-container">
 
-<!-- Mini Navbar -->
-<div align="center">
-    <div class="mini-navbar">
-        <a href="#" class="nav-item activo">Vinos</a>
-        <a href="#" class="nav-item">Combos</a>
+    <!-- Mini Navbar -->
+    <div align="center">
+        <div class="mini-navbar">
+            <a href="#" class="nav-item activo">Vinos</a>
+            <a href="#" class="nav-item">Combos</a>
+        </div>
     </div>
-</div>
 
+    <div class="main-content">
+        {% include 'catalogo/sidebar.html' with categorias=categorias %}
+        {% include 'catalogo/agregar_subcategoria.html' %}
+<script>
+  // Define el objeto global con las categorías antes de cargar el JS
+  window.categoriasData = JSON.parse('{{ categorias_json|escapejs }}');
+</script>
 
+<!-- 🔧 2) Carga el script externo -->
+<script src="{% static 'js/modal_categoria.js' %}"></script>
 
-<div class="main-content">
-    {% include 'catalogo/sidebar.html' with categorias=categorias %}
-    {% include 'catalogo/agregar_categoria.html' %}
-    {% include 'catalogo/editar_categoria.html' %}
-    {% include 'catalogo/eliminar_categoria.html' %}
-
+        {% include 'catalogo/editar_subcategoria.html' %}
+        {% include 'catalogo/eliminar_subcategoria.html' %}
 
         <!-- Sección de productos -->
-<!-- Sección de productos -->
-<div class="productos-section">
+        <div class="productos-section">
+            {% if request.session.usuario_rol == 'admin' %}
+                <div class="acciones-admin-superior">
+                    <button id="abrirModal" class="btn-agregar-producto">➕ Agregar producto</button>  <!-- 🔧 agrega id="abrirModal" -->
+                </div>
+            {% endif %}
 
-    {% if request.session.usuario_rol == 'admin' %}
-        <!-- Botón de agregar (solo visible para admin) -->
-        <div class="acciones-admin-superior">
-            <button class="btn-agregar-producto">➕ Agregar producto</button>
-        </div>
-    {% endif %}
-
-<!-- Sección de productos -->
-<div class="productos-section">
-
-    <!-- Botón de agregar (independiente del grid) -->
-    <div class="acciones-superior">
-        <button class="btn-agregar-producto">➕ Agregar producto</button>
-    </div>
-
-    <!-- Grid de productos -->
-    <div class="productos-grid">
-
-        <!-- Ejemplo de producto -->
-        <div class="card-producto">
-            <img src="{% static 'img/ejemplo_vino.jpg' %}" alt="Producto">
-            <h4>Nombre del Producto</h4>
-            <p class="precio">$123.000 <span class="precio-anterior">$145.000</span></p>
-
-            <div class="acciones-producto">
-                <button class="btn-detalle">👁️ Detalle</button>
-                <button class="btn-editar">✏️ Editar</button>
-                <button class="btn-eliminar">🗑️ Eliminar</button>
+            <!-- Grid de productos -->
+            <div class="productos-grid">
+                <div class="card-producto">
+                    <img src="{% static 'img/ejemplo_vino.jpg' %}" alt="Producto">
+                    <h4>Nombre del Producto</h4>
+                    <p class="precio">$123.000 <span class="precio-anterior">$145.000</span></p>
+                    <div class="acciones-producto">
+                        <button class="btn-detalle">👁️ Detalle</button>
+                        <button class="btn-editar">✏️ Editar</button>
+                        <button class="btn-eliminar">🗑️ Eliminar</button>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 </div>
 
 
-
-<!-- Estilos -->
+<!-- 🎨 Estilos -->
 <style>
+
 body {
     background-color: #fdf9f6;
     font-family: 'Poppins', sans-serif;
@@ -252,8 +244,8 @@ body {
     background-color: #7a3b35;
 }
 </style>
-<script>window.categoriasData = JSON.parse('{{ categorias_json|escapejs }}');</script>
-<script src="{% static 'js/modal_categoria.js' %}"></script>
 
+<!-- ⚙️ Scripts -->
+<!-- 🔧 1) Esto va antes del script externo -->
 
 {% endblock %}

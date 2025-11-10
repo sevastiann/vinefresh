@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib import messages
-from .models import Producto, Subcategoria, Combo
+from .models import Producto, Subcategoria, Combo , Categoria
 from django.http import JsonResponse
 import json
 
@@ -45,33 +45,38 @@ def detalle_producto(request, producto_id):
     return render(request, 'catalogo/detalle.html', {'producto': producto})
 
 
-# -----------------------------
-# 🔹 Inventario (para admin)
-# -----------------------------
 def inventario(request):
-    # Control de acceso: solo admins
+    # --- Control de acceso ---
     if not request.session.get('usuario_id'):
         return redirect('usuarios:login')
-
     if request.session.get('usuario_rol') != 'admin':
         return redirect('catalogo:catalogo_cliente')
 
-    # ✅ Ahora usamos Subcategoria, no Categoria
+    # ✅ Filtrar las subcategorías por sección
     subcategorias_productos = Subcategoria.objects.filter(seccion='productos')
     subcategorias_combos = Subcategoria.objects.filter(seccion='combos')
 
+    # ✅ Construir el JSON que usará el modal
     categorias_json = {
-        "productos": list(subcategorias_productos.values('id', 'categoria_principal', 'nombre')),
-        "combos": list(subcategorias_combos.values('id', 'categoria_principal', 'nombre')),
+        "productos": list(
+            Categoria.objects.filter(subcategorias__seccion='productos')
+            .values('id', 'nombre')
+            .distinct()
+        ),
+        "combos": list(
+            Categoria.objects.filter(subcategorias__seccion='combos')
+            .values('id', 'nombre')
+            .distinct()
+        ),
     }
 
     return render(request, 'catalogo/inventario.html', {
         'seccion': request.GET.get('seccion', 'productos'),
-        'categorias': Subcategoria.objects.all(),
-        'categorias_json': json.dumps(categorias_json)
+        'categorias_json': json.dumps(categorias_json),  # 👈 importante
+        'categorias': Categoria.objects.all(),
+        'subcategorias': Subcategoria.objects.all(),
     })
-
-# -----------------------------
+#------------------------
 # 🔹 Catálogo público (visitantes)
 # -----------------------------
 def catalogo_publico(request):
@@ -88,7 +93,7 @@ def catalogo_cliente(request):
 # -----------------------------
 # 🔹 Agregar nueva subcategoría
 # -----------------------------
-def agregar_categoria(request):
+def agregar_subcategoria(request):
     if request.method == 'POST':
         seccion = request.POST.get('seccion')
         categoria_principal = request.POST.get('categoria')
@@ -110,7 +115,7 @@ def agregar_categoria(request):
 # -----------------------------
 # 🔹 Eliminar subcategoría
 # -----------------------------
-def eliminar_categoria(request):
+def eliminar_subcategoria(request):
     if request.method == 'POST':
         categoria_id = request.POST.get('categoria_id')
         try:
@@ -129,7 +134,7 @@ def eliminar_categoria(request):
 # -----------------------------
 # 🔹 Editar subcategoría
 # -----------------------------
-def editar_categoria(request):
+def editar_subcategoria(request):
     if request.method == 'POST':
         categoria_id = request.POST.get('categoria_id')
         nuevo_nombre = request.POST.get('nuevo_nombre')

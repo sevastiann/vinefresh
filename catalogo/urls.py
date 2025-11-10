@@ -6,9 +6,9 @@ app_name = 'catalogo'
 urlpatterns = [
     # Inventario para administradores
     path('inventario/', views.inventario, name='inventario'),
-    path('agregar-categoria/', views.agregar_categoria, name='agregar_categoria'),
-    path('eliminar-categoria/', views.eliminar_categoria, name='eliminar_categoria'),
-    path('editar-categoria/', views.editar_categoria, name='editar_categoria'),
+    path('agregar-categoria/', views.agregar_subcategoria, name='agregar_subcategoria'),
+    path('eliminar-categoria/', views.eliminar_subcategoria, name='eliminar_subcategoria'),
+    path('editar-categoria/', views.editar_subcategoria, name='editar_subcategoria'),
 
     
     #path('sidebar/', views.sidebar, name='sidebar'),

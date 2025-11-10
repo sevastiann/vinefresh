@@ -48,24 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.target === modalEliminar) closeModal(modalEliminar);
     });
 
-    // --- Diccionario estático esperado ---
-    // (Debe declararse antes de este script o en un <script> previo)
-    // Ejemplo:
-    // window.categoriasData = {
-    //     productos: [
-    //         ['dulzor', 'Dulzor'],
-    //         ['grado_alcohol', 'Grado de alcohol'],
-    //         ['pais_origen', 'País de origen'],
-    //         ['tipo_fruta', 'Tipo de fruta'],
-    //         ['color', 'Color']
-    //     ],
-    //     combos: [
-    //         ['festividad', 'Festividad'],
-    //         ['temporada', 'Temporada'],
-    //         ['ano_anejamiento', 'Año de añejamiento']
-    //     ]
-    // };
-
     // --- Función para llenar el select de categorías ---
     function populateCategoriaSelect(seccionValue, targetSelect) {
         if (!targetSelect) return;
@@ -85,10 +67,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        data.forEach(([value, label]) => {
+        // ✅ CORREGIDO: recorrer objetos con {id, nombre}
+        data.forEach(item => {
             const opt = document.createElement('option');
-            opt.value = value;
-            opt.textContent = label;
+            opt.value = item.id;
+            opt.textContent = item.nombre;
             targetSelect.appendChild(opt);
         });
     }
@@ -110,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 populateCategoriaSelect(val, categoriaAgregar);
             });
 
+            // Si ya hay una sección seleccionada al cargar, la llena
             if (seccionAgregar.value)
                 populateCategoriaSelect(seccionAgregar.value, categoriaAgregar);
         }
@@ -134,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 populateCategoriaSelect(val, categoriaEditar);
             });
 
+            // Si ya hay valor seleccionado
             if (seccionEditar.value)
                 populateCategoriaSelect(seccionEditar.value, categoriaEditar);
         }

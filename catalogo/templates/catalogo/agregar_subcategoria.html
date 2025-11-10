@@ -17,7 +17,7 @@
                 </select>
             </div>
 
-            <!-- Nivel 2: Categoría principal (según sección) -->
+            <!-- Nivel 2: Categoría principal -->
             <div class="form-group" id="categoria-container" style="display:none;">
                 <label for="categoria">Categoría principal:</label>
                 <select id="categoria" name="categoria_principal"></select>
@@ -37,65 +37,22 @@
     </div>
 </div>
 
-<!-- ⚙️ Script -->
+<!-- ⚙️ Diccionario de categorías estáticas -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    // === Referencias ===
-    const abrirModal = document.getElementById("abrirModalCategoria");
-    const modal = document.getElementById("modalCategoria");
-    const cerrarModal = document.getElementById("cerrarModal");
-    const cerrarModal2 = document.getElementById("cerrarModal2");
-    const seccionSelect = document.getElementById("seccion");
-    const categoriaContainer = document.getElementById("categoria-container");
-    const categoriaSelect = document.getElementById("categoria");
-
-    // === Mostrar / Ocultar modal ===
-    if (abrirModal && modal) {
-        abrirModal.onclick = () => modal.style.display = "flex";
-        cerrarModal.onclick = () => modal.style.display = "none";
-        cerrarModal2.onclick = () => modal.style.display = "none";
-    }
-
-    // Cerrar al hacer clic fuera del modal
-    window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
-
-    // === Cargar categorías dinámicamente ===
-    // Datos enviados desde Django (diccionario { 'productos': [...], 'combos': [...] })
-    const categoriasData = JSON.parse('{{ categorias_json|escapejs }}');
-
-    seccionSelect.addEventListener("change", () => {
-        const seccion = seccionSelect.value;
-        categoriaSelect.innerHTML = '';
-
-        if (!seccion) {
-            categoriaContainer.style.display = "none";
-            return;
-        }
-
-        categoriaContainer.style.display = "block";
-
-        const defaultOption = document.createElement("option");
-        defaultOption.text = "-- Selecciona una categoría --";
-        defaultOption.value = "";
-        categoriaSelect.appendChild(defaultOption);
-
-        // Si no hay categorías disponibles
-        if (!categoriasData[seccion] || categoriasData[seccion].length === 0) {
-            const noOption = document.createElement("option");
-            noOption.text = "(No hay categorías disponibles)";
-            categoriaSelect.appendChild(noOption);
-            return;
-        }
-
-        // Agregar las categorías reales
-        categoriasData[seccion].forEach(cat => {
-            const opt = document.createElement("option");
-            opt.value = cat.id;
-            opt.text = cat.nombre;
-            categoriaSelect.appendChild(opt);
-        });
-    });
-});
+window.categoriasData = {
+    productos: [
+        ['dulzor', 'Dulzor'],
+        ['grado_alcohol', 'Grado de alcohol'],
+        ['pais_origen', 'País de origen'],
+        ['tipo_fruta', 'Tipo de fruta'],
+        ['color', 'Color']
+    ],
+    combos: [
+        ['festividad', 'Festividad'],
+        ['temporada', 'Temporada'],
+        ['ano_anejamiento', 'Año de añejamiento']
+    ]
+};
 </script>
 
 <!-- 🎨 Estilos -->
@@ -149,3 +106,85 @@ document.addEventListener("DOMContentLoaded", () => {
     padding: 8px 12px; border-radius: 5px; cursor: pointer;
 }
 </style>
+
+<!-- ⚙️ Script -->
+<script>
+// static/js/modal_categoria.js
+document.addEventListener("DOMContentLoaded", () => {
+
+    // === Helpers para abrir/cerrar modales ===
+    const openModal = modal => modal && (modal.style.display = 'flex');
+    const closeModal = modal => modal && (modal.style.display = 'none');
+
+    // === Modal Agregar ===
+    const modalAgregar = document.getElementById("modalCategoria");
+    const abrirAgregar = document.getElementById("abrirModal");
+    const cerrarAgregar = document.getElementById("cerrarModal");
+    const cerrarAgregar2 = document.getElementById("cerrarModal2");
+
+    if (abrirAgregar && modalAgregar) {
+        abrirAgregar.addEventListener('click', () => openModal(modalAgregar));
+        if (cerrarAgregar) cerrarAgregar.addEventListener('click', () => closeModal(modalAgregar));
+        if (cerrarAgregar2) cerrarAgregar2.addEventListener('click', () => closeModal(modalAgregar));
+    }
+
+    // === Cerrar si se hace clic fuera del modal ===
+    window.addEventListener('click', e => {
+        if (e.target === modalAgregar) closeModal(modalAgregar);
+    });
+
+    // === Diccionario de categorías estáticas ===
+    // (Debe declararse antes en el HTML como window.categoriasData)
+    // Ejemplo:
+    // window.categoriasData = {
+    //   productos: [['dulzor', 'Dulzor'], ...],
+    //   combos: [['festividad', 'Festividad'], ...]
+    // };
+
+    // === Función para llenar el select ===
+    function populateCategoriaSelect(seccionValue, targetSelect) {
+        if (!targetSelect) return;
+        targetSelect.innerHTML = '';
+
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = '-- Selecciona una categoría principal --';
+        targetSelect.appendChild(defaultOption);
+
+        const data = window.categoriasData?.[seccionValue];
+        if (!data || data.length === 0) {
+            const noOpt = document.createElement('option');
+            noOpt.textContent = '(No hay categorías disponibles)';
+            noOpt.disabled = true;
+            targetSelect.appendChild(noOpt);
+            return;
+        }
+
+        data.forEach(([value, label]) => {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = label;
+            targetSelect.appendChild(opt);
+        });
+    }
+
+    // === Conectar los selects del modal Agregar ===
+    const seccionAgregar = document.getElementById('seccion');
+    const categoriaAgregar = document.getElementById('categoria');
+    const categoriaContainer = document.getElementById('categoria-container');
+
+    if (seccionAgregar && categoriaAgregar) {
+        seccionAgregar.addEventListener('change', () => {
+            const val = seccionAgregar.value;
+            if (!val) {
+                categoriaContainer.style.display = 'none';
+                return;
+            }
+            categoriaContainer.style.display = 'block';
+            populateCategoriaSelect(val, categoriaAgregar);
+        });
+    }
+});
+
+</script>
+
