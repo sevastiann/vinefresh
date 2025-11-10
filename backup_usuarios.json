@@ -1,0 +1,36 @@
+[
+{
+  "model": "usuarios.usuario",
+  "pk": 1,
+  "fields": {
+    "nombre": "sebastian",
+    "apellido": "olave",
+    "nombre_usuario": "sebas",
+    "email": "sebstian.olave666@gmail.com",
+    "cedula": "1033456789",
+    "telefono": "3025878569",
+    "pais": "colombia",
+    "fecha_nacimiento": "2006-08-12",
+    "password": "pbkdf2_sha256$1000000$Cd2O6kyyHc23K0rzp7lNE6$BkrnfEGPkJWdhjMzDGxhSzg3yIYVdpVPdeukkrvyG10=",
+    "rol": "cliente",
+    "solicitud_eliminacion": false
+  }
+},
+{
+  "model": "usuarios.usuario",
+  "pk": 3,
+  "fields": {
+    "nombre": "Vine",
+    "apellido": "Fresh",
+    "nombre_usuario": "admin_vinefresh",
+    "email": "adm.vinefresh@gmail.com",
+    "cedula": "000000000",
+    "telefono": "3000000000",
+    "pais": "Colombia",
+    "fecha_nacimiento": null,
+    "password": "pbkdf2_sha256$1000000$sHQMgwiBiT9FnqNQ0yuQR6$jsyRWZSKZcnrjUUyF3HAZZn8Q6WMxcy35g/iBjhT7+M=",
+    "rol": "admin",
+    "solicitud_eliminacion": false
+  }
+}
+]
