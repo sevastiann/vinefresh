@@ -2,12 +2,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib import messages
-from .models import Producto, Subcategoria, Combo , Categoria
 from django.http import JsonResponse
 import json
+from .models import Producto, Subcategoria, Combo, Categoria
 
 # -----------------------------
-# 🔹 Catálogo general (para clientes)
+# 🔹 Catálogo general para clientes
 # -----------------------------
 def lista_productos(request):
     productos = Producto.objects.all()
@@ -36,7 +36,6 @@ def lista_productos(request):
         'productos': productos_pagina
     })
 
-
 # -----------------------------
 # 🔹 Detalle de producto individual
 # -----------------------------
@@ -44,7 +43,9 @@ def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     return render(request, 'catalogo/detalle.html', {'producto': producto})
 
-
+# -----------------------------
+# 🔹 Inventario (admin)
+# -----------------------------
 def inventario(request):
     # --- Control de acceso ---
     if not request.session.get('usuario_id'):
@@ -52,11 +53,14 @@ def inventario(request):
     if request.session.get('usuario_rol') != 'admin':
         return redirect('catalogo:catalogo_cliente')
 
-    # ✅ Filtrar las subcategorías por sección
+    # --- Sección actual (productos / combos) ---
+    seccion_actual = request.GET.get('seccion', 'productos')
+
+    # --- Subcategorías filtradas por sección ---
     subcategorias_productos = Subcategoria.objects.filter(seccion='productos')
     subcategorias_combos = Subcategoria.objects.filter(seccion='combos')
 
-    # ✅ Construir el JSON que usará el modal
+    # --- JSON para modales / scripts ---
     categorias_json = {
         "productos": list(
             Categoria.objects.filter(subcategorias__seccion='productos')
@@ -70,18 +74,24 @@ def inventario(request):
         ),
     }
 
+    # --- Diccionario de categorías estáticas desde el modelo ---
+    categorias_estaticas = Subcategoria.CATEGORIAS_PRINCIPALES
+
     return render(request, 'catalogo/inventario.html', {
-        'seccion': request.GET.get('seccion', 'productos'),
-        'categorias_json': json.dumps(categorias_json),  # 👈 importante
+        'seccion': seccion_actual,
+        'categorias_json': json.dumps(categorias_json),
         'categorias': Categoria.objects.all(),
         'subcategorias': Subcategoria.objects.all(),
+        'categorias_estaticas': categorias_estaticas,
+        'subcategorias_productos': subcategorias_productos,
+        'subcategorias_combos': subcategorias_combos,
     })
-#------------------------
+
+# -----------------------------
 # 🔹 Catálogo público (visitantes)
 # -----------------------------
 def catalogo_publico(request):
     return render(request, 'catalogo/catalogo_publico.html')
-
 
 # -----------------------------
 # 🔹 Catálogo del cliente logueado
@@ -89,15 +99,14 @@ def catalogo_publico(request):
 def catalogo_cliente(request):
     return render(request, 'catalogo/catalogo_cliente.html')
 
-
 # -----------------------------
 # 🔹 Agregar nueva subcategoría
 # -----------------------------
 def agregar_subcategoria(request):
     if request.method == 'POST':
         seccion = request.POST.get('seccion')
-        categoria_principal = request.POST.get('categoria')
-        nombre_subcategoria = request.POST.get('subcategoria')
+        categoria_principal = request.POST.get('categoria_principal')  # CORREGIDO: debe coincidir con el name del formulario
+        nombre_subcategoria = request.POST.get('nombre')
 
         if not (seccion and categoria_principal and nombre_subcategoria):
             messages.error(request, '⚠️ Todos los campos son obligatorios.')
@@ -111,36 +120,34 @@ def agregar_subcategoria(request):
         messages.success(request, '✅ Subcategoría agregada correctamente.')
         return redirect('catalogo:inventario')
 
-
 # -----------------------------
 # 🔹 Eliminar subcategoría
 # -----------------------------
 def eliminar_subcategoria(request):
     if request.method == 'POST':
-        categoria_id = request.POST.get('categoria_id')
+        subcategoria_id = request.POST.get('categoria_id')
         try:
-            subcategoria = Subcategoria.objects.get(id=categoria_id)
+            subcategoria = Subcategoria.objects.get(id=subcategoria_id)
             subcategoria.delete()
             messages.success(request, '🗑️ Subcategoría eliminada correctamente.')
         except Subcategoria.DoesNotExist:
             messages.error(request, '⚠️ La subcategoría no existe.')
-
         return redirect('catalogo:inventario')
 
-    # Si se entra por GET
+    # Si se entra por GET (no recomendado)
     subcategorias = Subcategoria.objects.all()
-    return render(request, 'catalogo/inventario.html', {'categorias': subcategorias})
+    return render(request, 'catalogo/inventario.html', {'subcategorias': subcategorias})
 
 # -----------------------------
 # 🔹 Editar subcategoría
 # -----------------------------
 def editar_subcategoria(request):
     if request.method == 'POST':
-        categoria_id = request.POST.get('categoria_id')
+        subcategoria_id = request.POST.get('categoria_id')
         nuevo_nombre = request.POST.get('nuevo_nombre')
         nueva_seccion = request.POST.get('seccion')
 
-        subcategoria = get_object_or_404(Subcategoria, id=categoria_id)
+        subcategoria = get_object_or_404(Subcategoria, id=subcategoria_id)
         subcategoria.nombre = nuevo_nombre
         subcategoria.seccion = nueva_seccion
         subcategoria.save()

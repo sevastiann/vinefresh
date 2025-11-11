@@ -11,42 +11,53 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            color: #3e2723;
             margin: 0;
-            color: #4a0e0e;
         }
 
         .form-container {
             background-color: #fdf6f0;
-            padding: 30px;
+            padding: 35px;
             border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             width: 380px;
             text-align: center;
             border: 2px solid #7b1f1f;
         }
 
-        h2 {
-            margin-bottom: 15px;
-            color: #7b1f1f;
+        .form-container h2 {
+            color: #4a0e0e;
+            margin-bottom: 20px;
+            font-size: 1.6em;
         }
 
         input[type="email"] {
-            width: 90%;
+            width: 100%;
             padding: 10px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #7b1f1f;
+            margin-bottom: 15px;
+            border: 1px solid #b08b57;
+            border-radius: 5px;
+            background-color: #fff8f5;
             font-size: 1em;
         }
 
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #7b1f1f;
+            box-shadow: 0 0 5px #7b1f1f;
+        }
+
         button {
+            width: 100%;
+            padding: 12px;
             background-color: #7b1f1f;
             color: #fdf6f0;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
@@ -56,6 +67,7 @@
         .mensaje {
             margin-top: 15px;
             font-weight: bold;
+            color: #4a0e0e;
         }
 
         a {

@@ -1,6 +1,23 @@
 // static/js/modal_categoria.js
 document.addEventListener("DOMContentLoaded", () => {
 
+    // --- Diccionario de categorías estáticas ---
+    // Se define antes de cualquier uso en populateCategoriaSelect
+    window.categoriaData = {
+        productos: [
+            {id: 'dulzor', nombre: 'Dulzor'},
+            {id: 'grado_alcohol', nombre: 'Grado de alcohol'},
+            {id: 'pais_origen', nombre: 'País de origen'},
+            {id: 'tipo_fruta', nombre: 'Tipo de fruta'},
+            {id: 'color', nombre: 'Color'}
+        ],
+        combos: [
+            {id: 'festividad', nombre: 'Festividad'},
+            {id: 'temporada', nombre: 'Temporada'},
+            {id: 'ano_anejamiento', nombre: 'Año de añejamiento'}
+        ]
+    };
+
     // --- Helper: abrir/ocultar modal de forma segura ---
     function openModal(modal) { if (modal) modal.style.display = 'flex'; }
     function closeModal(modal) { if (modal) modal.style.display = 'none'; }
@@ -67,11 +84,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // ✅ CORREGIDO: recorrer objetos con {id, nombre}
-        data.forEach(item => {
+        // recorrer objetos con {id, nombre}
+        data.forEach(({id, nombre}) => {
             const opt = document.createElement('option');
-            opt.value = item.id;
-            opt.textContent = item.nombre;
+            opt.value = id;
+            opt.textContent = nombre;
             targetSelect.appendChild(opt);
         });
     }
@@ -118,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 populateCategoriaSelect(val, categoriaEditar);
             });
 
-            // Si ya hay valor seleccionado
             if (seccionEditar.value)
                 populateCategoriaSelect(seccionEditar.value, categoriaEditar);
         }

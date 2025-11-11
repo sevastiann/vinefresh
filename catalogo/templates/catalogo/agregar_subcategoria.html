@@ -1,4 +1,3 @@
-<!-- 🪟 Modal Agregar Subcategoría -->
 <div id="modalCategoria" class="modal-overlay">
     <div class="modal-content">
         <span class="cerrar-modal" id="cerrarModal">&times;</span>
@@ -20,7 +19,20 @@
             <!-- Nivel 2: Categoría principal -->
             <div class="form-group" id="categoria-container" style="display:none;">
                 <label for="categoria">Categoría principal:</label>
-                <select id="categoria" name="categoria_principal"></select>
+                <select id="categoria" name="categoria_principal" required>
+                    <option value="">-- Selecciona una categoría principal --</option>
+                    {% comment %} Categorías de productos {% endcomment %}
+                    <option value="dulzor" class="productos">Dulzor</option>
+                    <option value="grado_alcohol" class="productos">Grado de alcohol</option>
+                    <option value="pais_origen" class="productos">País de origen</option>
+                    <option value="tipo_fruta" class="productos">Tipo de fruta</option>
+                    <option value="color" class="productos">Color</option>
+
+                    {% comment %} Categorías de combos {% endcomment %}
+                    <option value="festividad" class="combos">Festividad</option>
+                    <option value="temporada" class="combos">Temporada</option>
+                    <option value="ano_anejamiento" class="combos">Año de añejamiento</option>
+                </select>
             </div>
 
             <!-- Nivel 3: Nueva subcategoría -->
@@ -37,23 +49,46 @@
     </div>
 </div>
 
-<!-- ⚙️ Diccionario de categorías estáticas -->
 <script>
-window.categoriasData = {
-    productos: [
-        ['dulzor', 'Dulzor'],
-        ['grado_alcohol', 'Grado de alcohol'],
-        ['pais_origen', 'País de origen'],
-        ['tipo_fruta', 'Tipo de fruta'],
-        ['color', 'Color']
-    ],
-    combos: [
-        ['festividad', 'Festividad'],
-        ['temporada', 'Temporada'],
-        ['ano_anejamiento', 'Año de añejamiento']
-    ]
-};
+document.addEventListener("DOMContentLoaded", () => {
+    const modalAgregar = document.getElementById("modalCategoria");
+    const abrirAgregar = document.getElementById("abrirModal");
+    const cerrarAgregar = document.getElementById("cerrarModal");
+    const cerrarAgregar2 = document.getElementById("cerrarModal2");
+
+    const openModal = modal => modal && (modal.style.display = 'flex');
+    const closeModal = modal => modal && (modal.style.display = 'none');
+
+    if (abrirAgregar && modalAgregar) {
+        abrirAgregar.addEventListener('click', () => openModal(modalAgregar));
+        cerrarAgregar?.addEventListener('click', () => closeModal(modalAgregar));
+        cerrarAgregar2?.addEventListener('click', () => closeModal(modalAgregar));
+    }
+
+    window.addEventListener('click', e => {
+        if (e.target === modalAgregar) closeModal(modalAgregar);
+    });
+
+    // Filtrar categorías según la sección seleccionada
+    const seccion = document.getElementById('seccion');
+    const categoria = document.getElementById('categoria');
+    const contenedorCategoria = document.getElementById('categoria-container');
+
+    seccion.addEventListener('change', () => {
+        const val = seccion.value;
+        if (!val) {
+            contenedorCategoria.style.display = 'none';
+            return;
+        }
+        contenedorCategoria.style.display = 'block';
+        Array.from(categoria.options).forEach(opt => {
+            opt.style.display = (opt.classList.contains(val) || opt.value === '') ? 'block' : 'none';
+        });
+        categoria.value = ''; // resetear selección
+    });
+});
 </script>
+
 
 <!-- 🎨 Estilos -->
 <style>
@@ -107,84 +142,4 @@ window.categoriasData = {
 }
 </style>
 
-<!-- ⚙️ Script -->
-<script>
-// static/js/modal_categoria.js
-document.addEventListener("DOMContentLoaded", () => {
-
-    // === Helpers para abrir/cerrar modales ===
-    const openModal = modal => modal && (modal.style.display = 'flex');
-    const closeModal = modal => modal && (modal.style.display = 'none');
-
-    // === Modal Agregar ===
-    const modalAgregar = document.getElementById("modalCategoria");
-    const abrirAgregar = document.getElementById("abrirModal");
-    const cerrarAgregar = document.getElementById("cerrarModal");
-    const cerrarAgregar2 = document.getElementById("cerrarModal2");
-
-    if (abrirAgregar && modalAgregar) {
-        abrirAgregar.addEventListener('click', () => openModal(modalAgregar));
-        if (cerrarAgregar) cerrarAgregar.addEventListener('click', () => closeModal(modalAgregar));
-        if (cerrarAgregar2) cerrarAgregar2.addEventListener('click', () => closeModal(modalAgregar));
-    }
-
-    // === Cerrar si se hace clic fuera del modal ===
-    window.addEventListener('click', e => {
-        if (e.target === modalAgregar) closeModal(modalAgregar);
-    });
-
-    // === Diccionario de categorías estáticas ===
-    // (Debe declararse antes en el HTML como window.categoriasData)
-    // Ejemplo:
-    // window.categoriasData = {
-    //   productos: [['dulzor', 'Dulzor'], ...],
-    //   combos: [['festividad', 'Festividad'], ...]
-    // };
-
-    // === Función para llenar el select ===
-    function populateCategoriaSelect(seccionValue, targetSelect) {
-        if (!targetSelect) return;
-        targetSelect.innerHTML = '';
-
-        const defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = '-- Selecciona una categoría principal --';
-        targetSelect.appendChild(defaultOption);
-
-        const data = window.categoriasData?.[seccionValue];
-        if (!data || data.length === 0) {
-            const noOpt = document.createElement('option');
-            noOpt.textContent = '(No hay categorías disponibles)';
-            noOpt.disabled = true;
-            targetSelect.appendChild(noOpt);
-            return;
-        }
-
-        data.forEach(([value, label]) => {
-            const opt = document.createElement('option');
-            opt.value = value;
-            opt.textContent = label;
-            targetSelect.appendChild(opt);
-        });
-    }
-
-    // === Conectar los selects del modal Agregar ===
-    const seccionAgregar = document.getElementById('seccion');
-    const categoriaAgregar = document.getElementById('categoria');
-    const categoriaContainer = document.getElementById('categoria-container');
-
-    if (seccionAgregar && categoriaAgregar) {
-        seccionAgregar.addEventListener('change', () => {
-            const val = seccionAgregar.value;
-            if (!val) {
-                categoriaContainer.style.display = 'none';
-                return;
-            }
-            categoriaContainer.style.display = 'block';
-            populateCategoriaSelect(val, categoriaAgregar);
-        });
-    }
-});
-
-</script>
 

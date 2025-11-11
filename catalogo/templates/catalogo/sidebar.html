@@ -5,7 +5,6 @@
         <button id="abrirModal" class="btn-agregar-categoria">➕ Agregar Categoría</button>
         <button id="abrirModalEditar" class="btn-editar-categoria">✏️ Editar Categoría</button>
         <button id="abrirModalEliminar" class="btn-eliminar-categoria">🗑️ Eliminar Categoría</button>
-
     </div>
 
     <!-- 🔍 Buscador -->
@@ -26,19 +25,23 @@
 
     <!-- 🧩 Filtros dinámicos (categorías con subcategorías) -->
     <ul class="filtros-lista">
-        {% for categoria in categorias %}
-            <li>
-                <strong>{{ categoria.nombre }}</strong>
-                <select>
-                    <option value="">Seleccionar...</option>
-                    {% for sub in categoria.subcategorias.all %}
-                        <option value="{{ sub.id }}">{{ sub.nombre }}</option>
-                    {% endfor %}
-                </select>
-            </li>
-        {% empty %}
+        {% if categorias %}
+            {% for categoria in categorias %}
+                <li>
+                    <strong>{{ categoria.nombre }}</strong>
+                    <select>
+                        <option value="">Seleccionar...</option>
+                        {% for sub in subcategorias %}
+                            {% if sub.categoria_principal.id == categoria.id %}
+                                <option value="{{ sub.id }}">{{ sub.nombre }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </li>
+            {% endfor %}
+        {% else %}
             <li>No hay categorías registradas aún.</li>
-        {% endfor %}
+        {% endif %}
     </ul>
 </div>
 
