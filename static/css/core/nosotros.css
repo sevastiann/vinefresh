@@ -1,0 +1,303 @@
+/* ===============================
+   VINEFRESH - Página "Nosotros"
+   Archivo: static/css/core/nosotros.css
+   =============================== */
+
+/* --- Estilos generales --- */
+body {
+    background-color: #fdf9f6;
+    font-family: 'Poppins', sans-serif;
+    color: #3b2f2f;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Encabezado principal --- */
+.nosotros-header {
+    position: relative;
+    background: linear-gradient(to right, rgba(59, 47, 47, 0.8), rgba(167, 50, 50, 0.5)),
+                url("../../img/viñedo_banner.jpg") center/cover no-repeat;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+}
+
+.nosotros-header .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(59, 47, 47, 0.35);
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+}
+
+.header-content h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.header-content p {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+/* --- Contenedor general --- */
+.nosotros-container {
+    max-width: 1200px;
+    margin: 70px auto;
+    padding: 0 30px;
+}
+
+/* --- Sección de texto e imagen --- */
+.about-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 60px;
+    margin-bottom: 80px;
+    position: relative;
+}
+
+.about-content.reverse {
+    flex-direction: row-reverse;
+}
+
+.about-text {
+    flex: 1;
+    min-width: 320px;
+    text-align: left;
+}
+
+.about-text .section-title {
+    font-size: 2rem;
+    color: #a73232;
+    margin-bottom: 15px;
+    position: relative;
+    font-weight: 600;
+}
+
+.about-text .section-title::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #3b2f2f;
+    margin-top: 8px;
+    border-radius: 2px;
+}
+
+.section-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #4c3b3b;
+    margin-bottom: 25px;
+}
+
+.about-image {
+    flex: 1;
+    min-width: 320px;
+    text-align: center;
+}
+
+.nosotros-imagen {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.nosotros-imagen:hover {
+    transform: scale(1.03);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+}
+
+/* --- Sección Equipo --- */
+.about-team {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.about-team .section-title {
+    font-size: 2.2rem;
+    color: #3b2f2f;
+    margin-bottom: 20px;
+}
+
+.team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.team-member {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 280px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.team-member:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.team-member img {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 12px;
+}
+
+.team-member h3 {
+    font-size: 1.2rem;
+    color: #a73232;
+    margin-bottom: 4px;
+}
+
+.team-member p {
+    font-size: 0.95rem;
+    color: #4c3b3b;
+}
+
+/* --- Galería --- */
+.about-gallery {
+    margin-bottom: 90px;
+    text-align: center;
+}
+
+.about-gallery .section-title {
+    font-size: 2.1rem;
+    margin-bottom: 25px;
+    color: #3b2f2f;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.gallery-grid img:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* --- Sección de valores --- */
+.about-values {
+    text-align: center;
+    margin-top: 40px;
+    padding: 40px 0;
+    background: linear-gradient(135deg, #fff4f2, #fce9e9);
+    border-radius: 25px;
+}
+
+.about-values .section-title {
+    font-size: 2rem;
+    margin-bottom: 25px;
+    color: #3b2f2f;
+    font-weight: 600;
+}
+
+.valores {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 35px;
+    margin-top: 30px;
+}
+
+/* --- Tarjetas de valores --- */
+.valor-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    width: 280px;
+    padding: 30px 25px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+.valor-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.8s ease;
+}
+
+.valor-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+}
+
+.valor-card i {
+    font-size: 2.5rem;
+    color: #a73232;
+    margin-bottom: 12px;
+}
+
+.valor-card h3 {
+    font-size: 1.3rem;
+    color: #3b2f2f;
+    margin-bottom: 8px;
+}
+
+.valor-card p {
+    font-size: 0.95rem;
+    color: #5a4747;
+    line-height: 1.6;
+}
+
+/* --- Animaciones --- */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Responsivo --- */
+@media (max-width: 900px) {
+    .about-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .about-content.reverse {
+        flex-direction: column;
+    }
+    .about-text {
+        text-align: center;
+    }
+    .nosotros-imagen {
+        max-width: 90%;
+    }
+    .team-member {
+        width: 85%;
+    }
+}

@@ -10,7 +10,7 @@ class Usuario(models.Model):
     pais = models.CharField(max_length=50, blank=True, null=True)
     fecha_nacimiento = models.DateField(blank=True, null=True)
     password = models.CharField(max_length=255)
-    rol = models.CharField(max_length=20, default='usuario')
+    rol = models.CharField(max_length=20, default='cliente')
     solicitud_eliminacion = models.BooleanField(default=False)
 
     def __str__(self):

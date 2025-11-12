@@ -4,13 +4,70 @@
 {% block title %}Enviar invitación de administrador | VineFresh{% endblock %}
 
 {% block content %}
+<style>
+    body {
+        font-family: 'Georgia', serif;
+        background: linear-gradient(135deg, #4a0e0e, #7b1f1f);
+        margin: 0;
+        color: #3e2723;
+    }
+
+    .form-card {
+        background-color: #fdf6f0 !important;
+        border: 2px solid #7b1f1f;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-card h1 {
+        color: #4a0e0e !important;
+        font-family: 'Georgia', serif;
+        font-weight: bold;
+    }
+
+    input[type="email"] {
+        border: 1px solid #b08b57;
+        border-radius: 6px;
+        background-color: #fff8f5;
+        transition: all 0.3s ease;
+    }
+
+    input[type="email"]:focus {
+        outline: none;
+        border-color: #7b1f1f;
+        box-shadow: 0 0 5px #7b1f1f;
+    }
+
+    button {
+        background-color: #7b1f1f !important;
+        color: #fdf6f0 !important;
+        border: none;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+        letter-spacing: 0.5px;
+    }
+
+    button:hover {
+        background-color: #5e1010 !important;
+    }
+
+    a {
+        color: #7b1f1f;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-    <div class="form-card p-4 rounded shadow" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); max-width: 400px; width: 100%;">
-        <h1 class="text-center mb-4" style="color: #e0f2f1;">Enviar invitación de administrador</h1>
+    <div class="form-card p-4 rounded shadow" style="max-width: 400px; width: 100%;">
+        <h1 class="text-center mb-4">Enviar invitación de administrador</h1>
         <form method="POST">
             {% csrf_token %}
             <input type="email" name="email" placeholder="Correo electrónico" required class="form-control mb-3">
-            <button type="submit" class="btn btn-light btn-block font-weight-bold">Enviar invitación</button>
+            <button type="submit" class="btn btn-block font-weight-bold">Enviar invitación</button>
         </form>
         <!-- Enlace corregido: a la gestión de usuarios en lugar de admin_dashboard -->
     </div>

@@ -1,149 +1,225 @@
-# catalogo/views.py
-from django.shortcuts import render, redirect, get_object_or_404
-from django.core.paginator import Paginator
-from django.contrib import messages
-from .models import Producto, Subcategoria, Combo , Categoria
-from django.http import JsonResponse
-import json
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from .models import Producto, Combo
 
-# -----------------------------
-# 🔹 Catálogo general (para clientes)
-# -----------------------------
-def lista_productos(request):
-    productos = Producto.objects.all()
-
-    # --- FILTROS ---
-    pais = request.GET.get('pais')
-    color = request.GET.get('color')
-    dulzura = request.GET.get('dulzura')
-    cuerpo = request.GET.get('cuerpo')
-
-    if pais:
-        productos = productos.filter(pais_origen__icontains=pais)
-    if color:
-        productos = productos.filter(subcategoria__nombre__icontains=color)
-    if dulzura:
-        productos = productos.filter(subcategoria__nombre__icontains=dulzura)
-    if cuerpo:
-        productos = productos.filter(subcategoria__nombre__icontains=cuerpo)
-
-    # --- PAGINACIÓN ---
-    paginator = Paginator(productos, 9)
-    page_number = request.GET.get('page')
-    productos_pagina = paginator.get_page(page_number)
-
-    return render(request, 'catalogo/catalogo.html', {
-        'productos': productos_pagina
-    })
-
-
-# -----------------------------
-# 🔹 Detalle de producto individual
-# -----------------------------
-def detalle_producto(request, producto_id):
-    producto = get_object_or_404(Producto, id=producto_id)
-    return render(request, 'catalogo/detalle.html', {'producto': producto})
-
-
+# --------------------------
+# VISTA INVENTARIO
+# --------------------------
 def inventario(request):
-    # --- Control de acceso ---
-    if not request.session.get('usuario_id'):
-        return redirect('usuarios:login')
-    if request.session.get('usuario_rol') != 'admin':
-        return redirect('catalogo:catalogo_cliente')
+    seccion = request.GET.get('seccion', 'vinos')  # default: 'vinos'
 
-    # ✅ Filtrar las subcategorías por sección
-    subcategorias_productos = Subcategoria.objects.filter(seccion='productos')
-    subcategorias_combos = Subcategoria.objects.filter(seccion='combos')
-
-    # ✅ Construir el JSON que usará el modal
-    categorias_json = {
-        "productos": list(
-            Categoria.objects.filter(subcategorias__seccion='productos')
-            .values('id', 'nombre')
-            .distinct()
-        ),
-        "combos": list(
-            Categoria.objects.filter(subcategorias__seccion='combos')
-            .values('id', 'nombre')
-            .distinct()
-        ),
-    }
+    if seccion == 'vinos':
+        productos = Producto.objects.all()
+    else:  # seccion == 'combos'
+        productos = Combo.objects.all()
 
     return render(request, 'catalogo/inventario.html', {
-        'seccion': request.GET.get('seccion', 'productos'),
-        'categorias_json': json.dumps(categorias_json),  # 👈 importante
-        'categorias': Categoria.objects.all(),
-        'subcategorias': Subcategoria.objects.all(),
+        'productos': productos,
+        'seccion': seccion
     })
-#------------------------
-# 🔹 Catálogo público (visitantes)
-# -----------------------------
-def catalogo_publico(request):
-    return render(request, 'catalogo/catalogo_publico.html')
 
+# --------------------------
+# Vista de productos (Cliente)
+# --------------------------
+def productos(request):
+    seccion = request.GET.get('seccion', 'vinos')
+    if seccion == 'combos':
+        productos = Combo.objects.filter(activo=True)
+    else:
+        productos = Producto.objects.filter(activo=True)
+    return render(request, 'catalogo/productos.html', {
+        'productos': productos,
+        'seccion': seccion,
+    })
 
-# -----------------------------
-# 🔹 Catálogo del cliente logueado
-# -----------------------------
-def catalogo_cliente(request):
-    return render(request, 'catalogo/catalogo_cliente.html')
+# --------------------------
+# AGREGAR PRODUCTO / COMBO
+# --------------------------
 
-
-# -----------------------------
-# 🔹 Agregar nueva subcategoría
-# -----------------------------
-def agregar_subcategoria(request):
+def agregar_producto(request):
+    seccion = 'vinos'
     if request.method == 'POST':
-        seccion = request.POST.get('seccion')
-        categoria_principal = request.POST.get('categoria')
-        nombre_subcategoria = request.POST.get('subcategoria')
-
-        if not (seccion and categoria_principal and nombre_subcategoria):
-            messages.error(request, '⚠️ Todos los campos son obligatorios.')
-            return redirect('catalogo:inventario')
-
-        Subcategoria.objects.create(
-            seccion=seccion,
-            categoria_principal=categoria_principal,
-            nombre=nombre_subcategoria
+        categorias = request.POST.getlist('categoria')
+        producto = Producto(
+            nombre=request.POST.get('nombre'),
+            precio=request.POST.get('precio'),
+            descripcion=request.POST.get('descripcion', ''),
+            categoria=", ".join(categorias),
+            activo=request.POST.get('activo') == 'on'
         )
-        messages.success(request, '✅ Subcategoría agregada correctamente.')
-        return redirect('catalogo:inventario')
+        if request.FILES.get('imagen'):
+            producto.imagen = request.FILES.get('imagen')
+        producto.save()
+        return HttpResponseRedirect(reverse('catalogo:inventario') + f'?seccion={seccion}')
+    
+    return render(request, 'catalogo/agregar_producto.html', {'seccion': seccion})
 
 
-# -----------------------------
-# 🔹 Eliminar subcategoría
-# -----------------------------
-def eliminar_subcategoria(request):
+def agregar_combo(request):
+    seccion = 'combos'
     if request.method == 'POST':
-        categoria_id = request.POST.get('categoria_id')
-        try:
-            subcategoria = Subcategoria.objects.get(id=categoria_id)
-            subcategoria.delete()
-            messages.success(request, '🗑️ Subcategoría eliminada correctamente.')
-        except Subcategoria.DoesNotExist:
-            messages.error(request, '⚠️ La subcategoría no existe.')
+        categorias = request.POST.getlist('categoria')
+        combo = Combo(
+            nombre=request.POST.get('nombre'),
+            precio=request.POST.get('precio'),
+            descripcion=request.POST.get('descripcion', ''),
+            categoria=", ".join(categorias),
+            activo=request.POST.get('activo') == 'on'
+        )
+        if request.FILES.get('imagen'):
+            combo.imagen = request.FILES.get('imagen')
+        combo.save()
+        return HttpResponseRedirect(reverse('catalogo:inventario') + f'?seccion={seccion}')
+    
+    return render(request, 'catalogo/agregar_combo.html', {'seccion': seccion})
 
-        return redirect('catalogo:inventario')
+# --------------------------
+# EDITAR PRODUCTO/COMBO
+# --------------------------
+def editar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
 
-    # Si se entra por GET
-    subcategorias = Subcategoria.objects.all()
-    return render(request, 'catalogo/inventario.html', {'categorias': subcategorias})
+    # Listas para los checkboxes
+    paises = ["Chile","Argentina","España","Italia","Francia","Colombia","México"]
+    colores = ["Tinto","Blanco","Rosado"]
+    grados = ["Menos de 10%","10% - 13%","Más de 13%"]
+    uvas = ["Cabernet Sauvignon","Malbec","Merlot","Sauvignon Blanc","Verdejo","Carménère","Nebbiolo","Pinot Noir","Grenache"]
+    volumenes = ["375 ml","750 ml","1 L"]
 
-# -----------------------------
-# 🔹 Editar subcategoría
-# -----------------------------
-def editar_subcategoria(request):
     if request.method == 'POST':
-        categoria_id = request.POST.get('categoria_id')
-        nuevo_nombre = request.POST.get('nuevo_nombre')
-        nueva_seccion = request.POST.get('seccion')
+        # Obtener listas de cada categoría
+        categorias_pais = request.POST.getlist('categoria_pais')
+        categorias_color = request.POST.getlist('categoria_color')
+        categorias_grado = request.POST.getlist('categoria_grado')
+        categorias_uva = request.POST.getlist('categoria_uva')
+        categorias_volumen = request.POST.getlist('categoria_volumen')
 
-        subcategoria = get_object_or_404(Subcategoria, id=categoria_id)
-        subcategoria.nombre = nuevo_nombre
-        subcategoria.seccion = nueva_seccion
-        subcategoria.save()
+        # Guardar los datos
+        producto.nombre = request.POST.get('nombre')
+        producto.precio = request.POST.get('precio')
+        producto.descripcion = request.POST.get('descripcion', '')
+        
+        # Aquí dependiendo de cómo tengas el modelo, puedes guardar las relaciones de categoría/subcategoría
+        # Por simplicidad, si solo usas un campo texto:
+        producto.categoria = ", ".join(categorias_pais + categorias_color + categorias_grado + categorias_uva)
+        producto.subcategorias = ", ".join(categorias_volumen)
 
-        messages.success(request, '✅ Subcategoría actualizada correctamente.')
-        return redirect('catalogo:inventario')
+        if request.FILES.get('imagen'):
+            producto.imagen = request.FILES.get('imagen')
+
+        producto.activo = request.POST.get('activo') == 'on'
+        producto.save()
+
+        return HttpResponseRedirect(reverse('catalogo:inventario') + '?seccion=vinos')
+
+    context = {
+        'producto': producto,
+        'seccion': 'vinos',
+        'paises': paises,
+        'colores': colores,
+        'grados': grados,
+        'uvas': uvas,
+        'volumenes': volumenes,
+    }
+
+    return render(request, 'catalogo/editar_producto.html', context)
+
+def editar_combo(request, combo_id):
+    combo = get_object_or_404(Combo, id=combo_id)
+
+    # Listas para checkboxes
+    festividades = ["Navidad", "Año Nuevo", "San Valentín", "Día del Padre", "Día de la Madre"]
+    premium = ["Gold", "Platinum", "Black Label"]
+    regalo = ["Amistad", "Cumpleaños", "Pareja", "Corporativo"]
+
+    if request.method == 'POST':
+        categorias = request.POST.getlist('categoria')
+        combo.nombre = request.POST.get('nombre')
+        combo.precio = request.POST.get('precio')
+        combo.descripcion = request.POST.get('descripcion', '')
+        combo.categoria = ", ".join(categorias)
+        combo.unidades = request.POST.get('unidades', 1)
+
+        if request.FILES.get('imagen'):
+            combo.imagen = request.FILES.get('imagen')
+
+        combo.activo = request.POST.get('activo') == 'on'
+        combo.save()
+        return HttpResponseRedirect(reverse('catalogo:inventario') + '?seccion=combos')
+
+    context = {
+        'combo': combo,
+        'seccion': 'combos',
+        'festividades': festividades,
+        'premium': [f"premium_{p.lower()}" for p in premium],
+        'regalo': [f"regalo_{r.lower()}" for r in regalo],
+    }
+
+    return render(request, 'catalogo/editar_combo.html', context)
+
+
+# --------------------------
+# ELIMINAR PRODUCTO/COMBO
+# --------------------------
+def eliminar_producto(request, producto_id):
+    get_object_or_404(Producto, id=producto_id).delete()
+    return HttpResponseRedirect(reverse('catalogo:inventario') + '?seccion=vinos')
+
+def eliminar_combo(request, combo_id):
+    get_object_or_404(Combo, id=combo_id).delete()
+    return HttpResponseRedirect(reverse('catalogo:inventario') + '?seccion=combos')
+
+# --------------------------
+# DETALLE PRODUCTO/COMBO
+# --------------------------
+def detalle_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    return render(request, 'catalogo/modal_detalle.html', {'producto': producto})
+
+def detalle_combo(request, combo_id):
+    combo = get_object_or_404(Combo, id=combo_id)
+    return render(request, 'catalogo/modal_detalle.html', {'producto': combo})
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Producto, Combo
+
+# --------------------------
+# Vista de inventario (Admin)
+# --------------------------
+def inventario(request):
+    seccion = request.GET.get('seccion', 'vinos')
+    if seccion == 'combos':
+        productos = Combo.objects.all()
+    else:
+        productos = Producto.objects.all()
+    return render(request, 'catalogo/inventario.html', {
+        'productos': productos,
+        'seccion': seccion,
+    })
+
+# --------------------------
+# Vista de productos (Cliente)
+# --------------------------
+def productos(request):
+    seccion = request.GET.get('seccion', 'vinos')
+    if seccion == 'combos':
+        productos = Combo.objects.filter(activo=True)
+    else:
+        productos = Producto.objects.filter(activo=True)
+    return render(request, 'catalogo/productos.html', {
+        'productos': productos,
+        'seccion': seccion,
+    })
+
+# --------------------------
+# Detalle Producto/Combo
+# --------------------------
+def detalle_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id, activo=True)
+    return render(request, 'catalogo/detalle_producto.html', {'producto': producto})
+
+def detalle_combo(request, combo_id):
+    combo = get_object_or_404(Combo, id=combo_id, activo=True)
+    return render(request, 'catalogo/detalle_combo.html', {'combo': combo})

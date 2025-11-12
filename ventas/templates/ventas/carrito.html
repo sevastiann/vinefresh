@@ -6,35 +6,34 @@
 <div class="container mt-4">
     <h2>🛒 Carrito de Compras</h2>
 
-    <a href="{% url 'ventas_home' %}" class="btn btn-secondary mt-2">⬅ Volver</a>
+    <a href="" class="btn btn-secondary mt-2">⬅ Volver</a>
 
     {% if carrito %}
-    <table class="table table-bordered table-striped mt-3">
-        <thead class="table-dark">
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Usuario</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in carrito %}
-            <tr>
-                <td>{{ item.producto.nombre }}</td>
-                <td>{{ item.cantidad }}</td>
-                <td>{{ item.usuario.nombre_usuario }}</td>
-                <td>
-                    <a href="#" class="btn btn-sm btn-primary">Editar</a>
-                    <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Usuario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in carrito %}
+                <tr>
+                    <td>{{ item.producto.nombre }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>{{ item.usuario.nombre }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-primary">Editar</a>
+                        <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="#" class="btn btn-success mt-3">✅ Procesar Pedido</a>
-
+        <a href="#" class="btn btn-success mt-3">✅ Procesar Pedido</a>
     {% else %}
         <p class="mt-3">El carrito está vacío.</p>
     {% endif %}

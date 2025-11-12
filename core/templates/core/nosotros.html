@@ -4,70 +4,134 @@
 {% block title %}Nosotros | VineFresh{% endblock %}
 
 {% block content %}
-<section class="about-section py-10">
-    <div class="container mx-auto px-6 md:px-12 lg:px-20">
-        <h1 class="section-title text-center text-4xl font-bold text-green-700 mb-10">
-            Sobre Nosotros
-        </h1>
 
-        <!-- Historia y compromiso -->
-        <div class="about-content flex flex-col md:flex-row items-center gap-10 mb-16">
-            <div class="about-text md:w-1/2 text-gray-700">
-                <h2 class="text-2xl font-semibold text-green-700 mb-2">Nuestra Historia</h2>
-                <p class="mb-6">
-                    En <strong>VineFresh</strong> nacimos con una misión clara: ofrecer vinos de alta calidad 
-                    seleccionados cuidadosamente de los mejores viñedos nacionales e internacionales. 
-                    Buscamos que cada botella cuente una historia, una tradición y una pasión por la excelencia.
-                </p>
+<link rel="stylesheet" href="{% static 'css/core/nosotros.css' %}">
 
-                <h2 class="text-2xl font-semibold text-green-700 mb-2">Nuestro Compromiso</h2>
-                <p>
-                    Creemos que el vino es más que una bebida: es una experiencia.  
-                    Por eso, nos comprometemos con la sostenibilidad, el comercio justo 
-                    y la satisfacción de nuestros clientes, llevando cada producto 
-                    desde la vid hasta tu mesa con el mayor cuidado.
-                </p>
-            </div>
 
-            <div class="about-image md:w-1/2 text-center">
-                <img src="{% static 'img/nosotros_vino.jpg' %}" alt="Nuestra historia"
-                     class="rounded-2xl shadow-md max-w-full h-auto">
-            </div>
+<section class="nosotros-header">
+    <div class="overlay"></div>
+    <div class="header-content">
+        <h1>Sobre Nosotros</h1>
+        <p>Tradición, pasión y excelencia en cada botella</p>
+    </div>
+</section>
+
+<section class="nosotros-container">
+    <!-- Historia -->
+    <div class="about-content">
+        <div class="about-text">
+            <h2 class="section-title">Nuestra Historia</h2>
+            <p class="section-text">
+                En <strong>VineFresh</strong> nacimos con una misión clara: ofrecer vinos de alta calidad 
+                seleccionados cuidadosamente de los mejores viñedos nacionales e internacionales. 
+                Buscamos que cada botella cuente una historia, una tradición y una pasión por la excelencia.
+            </p>
+            <p class="section-text">
+                Desde nuestros inicios en el corazón de los valles vinícolas, nos hemos dedicado a mantener vivas 
+                las técnicas ancestrales de cultivo y fermentación, combinándolas con innovación para brindar 
+                una experiencia única a cada cliente.
+            </p>
         </div>
 
-        <!-- Valores -->
-        <div class="about-values text-center">
-            <h2 class="text-3xl font-semibold text-green-700 mb-8">Nuestros Valores</h2>
-            <div class="values-container grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="value-box p-6 rounded-xl shadow-md transition-transform duration-300 transform hover:scale-105">
-                    <i class="fas fa-leaf text-green-700 text-4xl mb-3"></i>
-                    <h3 class="text-xl font-bold mb-2">Sostenibilidad</h3>
-                    <p class="text-gray-600">Fomentamos prácticas responsables con el medio ambiente en cada proceso.</p>
-                </div>
-                <div class="value-box p-6 rounded-xl shadow-md transition-transform duration-300 transform hover:scale-105">
-                    <i class="fas fa-handshake text-green-700 text-4xl mb-3"></i>
-                    <h3 class="text-xl font-bold mb-2">Confianza</h3>
-                    <p class="text-gray-600">Valoramos la transparencia y la cercanía con nuestros clientes y proveedores.</p>
-                </div>
-                <div class="value-box p-6 rounded-xl shadow-md transition-transform duration-300 transform hover:scale-105">
-                    <i class="fas fa-wine-glass-alt text-green-700 text-4xl mb-3"></i>
-                    <h3 class="text-xl font-bold mb-2">Calidad</h3>
-                    <p class="text-gray-600">Seleccionamos vinos que cumplen con los más altos estándares de sabor y aroma.</p>
-                </div>
+        <div class="about-image">
+            <img src="{% static 'img/nosotros_vino.jpg' %}" alt="Nuestra historia" class="nosotros-imagen">
+        </div>
+    </div>
+
+    <!-- Compromiso -->
+    <div class="about-content reverse">
+        <div class="about-image">
+            <img src="{% static 'img/viñedo_trabajo.jpg' %}" alt="Nuestro compromiso" class="nosotros-imagen">
+        </div>
+
+        <div class="about-text">
+            <h2 class="section-title">Nuestro Compromiso</h2>
+            <p class="section-text">
+                Creemos que el vino es más que una bebida: es una experiencia, un momento de conexión con la tierra 
+                y con quienes lo comparten. Nos comprometemos con la sostenibilidad, el comercio justo y la calidad, 
+                respetando cada etapa del proceso desde la vid hasta tu mesa.
+            </p>
+            <p class="section-text">
+                Trabajamos de la mano con productores locales, promoviendo prácticas ecológicas y contribuyendo 
+                al desarrollo de comunidades rurales dedicadas al arte del vino.
+            </p>
+        </div>
+    </div>
+
+    <!-- Nuestro Equipo -->
+    <div class="about-team">
+        <h2 class="section-title">Nuestro Equipo</h2>
+        <p class="section-text">
+            Detrás de cada botella hay personas apasionadas que hacen posible que VineFresh siga creciendo.
+        </p>
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="{% static 'img/equipo_enologo.jpg' %}" alt="Enólogo principal">
+                <h3>Andrés López</h3>
+                <p>Enólogo Principal</p>
+            </div>
+            <div class="team-member">
+                <img src="{% static 'img/equipo_sommelier.jpg' %}" alt="Sommelier">
+                <h3>María Torres</h3>
+                <p>Sommelier</p>
+            </div>
+            <div class="team-member">
+                <img src="{% static 'img/equipo_marketing.jpg' %}" alt="Directora de marketing">
+                <h3>Camila Rivas</h3>
+                <p>Directora de Marketing</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Galería -->
+    <div class="about-gallery">
+        <h2 class="section-title">Momentos y Tradición</h2>
+        <div class="gallery-grid">
+            <img src="{% static 'img/galeria_barriles.jpg' %}" alt="Barriles de vino">
+            <img src="{% static 'img/galeria_uvas.jpg' %}" alt="Uvas frescas">
+            <img src="{% static 'img/galeria_copa.jpg' %}" alt="Copa de vino">
+            <img src="{% static 'img/galeria_bodega.jpg' %}" alt="Bodega VineFresh">
+        </div>
+    </div>
+
+    <!-- Valores -->
+    <div class="about-values">
+        <h2 class="section-title">Nuestros Valores</h2>
+        <div class="valores">
+            <div class="valor-card">
+                <i class="fa-solid fa-leaf"></i>
+                <h3>Sostenibilidad</h3>
+                <p>Fomentamos prácticas responsables con el medio ambiente en cada proceso.</p>
+            </div>
+
+            <div class="valor-card">
+                <i class="fa-solid fa-handshake"></i>
+                <h3>Confianza</h3>
+                <p>Valoramos la transparencia y la cercanía con nuestros clientes y proveedores.</p>
+            </div>
+
+            <div class="valor-card">
+                <i class="fa-solid fa-wine-glass-alt"></i>
+                <h3>Calidad</h3>
+                <p>Seleccionamos vinos que cumplen con los más altos estándares de sabor y aroma.</p>
             </div>
         </div>
     </div>
 </section>
+
+
+
+
 {% endblock %}
 
 {% block scripts %}
 <script>
 document.addEventListener("scroll", function() {
-    const elements = document.querySelectorAll('.value-box');
-    elements.forEach(el => {
-        const position = el.getBoundingClientRect().top;
-        if (position < window.innerHeight - 100) {
-            el.classList.add('visible');
+    const cards = document.querySelectorAll('.valor-card');
+    cards.forEach(card => {
+        const pos = card.getBoundingClientRect().top;
+        if (pos < window.innerHeight - 100) {
+            card.classList.add('visible');
         }
     });
 });

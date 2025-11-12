@@ -1,44 +1,85 @@
 {% load static %}
+<!-- Modal Detalle Producto -->
 <div id="modal-detalle-producto-{{ producto.id }}" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
+        <span class="close" data-id="{{ producto.id }}">&times;</span>
 
-        <!-- Imagen -->
-        {% if producto.imagen %}
-            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="modal-img">
-        {% endif %}
+        <h2>Detalle de Producto</h2>
 
-        <h2>{{ producto.nombre }}</h2>
-        <p><strong>Precio:</strong> ${{ producto.precio }}</p>
-        {% if producto.descripcion %}
-            <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
-        {% endif %}
+        <form>
+            <!-- Nombre -->
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" value="{{ producto.nombre }}" readonly>
+            </div>
 
-        <!-- Categorías -->
-        {% if producto.categorias.exists %}
-            <p><strong>Categorías:</strong> 
-                {% for cat in producto.categorias.all %}
-                    {{ cat.nombre }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </p>
-        {% endif %}
+            <!-- Precio -->
+            <div class="form-group">
+                <label>Precio:</label>
+                <input type="number" value="{{ producto.precio }}" readonly>
+            </div>
 
-        <!-- Subcategorías -->
-        {% if producto.subcategorias.exists %}
-            <p><strong>Subcategorías:</strong> 
-                {% for sub in producto.subcategorias.all %}
-                    {{ sub.nombre }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </p>
-        {% endif %}
+            <!-- Grado de alcohol -->
+            {% if producto.grado_alcohol %}
+            <div class="form-group">
+                <label>Grado de alcohol:</label>
+                <input type="number" value="{{ producto.grado_alcohol }}" readonly>
+            </div>
+            {% endif %}
+
+            <!-- Tipo de fruto -->
+            {% if producto.tipo_fruto %}
+            <div class="form-group">
+                <label>Tipo de fruto:</label>
+                <input type="text" value="{{ producto.tipo_fruto }}" readonly>
+            </div>
+            {% endif %}
+
+            <!-- País de origen -->
+            {% if producto.pais_origen %}
+            <div class="form-group">
+                <label>País de origen:</label>
+                <input type="text" value="{{ producto.pais_origen }}" readonly>
+            </div>
+            {% endif %}
+
+            <!-- Categorías -->
+            {% if producto.categoria %}
+            <div class="form-group">
+                <label>Categorías:</label>
+                <input type="text" value="{{ producto.categoria }}" readonly>
+            </div>
+            {% endif %}
+
+            <!-- Subcategorías -->
+            {% if producto.subcategorias.exists %}
+            <div class="form-group">
+                <label>Subcategorías:</label>
+                <input type="text" value="{% for sub in producto.subcategorias.all %}{{ sub.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}" readonly>
+            </div>
+            {% endif %}
+
+            <!-- Imagen -->
+            {% if producto.imagen %}
+            <div class="form-group">
+                <label>Imagen:</label><br>
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="modal-img">
+            </div>
+            {% endif %}
+
+            <!-- Estado activo/inactivo -->
+            <div class="form-group">
+                <label>Activo:</label>
+                <input type="checkbox" {% if producto.activo %}checked{% endif %} disabled>
+            </div>
+        </form>
     </div>
 </div>
 
 <style>
-/* Fondo del modal */
 .modal {
-    display: none; /* Oculto por defecto */
-    position: fixed; 
+    display: none;
+    position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
@@ -48,18 +89,16 @@
     background-color: rgba(0,0,0,0.5);
 }
 
-/* Contenido del modal */
 .modal-content {
     background-color: #fff;
-    margin: 10% auto;
+    margin: 5% auto;
     padding: 20px;
     border-radius: 10px;
-    width: 300px;
+    width: 400px;
     position: relative;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-/* Botón cerrar */
 .close {
     position: absolute;
     top: 5px;
@@ -73,28 +112,45 @@
 .modal-img {
     width: 100%;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 </style>
 
 <script>
-const modalProducto = document.getElementById("modal-detalle-producto-{{ producto.id }}");
-const closeBtnProducto = modalProducto.querySelector(".close");
-
-// Abrir modal
-function abrirModalProducto() {
-    modalProducto.style.display = "block";
+// Función para abrir modal según ID
+function abrirModal(id) {
+    document.getElementById('modal-detalle-producto-' + id).style.display = 'block';
 }
 
 // Cerrar modal al hacer click en "X"
-closeBtnProducto.onclick = function() {
-    modalProducto.style.display = "none";
-}
+document.querySelectorAll('.close').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        document.getElementById('modal-detalle-producto-' + id).style.display = 'none';
+    });
+});
 
 // Cerrar modal al hacer click fuera del contenido
-window.onclick = function(event) {
-    if (event.target == modalProducto) {
-        modalProducto.style.display = "none";
+window.addEventListener('click', (event) => {
+    if(event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
     }
-}
+});
 </script>

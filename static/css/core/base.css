@@ -1,0 +1,421 @@
+
+        /* ================================
+           ESTILO GENERAL
+        ================================ */
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f8f5f0, #f3e5e5);
+            margin: 0;
+            color: #3e2723;
+        }
+        
+        /* ================================
+           ENCABEZADO
+        ================================ */
+        header {
+            background-color: #4a0e0e;
+            color: #fdf6f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+        }
+        
+        .logo span {
+            font-size: 1.4em;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        nav a {
+            color: #fdf6f0;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #e0b080;
+        }
+        
+        /* BOTONES LOGIN / REGISTRO */
+        .user-actions {
+            display: inline-flex;
+            gap: 8px;
+            margin-left: 15px;
+        }
+        
+        .user-actions a {
+            background-color: #7b1f1f;
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+        
+        .user-actions a:hover {
+            background-color: #5e1010;
+        }
+        
+        /* ================================
+           SECCIÓN PRINCIPAL
+        ================================ */
+        main {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        main h1 {
+            color: #4a0e0e;
+            margin-bottom: 15px;
+        }
+        
+        main p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #5c4033;
+        }
+        
+        /* ================================
+           CARRUSEL
+        ================================ */
+.carousel-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.carousel-img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.carousel-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.carousel-subtitle {
+    font-size: 1.5rem;
+    margin: 5px 0;
+}
+
+.carousel-year {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Botones de navegación */
+.carousel-prev,
+.carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.4);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    color: #fff;
+    transition: 0.3s;
+    z-index: 10;
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+    background: rgba(0,0,0,0.6);
+}
+
+.carousel-prev {
+    left: 15px;
+}
+
+.carousel-next {
+    right: 15px;
+}
+
+.carousel-prev-icon::before,
+.carousel-next-icon::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-top: 2px solid #fff;
+    border-right: 2px solid #fff;
+}
+
+.carousel-prev-icon::before {
+    transform: rotate(-135deg);
+}
+
+.carousel-next-icon::before {
+    transform: rotate(45deg);
+}
+
+        
+        /* ================================
+           SOBRE NOSOTROS
+        ================================ */
+        .about-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .about-title h4 {
+            color: #e0b080;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+        
+        .about-title h1 {
+            color: #4a0e0e;
+            margin-bottom: 40px;
+        }
+        
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .about-text, .about-image, .about-extra {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        
+        .about-text h1, .about-extra h1 {
+            color: #4a0e0e;
+            margin-bottom: 15px;
+        }
+        
+        /* ================================
+           SERVICIOS
+        ================================ */
+        .service-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .service-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+        
+        .service-item img {
+            width: 120px;
+            border-radius: 10px;
+        }
+        
+        .service-item h4 {
+            margin: 0 0 5px 0;
+            color: #4a0e0e;
+        }
+        
+        .service-item p {
+            margin: 0;
+            color: #5c4033;
+        }
+        
+        /* ================================
+           OFERTAS
+        ================================ */
+        .offer-section {
+            background: rgba(74, 14, 14, 0.9);
+            color: #fff;
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+        }
+        
+        .offer-section h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .offer-section input[type="text"] {
+            padding: 15px;
+            width: 300px;
+            max-width: 80%;
+            border: none;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .offer-section button {
+            padding: 15px 25px;
+            border: none;
+            background-color: #e0b080;
+            color: #4a0e0e;
+            font-weight: bold;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        
+        .offer-section button:hover {
+            background-color: #c18b5a;
+        }
+        
+        /* ================================
+           MENÚ / TIPOS DE VINOS
+        ================================ */
+        .menu-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .menu-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            align-items: center;
+        }
+        
+        .menu-item img {
+            width: 100px;
+            border-radius: 50%;
+        }
+        
+        .menu-item h4 {
+            margin: 0 0 5px 0;
+            color: #4a0e0e;
+        }
+        
+        .menu-item p {
+            margin: 0;
+            color: #5c4033;
+        }
+        
+        /* ================================
+           RESERVA / OPINIÓN
+        ================================ */
+        .reservation-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .reservation-text, .reservation-form {
+            flex: 1;
+            min-width: 300px;
+            color: #fff;
+        }
+        
+        .reservation-form {
+            background: rgba(51, 33, 29, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .reservation-form input, .reservation-form .datetimepicker-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e0b080;
+            border-radius: 5px;
+            background: transparent;
+            color: #fff;
+        }
+        
+        /* ================================
+           TESTIMONIOS
+        ================================ */
+        .testimonial-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .testimonial-item {
+            margin-bottom: 30px;
+        }
+        
+        .testimonial-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        
+        .testimonial-item h4 {
+            margin: 0;
+            color: #4a0e0e;
+        }
+        
+        .testimonial-item i {
+            font-style: italic;
+            color: #5c4033;
+        }
+        
+        /* ================================
+           PIE DE PÁGINA
+        ================================ */
+        footer {
+            background-color: #4a0e0e;
+            color: #fdf6f0;
+            text-align: center;
+            padding: 25px 10px;
+            font-size: 0.9em;
+        }
+        
+        footer a {
+            color: #e0b080;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        
+    

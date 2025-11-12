@@ -1,89 +1,228 @@
-<!-- catalogo/sidebar.html -->
-<div class="sidebar">
-    <!-- 🔧 Botones administrativos -->
-    <div class="apartado admin-botones">
-        <button id="abrirModal" class="btn-agregar-categoria">➕ Agregar Categoría</button>
-        <button id="abrirModalEditar" class="btn-editar-categoria">✏️ Editar Categoría</button>
-        <button id="abrirModalEliminar" class="btn-eliminar-categoria">🗑️ Eliminar Categoría</button>
-
-    </div>
-
-    <!-- 🔍 Buscador -->
-    <div class="buscador">
-        <input type="text" placeholder="Buscar por nombre...">
-        <button class="btn-buscar">🔍</button>
-    </div>
-
-    <!-- 💰 Filtro de precio -->
-    <div class="filtro-precio">
-        <label>Hasta: $150.000</label>
-        <div class="slider-control">
-            <button>-</button>
-            <input type="range" min="0" max="150000" value="75000">
-            <button>+</button>
+<div class="layout-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <!-- 🔍 Buscador -->
+        <div class="buscador mb-4">
+            <input type="text" placeholder="Buscar por nombre..." class="input-buscar">
+            <button class="btn-buscar">🔍</button>
         </div>
-    </div>
 
-    <!-- 🧩 Filtros dinámicos (categorías con subcategorías) -->
-    <ul class="filtros-lista">
-        {% for categoria in categorias %}
-            <li>
-                <strong>{{ categoria.nombre }}</strong>
-                <select>
-                    <option value="">Seleccionar...</option>
-                    {% for sub in categoria.subcategorias.all %}
-                        <option value="{{ sub.id }}">{{ sub.nombre }}</option>
-                    {% endfor %}
-                </select>
-            </li>
-        {% empty %}
-            <li>No hay categorías registradas aún.</li>
-        {% endfor %}
-    </ul>
+        <!-- 💰 Filtro de precio -->
+        <div class="filtro-precio mb-5">
+            <label class="bloque-texto font-semibold mb-2">Filtrar por precio</label>
+            <div class="precio-inputs">
+                <input type="number" placeholder="Mínimo" class="input-precio">
+                <span>—</span>
+                <input type="number" placeholder="Máximo" class="input-precio">
+            </div>
+        </div>
+
+        <!-- 🍇 Filtros según sección -->
+        <div class="filtros-plegables">
+            {% if seccion == "vinos" %}
+                <details open>
+                    <summary>País</summary>
+                    <ul class="lista-filtro">
+                        <li><input type="checkbox" id="pais1"><label for="pais1">Chile</label></li>
+                        <li><input type="checkbox" id="pais2"><label for="pais2">Argentina</label></li>
+                        <li><input type="checkbox" id="pais3"><label for="pais3">España</label></li>
+                        <li><input type="checkbox" id="pais4"><label for="pais4">Italia</label></li>
+                        <li><input type="checkbox" id="pais5"><label for="pais4">Francia</label></li>
+                        <li><input type="checkbox" id="pais6"><label for="pais4">Colombia</label></li>
+                        <li><input type="checkbox" id="pais7"><label for="pais4">Mexico</label></li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Color</summary>
+                    <ul class="lista-filtro">
+                        <li><input type="checkbox" id="color1"><label for="color1">Tinto</label></li>
+                        <li><input type="checkbox" id="color2"><label for="color2">Blanco</label></li>
+                        <li><input type="checkbox" id="color3"><label for="color3">Rosado</label></li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Grado de Alcohol</summary>
+                    <ul class="lista-filtro">
+                        <li><input type="checkbox" id="alcohol1"><label for="alcohol1">Menos de 10%</label></li>
+                        <li><input type="checkbox" id="alcohol2"><label for="alcohol2">10% - 13%</label></li>
+                        <li><input type="checkbox" id="alcohol3"><label for="alcohol3">Más de 13%</label></li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Tipo de Uva</summary>
+                    <ul class="lista-filtro">
+                        <li><input type="checkbox" id="uva1"><label for="uva1">Cabernet Sauvignon</label></li>
+                        <li><input type="checkbox" id="uva2"><label for="uva2">Malbec</label></li>
+                        <li><input type="checkbox" id="uva3"><label for="uva3">Merlot</label></li>
+                        <li><input type="checkbox" id="uva4"><label for="uva4">Sauvignon Blanc</label></li>
+                        <li><input type="checkbox" id="uva5"><label for="uva5">Verdejo</label></li>
+                        <li><input type="checkbox" id="uva6"><label for="uva6">Carménère</label></li>
+                        <li><input type="checkbox" id="uva7"><label for="uva7">Nebbiolo</label></li>
+                        <li><input type="checkbox" id="uva8"><label for="uva8">Pinot Noir</label></li>
+                        <li><input type="checkbox" id="uva9"><label for="uva9">Grenache</label></li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Volumen</summary>
+                    <ul class="lista-filtro">
+                        <li><input type="checkbox" id="vol1"><label for="vol1">375 ml</label></li>
+                        <li><input type="checkbox" id="vol2"><label for="vol2">750 ml</label></li>
+                        <li><input type="checkbox" id="vol3"><label for="vol3">1 L</label></li>
+                    </ul>
+                </details>
+            {% elif seccion == "combos" %}
+                <details open>
+                    <summary>Festividad</summary>
+                    <ul class="lista-filtro">
+                        <li><input type="checkbox" id="fest1"><label for="fest1">Navidad</label></li>
+                        <li><input type="checkbox" id="fest2"><label for="fest2">San Valentín</label></li>
+                        <li><input type="checkbox" id="fest3"><label for="fest3">Día especial</label></li>
+                        <li><input type="checkbox" id="fest4"><label for="fest4">Bodas y Aniversarios</label></li>
+                        <li><input type="checkbox" id="fest5"><label for="fest5">Cenas Importantes</label></li>
+                        <li><input type="checkbox" id="fest6"><label for="fest6">Fiestas Tematicas</label></li>
+                        <li><input type="checkbox" id="fest7"><label for="fest7">halloween</label></li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Premium</summary>
+                    <ul class="lista-filtro">
+                        <li><input type="checkbox" id="prem1"><label for="prem1">Sí</label></li>
+                        <li><input type="checkbox" id="prem2"><label for="prem2">No</label></li>
+                    </ul>
+                </details>
+
+                <details>
+                    <summary>Regalo</summary>
+                    <ul class="lista-filtro">
+                        <li><input type="checkbox" id="reg1"><label for="reg1">Sí</label></li>
+                        <li><input type="checkbox" id="reg2"><label for="reg2">No</label></li>
+                    </ul>
+                </details>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- Área central -->
+    <main class="productos-section">
+        <!-- Aquí van los productos o contenido principal -->
+    </main>
 </div>
 
-<!-- 🎨 Estilos opcionales -->
 <style>
-.sidebar {
-    background-color: #fffaf2;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-.admin-botones {
+.layout-container {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    align-items: flex-start;
+    width: 100%;
+    padding: 0;          /* elimina padding general */
+    margin: 0;           /* elimina margen */
+}
+
+.sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background-color: #fffaf2;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-family: 'Poppins', sans-serif;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    margin-right: 20px;  /* opcional, si quieres separación con productos */
+    margin-left: 0;      /* asegura que esté pegado al borde izquierdo */
+}
+
+/* Buscador */
+.buscador {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     margin-bottom: 20px;
 }
-.btn-agregar-categoria, .btn-editar-categoria, .btn-eliminar-categoria {
-    background: #d0a85c;
+.input-buscar {
+    flex: 1;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff7f0;
+}
+.btn-buscar {
+    background: #cfa35a;
+    color: #fff;
     border: none;
-    color: white;
-    font-weight: bold;
-    padding: 8px;
+    padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
     transition: 0.2s;
 }
-.btn-agregar-categoria:hover,
-.btn-editar-categoria:hover,
-.btn-eliminar-categoria:hover {
-    background: #b78e4e;
+.btn-buscar:hover { background: #b78e4e; }
+
+/* Precio */
+.filtro-precio .precio-inputs {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
-.filtros-lista {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
-}
-.filtros-lista li {
-    margin-bottom: 10px;
-}
-.filtros-lista select {
-    width: 100%;
+.input-precio {
+    width: 45%;
     padding: 5px;
-    border-radius: 4px;
     border: 1px solid #ccc;
+    border-radius: 6px;
     background-color: #fff7f0;
 }
+
+/* Filtros plegables */
+details {
+    background: #fff7f0;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 12px;
+    border: 1px solid #e0d3b8;
+    transition: 0.3s;
+}
+details[open] {
+    background: #fff2e0;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.05);
+}
+summary {
+    font-weight: 600;
+    color: #6a4a1f;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+summary::after {
+    content: "▾";
+    font-size: 0.8rem;
+    transition: transform 0.3s;
+}
+details[open] summary::after {
+    transform: rotate(180deg);
+}
+.lista-filtro {
+    list-style: none;
+    padding-left: 4px;
+    margin: 0;
+}
+.lista-filtro li {
+    margin-bottom: 6px;
+}
+.lista-filtro input {
+    margin-right: 6px;
+}
+
+/* Productos */
+.productos-section {
+    flex: 1;                  /* ocupa el resto del espacio */
+    display: flex;
+    flex-wrap: wrap;           /* filas horizontales */
+    gap: 20px;
+}
+
 </style>

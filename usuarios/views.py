@@ -110,7 +110,7 @@ def registro_view(request):
             pais=datos['pais'],
             nombre_usuario=datos['nombre_usuario'],
             password=make_password(datos['password']),
-            rol='usuario'
+            rol='cliente'
         )
         usuario.save()
         return JsonResponse({'success': True, 'message': 'Usuario registrado correctamente'})

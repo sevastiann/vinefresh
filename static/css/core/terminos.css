@@ -1,0 +1,93 @@
+/* ===============================
+   Estilos para Política y Términos - VineFresh
+   =============================== */
+
+body {
+  background-color: #f9faf9;
+  font-family: 'Poppins', sans-serif;
+  color: #2e2e2e;
+  line-height: 1.7;
+}
+
+/* --- Contenedor principal --- */
+.policy-section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  background-color: #ffffff;
+}
+
+.policy-section .container {
+  background-color: #ffffff;
+  padding: 60px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Encabezados principales --- */
+.policy-section h1 {
+  color: #2f7a47;
+  font-size: 2.3rem;
+  margin-bottom: 25px;
+  border-left: 5px solid #3ea860;
+  padding-left: 15px;
+  font-weight: 700;
+}
+
+.policy-section h2 {
+  color: #317a4c;
+  font-size: 1.5rem;
+  margin-top: 30px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+/* --- Párrafos --- */
+.policy-section p {
+  font-size: 1rem;
+  color: #3a3a3a;
+  margin-bottom: 16px;
+  text-align: justify;
+}
+
+/* --- Enlaces --- */
+.policy-section a {
+  color: #3ea860;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.policy-section a:hover {
+  color: #256b40;
+  text-decoration: underline;
+}
+
+/* --- Separación entre bloques --- */
+.terms-content {
+  margin-top: 40px;
+}
+
+/* --- Listas (si agregas en el futuro) --- */
+.policy-section ul {
+  margin-left: 20px;
+  list-style: disc;
+}
+
+/* --- Adaptabilidad móvil --- */
+@media (max-width: 768px) {
+  .policy-section .container {
+    padding: 30px 20px;
+  }
+
+  .policy-section h1 {
+    font-size: 1.8rem;
+  }
+
+  .policy-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .policy-section p {
+    font-size: 0.95rem;
+  }
+}

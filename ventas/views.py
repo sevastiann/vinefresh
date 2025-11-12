@@ -1,14 +1,14 @@
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404,render,redirect
-from .models import CarritoCompra, Pedido, Factura, Cupon
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib import messages
+from datetime import date
+from .models import CarritoCompra, Pedido, PedidoItem, Factura, Cupon
 from catalogo.models import Producto
 from usuarios.models import Usuario
-from datetime import datetime
-from django.contrib import messages
 
-# --------------------------------------------------
-# CARRITO
-# --------------------------------------------------
+# ============================================================
+# 🛒 CARRITO
+# ============================================================
 def agregar_al_carrito(request, usuario_id, producto_id, cantidad):
     usuario = get_object_or_404(Usuario, id=usuario_id)
     producto = get_object_or_404(Producto, id=producto_id)
@@ -19,88 +19,118 @@ def agregar_al_carrito(request, usuario_id, producto_id, cantidad):
         if cantidad <= 0:
             return JsonResponse({"error": "La cantidad debe ser mayor que 0"}, status=400)
     except ValueError:
-        return JsonResponse({"error": "La cantidad debe ser un número entero"}, status=400)
+        return JsonResponse({"error": "La cantidad debe ser un número válido"}, status=400)
 
+    # Crear o actualizar el carrito
     carrito, creado = CarritoCompra.objects.get_or_create(
         usuario=usuario,
         producto=producto,
-        defaults={"cantidad": 0}
+        defaults={"cantidad": cantidad}
     )
 
-    carrito.cantidad += cantidad
-    carrito.save()
+    if not creado:
+        carrito.cantidad += cantidad
+        carrito.save()
 
     return JsonResponse({
         "mensaje": "Producto agregado al carrito",
-        "producto": producto.nom_producto,
-        "cantidad_agregada": cantidad,
+        "producto": producto.nombre,
         "cantidad_total": carrito.cantidad
     })
 
 
 def ver_carrito(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
-    carrito = CarritoCompra.objects.filter(usuario=usuario).values(
-        "id",
-        "cantidad",
-        "producto__nom_producto",
-        "producto__precio"
-    )
-    return JsonResponse(list(carrito), safe=False)
+    carrito = CarritoCompra.objects.filter(usuario=usuario)
+
+    data = [
+        {
+            "producto": item.producto.nombre,
+            "precio_unitario": item.producto.precio,
+            "cantidad": item.cantidad,
+            "subtotal": item.subtotal(),
+        }
+        for item in carrito
+    ]
+
+    return JsonResponse(data, safe=False)
 
 
-# --------------------------------------------------
-# FACTURA
-# --------------------------------------------------
-def crear_factura(request, usuario_id, metodo_pago):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
-    
-    factura = Factura.objects.create(
-        usuario=usuario,
-        metodo_pago=metodo_pago
-    )
+def carrito(request):
+    """Versión HTML del carrito."""
+    usuario = request.user
+    carrito = CarritoCompra.objects.filter(usuario=usuario) if usuario.is_authenticated else []
+    return render(request, "ventas/carrito.html", {"carrito": carrito})
 
-    return JsonResponse({
-        "mensaje": "Factura creada",
-        "factura_id": factura.id,
-        "usuario": f"{usuario.nombre} {usuario.apellido}",
-        "metodo_pago": metodo_pago
-    })
 
-# -----------------------------
-# CREAR FACTURA
-# -----------------------------
-def ventas_factura_crear(request):
-    usuarios = Usuario.objects.all()
+# ============================================================
+# 📦 PEDIDOS
+# ============================================================
+def pedido_crear(request):
+    """Crea un pedido desde el carrito actual del usuario."""
+    usuario = request.user
+    carrito = CarritoCompra.objects.filter(usuario=usuario)
 
-    if request.method == "POST":
-        usuario_id = request.POST.get("usuario_id")
-        metodo_pago = request.POST.get("metodo_pago")
+    if not carrito.exists():
+        messages.error(request, "Tu carrito está vacío.")
+        return redirect("ventas:carrito_html")
 
-        Factura.objects.create(
-            usuario_id=usuario_id,
-            metodo_pago=metodo_pago
+    pedido = Pedido.objects.create(usuario=usuario)
+
+    for item in carrito:
+        PedidoItem.objects.create(
+            pedido=pedido,
+            producto=item.producto,
+            cantidad=item.cantidad,
+            precio=item.producto.precio
         )
 
-        messages.success(request, "✅ Factura creada correctamente")
-        return redirect("ventas_facturas")
+    carrito.delete()  # Vaciar el carrito tras crear el pedido
+    messages.success(request, "✅ Pedido creado correctamente.")
+    return redirect("ventas:pedidos_html")
 
-    return render(request, "ventas/ventas_factura_crear.html", {
-        "usuarios": usuarios
-    })
 
-def ver_factura(request, factura_id):
-    factura = get_object_or_404(Factura, id=factura_id)
-    return render(request, 'ventas/ventas_factura_ver.html', {'factura': factura})
+def pedidos(request):
+    """Muestra todos los pedidos del usuario."""
+    usuario = request.user
+    pedidos = Pedido.objects.filter(usuario=usuario)
+    return render(request, "ventas/pedidos.html", {"pedidos": pedidos})
 
-def eliminar_factura(request, factura_id):
-    factura = get_object_or_404(Factura, id=factura_id)
-    factura.delete()
-    return redirect('ventas_facturas')
 
-# --------------------------------------------------
-# CUPONES
-# --------------------------------------------------
+# ============================================================
+# 🧾 FACTURAS
+# ============================================================
+def factura_crear(request):
+    pedidos = Pedido.objects.all()
+
+    if request.method == "POST":
+        pedido_id = request.POST.get("pedido_id")
+        metodo_pago = request.POST.get("metodo_pago")
+
+        pedido = get_object_or_404(Pedido, id=pedido_id)
+        total = pedido.total()
+
+        Factura.objects.create(
+            pedido=pedido,
+            metodo_pago=metodo_pago,
+            total_pagado=total
+        )
+
+        messages.success(request, "✅ Factura creada correctamente.")
+        return redirect("ventas:facturas_html")
+
+    return render(request, "ventas/factura_crear.html", {"pedidos": pedidos})
+
+
+def facturas(request):
+    """Lista de facturas creadas."""
+    facturas = Factura.objects.all()
+    return render(request, "ventas/facturas.html", {"facturas": facturas})
+
+
+# ============================================================
+# 🎟️ CUPONES
+# ============================================================
 def validar_cupon(request, codigo):
     cupon = get_object_or_404(Cupon, codigo=codigo)
 
@@ -112,10 +142,8 @@ def validar_cupon(request, codigo):
         "descuento": cupon.descuento
     })
 
-# -----------------------------
-# CREAR CUPÓN
-# -----------------------------
-def ventas_cupones_crear(request):
+
+def cupones_crear(request):
     if request.method == "POST":
         codigo = request.POST.get("codigo")
         descuento = request.POST.get("descuento")
@@ -129,82 +157,20 @@ def ventas_cupones_crear(request):
             activo=activo
         )
 
-        messages.success(request, "✅ Cupón creado exitosamente")
-        return redirect("ventas_cupones")
+        messages.success(request, "✅ Cupón creado correctamente.")
+        return redirect("ventas:cupones_html")
 
-    return render(request, "ventas/ventas_cupones_crear.html")
-
-def eliminar_cupon(request, cupon_id):
-    cupon = get_object_or_404(Cupon, id=cupon_id)
-    cupon.delete()
-    return redirect('ventas_cupones')
-
-# --------------------------------------------------
-# PEDIDOS
-# --------------------------------------------------
-def crear_pedido(request, carrito_id):
-    """
-    Crea un pedido usando el carrito.
-    ✅ El precio se calcula automáticamente (seguro).
-    """
-    carrito = get_object_or_404(CarritoCompra, id=carrito_id)
-
-    # Cálculo seguro del precio
-    precio_final = carrito.producto.precio * carrito.cantidad
-
-    pedido = Pedido.objects.create(
-        carrito=carrito,
-        cantidad=carrito.cantidad,
-        precio=precio_final
-    )
-
-    return JsonResponse({
-        "mensaje": "Pedido creado",
-        "pedido_id": pedido.id,
-        "producto": carrito.producto.nom_producto,
-        "cantidad": carrito.cantidad,
-        "precio_total": precio_final
-    })
+    return render(request, "ventas/cupones_crear.html")
 
 
-def ver_pedidos(request, usuario_id):
-    pedidos = Pedido.objects.filter(carrito__usuario_id=usuario_id).values(
-        "id",
-        "cantidad",
-        "precio",
-        "carrito__producto__nom_producto",
-        "carrito__producto__precio",
-    )
-    return JsonResponse(list(pedidos), safe=False)
+def cupones(request):
+    cupones = Cupon.objects.all()
+    return render(request, "ventas/cupones.html", {"cupones": cupones})
 
-# -----------------------------
-# CREAR PEDIDO
-# -----------------------------
-def ventas_pedido_crear(request):
-    carritos = CarritoCompra.objects.all()
 
-    if request.method == "POST":
-        carrito_id = request.POST.get("carrito_id")
-        precio = request.POST.get("precio")
-
-        Pedido.objects.create(
-            carrito_id=carrito_id,
-            precio_total=precio,
-            fecha_pedido=datetime.now()
-        )
-
-        messages.success(request, "✅ Pedido creado correctamente")
-        return redirect("ventas_pedidos")
-
-    return render(request, "ventas/ventas_pedido_crear.html", {
-        "carritos": carritos
-    })
-
-def ver_pedido(request, pedido_id):
-    pedido = get_object_or_404(Pedido, id=pedido_id)
-    return render(request, 'ventas/ventas_pedido_ver.html', {'pedido': pedido})
-
-def eliminar_pedido(request, pedido_id):
-    pedido = get_object_or_404(Pedido, id=pedido_id)
-    pedido.delete()
-    return redirect('ventas_pedidos')
+# ============================================================
+# 🌍 HOME
+# ============================================================
+def ventas_home(request):
+    """Página principal de la app de ventas."""
+    return render(request, "ventas/home.html")

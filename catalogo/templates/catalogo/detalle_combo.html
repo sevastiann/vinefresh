@@ -1,44 +1,67 @@
 {% load static %}
-<div id="modal-detalle" class="modal">
+<!-- Modal Detalle Combo -->
+<div id="modal-detalle-combo-{{ combo.id }}" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
+        <span class="close" data-id="{{ combo.id }}">&times;</span>
 
-        <!-- Imagen -->
-        {% if combo.imagen %}
-            <img src="{{ combo.imagen.url }}" alt="{{ combo.nombre }}" class="modal-img">
-        {% endif %}
+        <h2>Detalle de Combo</h2>
 
-        <h2>{{ combo.nombre }}</h2>
-        <p><strong>Precio:</strong> ${{ combo.precio }}</p>
-        {% if combo.descripcion %}
-            <p><strong>Descripción:</strong> {{ combo.descripcion }}</p>
-        {% endif %}
+        <form>
+            <!-- Nombre -->
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" value="{{ combo.nombre }}" readonly>
+            </div>
 
-        <!-- Categorías -->
-        {% if combo.categorias.exists %}
-            <p><strong>Categorías:</strong> 
-                {% for cat in combo.categorias.all %}
-                    {{ cat.nombre }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </p>
-        {% endif %}
+            <!-- Precio -->
+            <div class="form-group">
+                <label>Precio:</label>
+                <input type="number" value="{{ combo.precio }}" readonly>
+            </div>
 
-        <!-- Subcategorías -->
-        {% if combo.subcategorias.exists %}
-            <p><strong>Subcategorías:</strong> 
-                {% for sub in combo.subcategorias.all %}
-                    {{ sub.nombre }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </p>
-        {% endif %}
+            <!-- Descripción -->
+            {% if combo.descripcion %}
+            <div class="form-group">
+                <label>Descripción:</label>
+                <textarea readonly>{{ combo.descripcion }}</textarea>
+            </div>
+            {% endif %}
+
+            <!-- Categorías -->
+            {% if combo.categoria %}
+            <div class="form-group">
+                <label>Categorías:</label>
+                <input type="text" value="{{ combo.categoria }}" readonly>
+            </div>
+            {% endif %}
+
+            <!-- Unidades -->
+            <div class="form-group">
+                <label>Unidades:</label>
+                <input type="number" value="{{ combo.unidades }}" readonly>
+            </div>
+
+            <!-- Imagen -->
+            {% if combo.imagen %}
+            <div class="form-group">
+                <label>Imagen:</label><br>
+                <img src="{{ combo.imagen.url }}" alt="{{ combo.nombre }}" class="modal-img">
+            </div>
+            {% endif %}
+
+            <!-- Estado activo/inactivo -->
+            <div class="form-group">
+                <label>Activo:</label>
+                <input type="checkbox" {% if combo.activo %}checked{% endif %} disabled>
+            </div>
+        </form>
     </div>
 </div>
 
 <style>
-/* Fondo del modal */
 .modal {
-    display: none; /* Oculto por defecto */
-    position: fixed; 
+    display: none;
+    position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
@@ -48,18 +71,16 @@
     background-color: rgba(0,0,0,0.5);
 }
 
-/* Contenido del modal */
 .modal-content {
     background-color: #fff;
-    margin: 10% auto;
+    margin: 5% auto;
     padding: 20px;
     border-radius: 10px;
-    width: 300px;
+    width: 400px;
     position: relative;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-/* Botón cerrar */
 .close {
     position: absolute;
     top: 5px;
@@ -73,28 +94,50 @@
 .modal-img {
     width: 100%;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+textarea[readonly] {
+    background-color: #f5f5f5;
+    resize: none;
 }
 </style>
 
 <script>
-const modal = document.getElementById("modal-detalle");
-const closeBtn = modal.querySelector(".close");
-
-// Función para abrir modal
-function abrirModal() {
-    modal.style.display = "block";
+// Función para abrir modal según ID
+function abrirModalCombo(id) {
+    document.getElementById('modal-detalle-combo-' + id).style.display = 'block';
 }
 
-// Cerrar modal al dar click en "X"
-closeBtn.onclick = function() {
-    modal.style.display = "none";
-}
+// Cerrar modal al hacer click en "X"
+document.querySelectorAll('.close').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        document.getElementById('modal-detalle-combo-' + id).style.display = 'none';
+    });
+});
 
-// Cerrar modal al dar click fuera del contenido
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+// Cerrar modal al hacer click fuera del contenido
+window.addEventListener('click', (event) => {
+    if(event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
     }
-}
+});
 </script>

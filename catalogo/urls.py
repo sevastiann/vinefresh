@@ -4,18 +4,19 @@ from . import views
 app_name = 'catalogo'
 
 urlpatterns = [
-    # Inventario para administradores
+    # 🧩 Inventario para administradores
     path('inventario/', views.inventario, name='inventario'),
-    path('agregar-categoria/', views.agregar_subcategoria, name='agregar_subcategoria'),
-    path('eliminar-categoria/', views.eliminar_subcategoria, name='eliminar_subcategoria'),
-    path('editar-categoria/', views.editar_subcategoria, name='editar_subcategoria'),
+    path('productos/', views.productos, name='productos'),
 
-    
-    #path('sidebar/', views.sidebar, name='sidebar'),
+    # 🍷 Vinos / Productos
+    path('vinos/agregar/', views.agregar_producto, name='agregar_producto'),
+    path('productos/<int:producto_id>/editar/', views.editar_producto, name='editar_producto'),
+    path('productos/<int:producto_id>/detalle/', views.detalle_producto, name='detalle_producto'),
+    path('productos/<int:producto_id>/eliminar/', views.eliminar_producto, name='eliminar_producto'),
 
-    # Catálogo para clientes
-    #path('cliente/', views.catalogo_cliente, name='catalogo_cliente'),
-
-    # Catálogo público (sin login)
-    #path('publico/', views.catalogo_publico, name='catalogo_publico'),
+    # 🎁 Combos
+    path('combos/agregar/', views.agregar_combo, name='agregar_combo'),
+    path('combos/<int:combo_id>/editar/', views.editar_combo, name='editar_combo'),
+    path('combos/<int:combo_id>/detalle/', views.detalle_combo, name='detalle_combo'),
+    path('combos/<int:combo_id>/eliminar/', views.eliminar_combo, name='eliminar_combo'),
 ]

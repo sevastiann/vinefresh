@@ -4,248 +4,340 @@
 {% block content %}
 <div class="inventario-container">
 
-    <!-- Mini Navbar -->
-    <div align="center">
-        <div class="mini-navbar">
-            <a href="#" class="nav-item activo">Vinos</a>
-            <a href="#" class="nav-item">Combos</a>
-        </div>
+    <!-- 🔸 Mini Navbar -->
+    <div class="mini-navbar" align="center">
+        <a href="{% url 'catalogo:inventario' %}?seccion=vinos" 
+           class="nav-item {% if seccion == 'vinos' %}activo{% endif %}">
+           Vinos
+        </a>
+        <a href="{% url 'catalogo:inventario' %}?seccion=combos" 
+           class="nav-item {% if seccion == 'combos' %}activo{% endif %}">
+           Combos
+        </a>
     </div>
 
     <div class="main-content">
-        {% include 'catalogo/sidebar.html' with categorias=categorias %}
-        {% include 'catalogo/agregar_subcategoria.html' %}
-<script>
-  // Define el objeto global con las categorías antes de cargar el JS
-  window.categoriasData = JSON.parse('{{ categorias_json|escapejs }}');
-</script>
+        <!-- 🔸 Sidebar (Filtros) -->
+        {% include 'catalogo/sidebar.html' with seccion=seccion %}
 
-<!-- 🔧 2) Carga el script externo -->
-<script src="{% static 'js/modal_categoria.js' %}"></script>
-
-        {% include 'catalogo/editar_subcategoria.html' %}
-        {% include 'catalogo/eliminar_subcategoria.html' %}
-
-        <!-- Sección de productos -->
+        <!-- 🔸 Área central -->
         <div class="productos-section">
-            {% if request.session.usuario_rol == 'admin' %}
-                <div class="acciones-admin-superior">
-                    <button id="abrirModal" class="btn-agregar-producto">➕ Agregar producto</button>  <!-- 🔧 agrega id="abrirModal" -->
-                </div>
-            {% endif %}
 
-            <!-- Grid de productos -->
+            <!-- 🔸 Botón de agregar -->
+            <div class="acciones-admin-superior">
+                {% if seccion == 'vinos' %}
+                    <a href="{% url 'catalogo:agregar_producto' %}" class="btn-agregar-producto">
+                        ➕ Agregar Vino
+                    </a>
+                {% else %}
+                    <a href="{% url 'catalogo:agregar_combo' %}" class="btn-agregar-producto">
+                        ➕ Agregar Combo
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- 🔸 Grid de productos -->
             <div class="productos-grid">
-                <div class="card-producto">
-                    <img src="{% static 'img/ejemplo_vino.jpg' %}" alt="Producto">
-                    <h4>Nombre del Producto</h4>
-                    <p class="precio">$123.000 <span class="precio-anterior">$145.000</span></p>
-                    <div class="acciones-producto">
-                        <button class="btn-detalle">👁️ Detalle</button>
-                        <button class="btn-editar">✏️ Editar</button>
-                        <button class="btn-eliminar">🗑️ Eliminar</button>
+                {% for item in productos %}
+                    <div class="card-producto">
+                        {% if item.imagen %}
+                            <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
+                        {% else %}
+                            <img src="{% static 'img/default.png' %}" alt="Sin imagen">
+                        {% endif %}
+                        <h4>{{ item.nombre }}</h4>
+                        <p class="precio">${{ item.precio }}</p>
+
+                        <!-- 🔹 Etiquetas / filtros -->
+                        {% if item.etiquetas.exists %}
+                        <div class="etiquetas-producto">
+                            {% for etiqueta in item.etiquetas.all %}
+                                <span class="etiqueta">{{ etiqueta.nombre }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- 🔹 Botones de acción -->
+                        <div class="acciones-producto">
+                            <!-- Abrir modal detalle -->
+                            <button type="button" class="btn-detalle" onclick="abrirModal('modal-detalle-{{ seccion }}-{{ item.id }}')">👁️ Detalle</button>
+
+                            <!-- Editar -->
+                            {% if seccion == 'vinos' %}
+                                <a href="{% url 'catalogo:editar_producto' item.id %}" class="btn-editar">✏️ Editar</a>
+                            {% else %}
+                                <a href="{% url 'catalogo:editar_combo' item.id %}" class="btn-editar">✏️ Editar</a>
+                            {% endif %}
+
+                            <!-- Eliminar modal -->
+                            <button type="button" class="btn-eliminar" onclick="abrirModal('modal-eliminar-{{ seccion }}-{{ item.id }}')">🗑️ Eliminar</button>
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Modal Detalle -->
+                    <div id="modal-detalle-{{ seccion }}-{{ item.id }}" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="cerrarModal('modal-detalle-{{ seccion }}-{{ item.id }}')">&times;</span>
+                            {% if item.imagen %}
+                                <img src="{{ item.imagen.url }}" class="modal-img">
+                            {% endif %}
+                            <h2>{{ item.nombre }}</h2>
+                            <p><strong>Precio:</strong> ${{ item.precio }}</p>
+                            {% if item.descripcion %}
+                                <p><strong>Descripción:</strong> {{ item.descripcion }}</p>
+                            {% endif %}
+                            {% if item.categoria %}
+                                <p><strong>Categorías:</strong> {{ item.categoria }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Modal Eliminar -->
+                    <div id="modal-eliminar-{{ seccion }}-{{ item.id }}" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="cerrarModal('modal-eliminar-{{ seccion }}-{{ item.id }}')">&times;</span>
+                            <p>¿Estás seguro que deseas eliminar <strong>{{ item.nombre }}</strong>?</p>
+                            <form action="{% if seccion == 'vinos' %}{% url 'catalogo:eliminar_producto' item.id %}{% else %}{% url 'catalogo:eliminar_combo' item.id %}{% endif %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-eliminar">Eliminar</button>
+                                <button type="button" class="btn-secundario" onclick="cerrarModal('modal-eliminar-{{ seccion }}-{{ item.id }}')">Cancelar</button>
+                            </form>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="no-productos">No hay {{ seccion }} registrados aún.</p>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
 
-<!-- 🎨 Estilos -->
+<!-- 🎨 Estilos y Modal -->
 <style>
-
-body {
-    background-color: #fdf9f6;
-    font-family: 'Poppins', sans-serif;
-    color: #3b2f2f;
+body { 
+    background-color: #fdf9f6; 
+    font-family: 'Poppins', sans-serif; 
+    color: #3b2f2f; 
+}
+.inventario-container { 
+    padding: 40px 60px; 
+    max-width: 1400px; 
+    margin: 0 auto; 
+}
+.mini-navbar { 
+    display: flex; 
+    justify-content: center; 
+    gap: 60px; 
+    margin-bottom: 35px; 
+}
+.mini-navbar a { 
+    text-decoration: none; 
+    color: #5a2a27; 
+    font-weight: 600; 
+    font-size: 1.1rem; 
+    padding-bottom: 6px; 
+    border-bottom: 2px solid transparent; 
+    transition: all 0.3s ease; 
+}
+.mini-navbar a:hover { 
+    border-color: #c18b5b; 
+    color: #c18b5b; 
+}
+.mini-navbar a.activo { 
+    border-color: #5a2a27; 
+}
+.main-content { 
+    display: flex; 
+    gap: 40px; 
+    align-items: flex-start; 
+}
+.productos-section { 
+    flex: 1; 
+}
+.btn-agregar-producto { 
+    display: inline-block; 
+    background-color: #5a2a27; 
+    color: #fff; 
+    padding: 10px 15px; 
+    border-radius: 8px; 
+    border: none; 
+    font-weight: 600; 
+    cursor: pointer; 
+    margin-bottom: 25px; 
+    transition: background 0.3s; 
+}
+.btn-agregar-producto:hover { 
+    background-color: #7a3b35; 
 }
 
-/* Contenedor principal */
-.inventario-container {
-    padding: 40px 60px;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-/* Mini Navbar */
-.mini-navbar {
-    display: flex;
-    justify-content: center;
-    gap: 60px;
-    margin-bottom: 35px;
-}
-.mini-navbar a {
-    text-decoration: none;
-    color: #5a2a27;
-    font-weight: 600;
-    font-size: 1.1rem;
-    padding-bottom: 6px;
-    border-bottom: 2px solid transparent;
-    transition: all 0.3s ease;
-}
-.mini-navbar a:hover {
-    border-color: #c18b5b;
-    color: #c18b5b;
-}
-.mini-navbar a.activo {
-    border-color: #5a2a27;
-}
-
-/* Contenido principal */
-.main-content {
-    display: flex;
-    gap: 40px;
-    align-items: flex-start;
-}
-
-/* Sidebar */
-.sidebar {
-    width: 280px;
-    background-color: #fff;
-    border: 1px solid #e7ded3;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    flex-shrink: 0;
-}
-
-/* Botones de categoría */
-.sidebar .apartado {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    margin-bottom: 15px;
-    background-color: #f6ede3;
-    border-radius: 8px;
-    color: #5a2a27;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.sidebar .apartado:hover {
-    background-color: #e8d7c2;
-}
-
-/* Buscador */
-.buscador {
-    display: flex;
-    margin: 20px 0;
-}
-.buscador input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #d6c7b5;
-    border-radius: 6px 0 0 6px;
-}
-.buscador button {
-    background-color: #c18b5b;
-    border: none;
-    color: white;
-    padding: 0 10px;
-    border-radius: 0 6px 6px 0;
-    cursor: pointer;
-}
-
-/* Filtros */
-.filtros-lista {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
-}
-.filtros-lista li {
-    margin-bottom: 12px;
-}
-.filtros-lista select {
-    width: 100%;
-    padding: 6px;
-    border: 1px solid #d6c7b5;
-    border-radius: 5px;
-    background-color: #fffaf6;
-}
-
-/* Grid de productos */
 .productos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 25px;
-    flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 productos por fila */
+  gap: 25px;
+  justify-items: center;
+  padding-bottom: 20px;
 }
 
-/* Tarjeta de producto */
+/* 🔹 Responsive (ajuste automático) */
+@media (max-width: 1200px) {
+  .productos-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .productos-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .productos-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 🔹 Tarjetas de producto */
 .card-producto {
-    background-color: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #e2dcd3;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-.card-producto:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-}
-.card-producto img {
-    width: 100%;
-    height: 190px;
-    object-fit: cover;
-}
-.card-producto h4 {
-    margin: 12px 15px 5px;
-    font-size: 1.05rem;
-    color: #5a2a27;
-}
-.precio {
-    margin: 0 15px 12px;
-    font-weight: bold;
-}
-.precio-anterior {
-    text-decoration: line-through;
-    color: #999;
-    margin-left: 8px;
-    font-size: 0.9rem;
+  width: 260px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e2dcd3;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-/* Botones */
-.acciones {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px;
-    border-top: 1px solid #eae0d5;
-    background-color: #fdfaf7;
+.card-producto:hover { 
+    transform: translateY(-4px); 
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1); 
 }
-.acciones button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: #5a2a27;
-    font-weight: 600;
-    transition: 0.2s;
+.card-producto img { 
+    width: 100%; 
+    height: 190px; 
+    object-fit: cover; 
 }
-.acciones button:hover {
-    color: #c18b5b;
+.card-producto h4 { 
+    margin: 12px 15px 5px; 
+    font-size: 1.05rem; 
+    color: #5a2a27; 
+}
+.precio { 
+    margin: 0 15px 12px; 
+    font-weight: bold; 
+}
+.etiquetas-producto { 
+    margin: 0 15px 12px; 
+}
+.etiqueta { 
+    display: inline-block; 
+    background-color: #fff2e0; 
+    color: #5a2a27; 
+    padding: 2px 8px; 
+    border-radius: 6px; 
+    font-size: 0.8rem; 
+    margin: 2px 2px 0 0; 
+}
+.acciones-producto { 
+    display: flex; 
+    justify-content: space-around; 
+    padding: 10px; 
+    border-top: 1px solid #eae0d5; 
+    background-color: #fdfaf7; 
+}
+.acciones-producto button, .acciones-producto a { 
+    border: none; 
+    background: none; 
+    cursor: pointer; 
+    color: #5a2a27; 
+    font-weight: 600; 
+    transition: 0.2s; 
+    text-decoration: none; 
+}
+.acciones-producto button:hover, .acciones-producto a:hover { 
+    color: #c18b5b; 
+}
+.no-productos { 
+    text-align: center; 
+    color: #7a3b35; 
+    font-style: italic; 
 }
 
-/* Botón agregar aparte */
-.btn-agregar-producto {
-    display: block;
-    background-color: #5a2a27;
-    color: #fff;
-    padding: 10px 15px;
-    border-radius: 8px;
-    border: none;
-    font-weight: 600;
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 25px;
-    transition: background 0.3s;
+/* Modal */
+.modal { 
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.5); 
 }
-.btn-agregar-producto:hover {
-    background-color: #7a3b35;
+.modal-content { 
+    background-color: #fff; 
+    margin: 10% auto; 
+    padding: 20px; 
+    border-radius: 10px; 
+    width: 300px; 
+    position: relative; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
+}
+.close { 
+    position: absolute; 
+    top: 5px; 
+    right: 10px; 
+    color: #333; 
+    font-size: 20px; 
+    font-weight: bold; 
+    cursor: pointer; 
+}
+.modal-img { 
+    width: 100%; 
+    border-radius: 5px; 
+    margin-bottom: 10px; 
+}
+.btn-eliminar { 
+    background-color: #c74f4f; 
+    color: white; 
+    padding: 8px 12px; 
+    border-radius: 6px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    margin-right: 6px; 
+}
+.btn-eliminar:hover { 
+    background-color: #a63b3b; 
+}
+.btn-secundario { 
+    background-color: #aaa; 
+    color: white; 
+    padding: 8px 12px; 
+    border-radius: 6px; 
+    font-weight: 600; 
+    cursor: pointer; 
+}
+.btn-secundario:hover { 
+    background-color: #888; 
 }
 </style>
 
-<!-- ⚙️ Scripts -->
-<!-- 🔧 1) Esto va antes del script externo -->
 
+
+<!-- Modal JS -->
+<script>
+function abrirModal(id) {
+    const modal = document.getElementById(id);
+    if(modal) modal.style.display = 'block';
+}
+
+function cerrarModal(id) {
+    const modal = document.getElementById(id);
+    if(modal) modal.style.display = 'none';
+}
+
+// Cerrar modal al hacer click fuera
+window.addEventListener('click', function(event) {
+    if(event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+});
+</script>
 {% endblock %}
+
+
