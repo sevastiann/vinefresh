@@ -1,16 +1,23 @@
 {% extends 'core/base.html' %}
 {% block content %}
 <h2 class="text-center my-4">Reseñas de Productos</h2>
+
 {% if rol == 'cliente' %}
-  <a href="{% url 'reseñas:nueva_reseña' %}" class="btn btn-success mb-3">Agregar Reseña</a>
+  <div class="text-center mb-3">
+    <a href="{% url 'reseñas:nueva_reseña' %}" class="btn btn-success">Agregar Reseña</a>
+  </div>
 {% endif %}
+
 <div class="list-group">
   {% for r in reseñas %}
     <a href="{% url 'reseñas:detalle_reseña' r.id %}" class="list-group-item list-group-item-action">
-      <strong>{{ r.usuario.nombre }}</strong> reseñó <em>{{ r.producto.nom_producto }}</em>:
+      <strong>{{ r.usuario.nombre }}</strong> reseñó <em>{{ r.producto.nombre }}</em>:
       ⭐{{ r.calificacion }} <br>
-      <small>{{ r.comentario }}</small>
+      <small>{{ r.comentario }}</small><br>
+      <small class="text-muted">📅 {{ r.fecha|date:"d/m/Y H:i" }}</small>
     </a>
+  {% empty %}
+    <p class="text-center text-muted">No hay reseñas registradas todavía.</p>
   {% endfor %}
 </div>
 {% endblock %}

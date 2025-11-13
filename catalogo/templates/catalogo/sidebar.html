@@ -112,20 +112,29 @@
         <!-- Aquí van los productos o contenido principal -->
     </main>
 </div>
+{% block scripts %}
+<style>
+/* pega aquí todo tu CSS */
+</style>
+{% endblock %}
 
 <style>
-
-
+/* === CONTENEDOR PRINCIPAL === */
 .layout-container {
     display: flex;
     align-items: flex-start;
+    justify-content: flex-start;
     width: 100%;
-    padding: 0;          /* elimina padding general */
-    margin: 0;           /* elimina margen */
+    max-width: 1300px;      /* evita que se extienda demasiado */
+    margin: 0 auto;         /* centra todo el contenido */
+    gap: 2rem;              /* separación entre sidebar y productos */
+    padding: 2rem 1rem;
+    box-sizing: border-box;
 }
 
+/* === SIDEBAR === */
 .sidebar {
-    width: 280px;
+    width: 260px;
     flex-shrink: 0;
     background-color: #fffaf2;
     padding: 20px;
@@ -134,13 +143,10 @@
     font-family: 'Poppins', sans-serif;
     position: sticky;
     top: 20px;
-    left:0;
     height: fit-content;
-    margin-right: 20px;  /* opcional, si quieres separación con productos */
-    margin-left: 0;      /* asegura que esté pegado al borde izquierdo */
 }
 
-/* Buscador */
+/* === BUSCADOR === */
 .buscador {
     display: flex;
     align-items: center;
@@ -165,7 +171,7 @@
 }
 .btn-buscar:hover { background: #b78e4e; }
 
-/* Precio */
+/* === FILTRO DE PRECIO === */
 .filtro-precio .precio-inputs {
     display: flex;
     align-items: center;
@@ -179,7 +185,7 @@
     background-color: #fff7f0;
 }
 
-/* Filtros plegables */
+/* === FILTROS PLEGABLES === */
 details {
     background: #fff7f0;
     border-radius: 8px;
@@ -220,12 +226,35 @@ details[open] summary::after {
     margin-right: 6px;
 }
 
-/* Productos */
+/* === SECCIÓN DE PRODUCTOS === */
 .productos-section {
-    flex: 1;                  /* ocupa el resto del espacio */
-    display: flex;
-    flex-wrap: wrap;           /* filas horizontales */
-    gap: 20px;
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1.5rem;
+    justify-items: center;
+    align-items: stretch;
 }
 
+/* === TARJETAS DE PRODUCTOS === */
+.productos-section .producto {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.productos-section .producto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.productos-section .producto img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+}
 </style>

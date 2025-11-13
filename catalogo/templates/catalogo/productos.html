@@ -285,6 +285,36 @@ body {
 @media (max-width: 600px) {
   .productos-grid { grid-template-columns: repeat(2, 1fr); }
 }
+.main-content { 
+    display: flex; 
+    align-items: flex-start; 
+    gap: 40px; 
+}
+
+/* Sidebar fijo a la izquierda */
+.sidebar-filtros {
+    flex: 0 0 260px; /* ancho fijo */
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+/* Productos ocupan el resto del espacio */
+.productos-section { 
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* Grid: máximo 3 por fila */
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    width: 100%;
+    justify-items: center;
+}
+
 </style>
 
 
