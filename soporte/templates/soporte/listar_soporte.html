@@ -12,7 +12,13 @@
       <td>{{ s.PQRS }}</td>
       <td>{{ s.estado }}</td>
       <td>{{ s.fecha|date:"Y-m-d H:i" }}</td>
-      <td><a href="{% url 'soporte:detalle_soporte' s.id %}">Ver</a></td>
+      <td>
+        {% if rol == 'admin' %}
+          <a href="{% url 'soporte:responder_soporte' s.id %}">Responder</a>
+        {% else %}
+          <a href="{% url 'soporte:detalle_soporte' s.id %}">Ver</a>
+        {% endif %}
+      </td>
     </tr>
   {% endfor %}
 </table>

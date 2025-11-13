@@ -12,12 +12,19 @@ class Soporte(models.Model):
         ('Pendiente', 'Pendiente'),
         ('En proceso', 'En proceso'),
         ('Resuelto', 'Resuelto'),
+        ('Cancelado', 'Cancelado'),
     ]
 
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     PQRS = models.CharField(max_length=20, choices=PQRS_CHOICES)
+    asunto = models.CharField(max_length=100, blank=True, null=True)
     mensaje = models.TextField()
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='Pendiente')
+
+    # Respuesta del admin
+    respuesta = models.TextField(blank=True, null=True)
+    fecha_respuesta = models.DateTimeField(blank=True, null=True)
+
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

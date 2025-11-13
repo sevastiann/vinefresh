@@ -2,7 +2,20 @@
 {% block content %}
 <h2>Detalle del Soporte #{{ soporte.id }}</h2>
 <p><strong>Tipo:</strong> {{ soporte.PQRS }}</p>
+<p><strong>Asunto:</strong> {{ soporte.asunto }}</p>
 <p><strong>Mensaje:</strong> {{ soporte.mensaje }}</p>
 <p><strong>Estado:</strong> {{ soporte.estado }}</p>
 <p><strong>Fecha:</strong> {{ soporte.fecha|date:"Y-m-d H:i" }}</p>
+
+{% if soporte.respuesta %}
+<div class="alert alert-info mt-3">
+    <strong>Respuesta del administrador:</strong>
+    <p>{{ soporte.respuesta }}</p>
+    <small>Respondido el {{ soporte.fecha_respuesta|date:"d/m/Y H:i" }}</small>
+</div>
+{% elif rol == 'admin' %}
+<p>No hay respuesta todavía. Puedes responder desde el panel de admin.</p>
+{% else %}
+<p class="text-muted">Aún no hay respuesta del administrador.</p>
+{% endif %}
 {% endblock %}

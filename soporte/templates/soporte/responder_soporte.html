@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Responder Solicitud de Soporte #{{ soporte.id }}</h2>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <strong>Información del Cliente:</strong> {{ soporte.usuario.nombre }} ({{ soporte.usuario.email }})
+        </div>
+        <div class="card-body">
+            <p><strong>Tipo de PQRS:</strong> {{ soporte.PQRS }}</p>
+            {% if soporte.asunto %}
+            <p><strong>Asunto:</strong> {{ soporte.asunto }}</p>
+            {% endif %}
+            <p><strong>Mensaje:</strong> {{ soporte.mensaje }}</p>
+            <p><strong>Estado:</strong> {{ soporte.estado }}</p>
+            <p><strong>Fecha de envío:</strong> {{ soporte.fecha|date:"d/m/Y H:i" }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><strong>Responder y actualizar estado:</strong></div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <textarea name="respuesta" rows="5" class="form-control" placeholder="Escribe la respuesta aquí..." required>{{ soporte.respuesta }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="estado" class="form-label"><strong>Estado:</strong></label>
+                    <select name="estado" id="estado" class="form-control">
+                        <option value="Pendiente" {% if soporte.estado == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                        <option value="En proceso" {% if soporte.estado == 'En proceso' %}selected{% endif %}>En proceso</option>
+                        <option value="Resuelto" {% if soporte.estado == 'Resuelto' %}selected{% endif %}>Resuelto</option>
+                        <option value="Cancelado" {% if soporte.estado == 'Cancelado' %}selected{% endif %}>Cancelado</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Enviar Respuesta</button>
+                <a href="{% url 'soporte:panel_admin_soporte' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
