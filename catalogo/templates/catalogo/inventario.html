@@ -315,6 +315,42 @@ body {
 .btn-secundario:hover { 
     background-color: #888; 
 }
+/* Contenedor principal flex */
+.main-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start; /* fuerza todo a la izquierda */
+    gap: 40px; 
+    flex-wrap: wrap;          
+
+}
+
+/* Sidebar a la izquierda */
+..sidebar-filtros {
+    flex: 0 0 260px;  /* ancho fijo para que siempre quede a la izquierda */
+    position: sticky; /* se queda visible al hacer scroll */
+    top: 20px;
+    height: fit-content;   
+}
+
+/* Grid de productos con 3 por fila máximo */
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* máximo 3 por fila */
+    gap: 25px;
+    flex: 1;
+    justify-items: center; /* centra las tarjetas en cada columna */
+}
+
+/* Tarjetas adaptables, tamaño fijo máximo para no achicarse demasiado */
+.card-producto {
+    width: 260px; /* ancho deseado */
+    max-width: 100%; /* no se salga de la columna */
+    box-sizing: border-box;
+
+}
+
+
 </style>
 
 
