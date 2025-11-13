@@ -1,42 +1,62 @@
-{% extends "base.html" %}
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Detalle del Cliente - VineFresh{% endblock %}
 
 {% block content %}
-<h1>Detalle del Cliente</h1>
+<div class="container mt-5 mb-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-white text-center">
+            <h2 class="mb-0">🍇 Detalle del Cliente</h2>
+        </div>
 
-<table border="1" cellpadding="10" cellspacing="0">
-    <tr>
-        <th>Nombre:</th>
-        <td>{{ cliente.nombre }}</td>
-    </tr>
-    <tr>
-        <th>Apellido:</th>
-        <td>{{ cliente.apellido }}</td>
-    </tr>
-    <tr>
-        <th>Email:</th>
-        <td>{{ cliente.email }}</td>
-    </tr>
-    <tr>
-        <th>Usuario:</th>
-        <td>{{ cliente.nombre_usuario }}</td>
-    </tr>
-    <tr>
-        <th>Cédula:</th>
-        <td>{{ cliente.cedula }}</td>
-    </tr>
-    <tr>
-        <th>Teléfono:</th>
-        <td>{{ cliente.telefono }}</td>
-    </tr>
-    <tr>
-        <th>País:</th>
-        <td>{{ cliente.pais }}</td>
-    </tr>
-    <tr>
-        <th>Fecha Nacimiento:</th>
-        <td>{{ cliente.fecha_nacimiento }}</td>
-    </tr>
-</table>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5 class="fw-bold text-muted">Información Personal</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Nombre:</strong> {{ cliente.nombre }}</li>
+                        <li class="list-group-item"><strong>Apellido:</strong> {{ cliente.apellido }}</li>
+                        <li class="list-group-item"><strong>Nombre de Usuario:</strong> {{ cliente.nombre_usuario }}</li>
+                        <li class="list-group-item"><strong>Cédula:</strong> {{ cliente.cedula }}</li>
+                        <li class="list-group-item"><strong>Fecha de Nacimiento:</strong> {{ cliente.fecha_nacimiento }}</li>
+                    </ul>
+                </div>
 
-<a href="{% url 'gestion_usuarios' %}" style="margin-top:10px; display:inline-block;">Volver a la lista</a>
+                <div class="col-md-6">
+                    <h5 class="fw-bold text-muted">Información de Contacto</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Correo Electrónico:</strong> {{ cliente.email }}</li>
+                        <li class="list-group-item"><strong>Teléfono:</strong> {{ cliente.telefono }}</li>
+                        <li class="list-group-item"><strong>País:</strong> {{ cliente.pais }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row text-center">
+                <div class="col-md-4 offset-md-2">
+                    <h6 class="fw-bold">Rol:</h6>
+                    <p class="badge bg-primary">{{ cliente.rol|title }}</p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="fw-bold">Estado:</h6>
+                    {% if cliente.estado %}
+                        <span class="badge bg-success">Activo</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer text-center bg-light">
+            <a href="{% url 'usuarios:gestion_usuarios' %}" class="btn btn-outline-dark">
+                <i class="fas fa-arrow-left"></i> Volver a la lista
+            </a>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

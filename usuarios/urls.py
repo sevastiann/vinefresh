@@ -16,9 +16,8 @@ urlpatterns = [
 
     # Gestión de usuarios
     path('enviar-invitacion/', views.enviar_invitacion_view, name='enviar_invitacion'),
-    path('usuarios-dropdown/', views.usuarios_dropdown, name='usuarios_dropdown'),
     path('gestion-usuarios/', views.gestion_usuarios, name='gestion_usuarios'),
-    path('eliminar-usuario/<int:id>/', views.eliminar_usuario, name='eliminar_usuario'),
     path('detalle-cliente/<int:id>/', views.detalle_cliente, name='detalle_cliente'),
-
+# 🔸 NUEVAS RUTAS para cambiar el estado del usuario
+    path('cambiar_estado/<int:usuario_id>/', views.cambiar_estado, name='cambiar_estado'),
 ]

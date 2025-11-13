@@ -41,7 +41,7 @@
                         <!-- 🔹 Botones de acción -->
                             <div class="acciones-producto">
                                 <button type="button" class="btn-detalle" onclick="abrirModal('modal-detalle-{{ seccion }}-{{ item.id }}')">👁️ Detalle</button>
-<form action="{% url 'ventas:agregar_al_carrito' user.id item.id 1 %}" method="post" style="display:inline;">
+<form action="" method="post" style="display:inline;">
     {% csrf_token %}
     <button type="submit" class="btn-carrito">🛒 Agregar al carrito</button>
 </form>

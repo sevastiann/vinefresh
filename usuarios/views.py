@@ -1,15 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
 from django.utils.crypto import get_random_string
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 import secrets
-
+from django.utils import timezone
+from django.utils.crypto import get_random_string
 from .models import Usuario, InvitacionAdmin
+
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 # -------------------------
 # TOKENS TEMPORALES
@@ -243,66 +249,149 @@ def registro_admin_view(request, token):
 # DETALLE DE CLIENTE
 # -------------------------
 def detalle_cliente(request, id):
+    # opcional: control de permisos
     if not usuario_logueado(request) or not es_admin(request):
-        return redirect('home')
-    
-    usuario = get_object_or_404(Usuario, id=id)
-    return render(request, 'usuarios/detalle_cliente.html', {'usuario': usuario})
+        return redirect('core:home')
+
+    cliente = get_object_or_404(Usuario, id=id)
+    return render(request, 'usuarios/detalle_cliente.html', {'cliente': cliente})
 
 # -------------------------
-# CONSULTA Y ELIMINACIÓN DE USUARIOS (solo admin)
+# CONSULTA Y GESTIÓN DE USUARIOS (solo admin)
 # -------------------------
-@csrf_exempt
-def usuarios_dropdown(request):
-    if not usuario_logueado(request) or not es_admin(request):
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=403)
 
-    if request.method == 'GET':
-        usuarios = list(
-            Usuario.objects.all().values(
-                'id', 'nombre', 'apellido', 'email', 'rol', 'solicitud_eliminacion'
-            ).order_by('-rol', 'apellido')
-        )
-        return JsonResponse({'success': True, 'usuarios': usuarios})
-
-    if request.method == 'POST':
-        user_id = request.POST.get('id')
-        if not user_id:
-            return JsonResponse({'success': False, 'error': 'ID de usuario requerido'}, status=400)
-        usuario = get_object_or_404(Usuario, id=user_id)
-        if not usuario.solicitud_eliminacion:
-            return JsonResponse({'success': False, 'error': 'El usuario no ha solicitado eliminar su cuenta'}, status=403)
-        usuario.delete()
-        return JsonResponse({'success': True})
-
-    return JsonResponse({'success': False, 'error': 'Método no permitido'}, status=405)
-
-def eliminar_usuario(request, id):
-    if not usuario_logueado(request) or not es_admin(request):
-        return JsonResponse({'success': False, 'error': 'No autorizado'}, status=403)
-    usuario = get_object_or_404(Usuario, id=id)
-    if not usuario.solicitud_eliminacion:
-        return JsonResponse({'success': False, 'error': 'El usuario no ha solicitado eliminar su cuenta'}, status=403)
-    usuario.delete()
-    return JsonResponse({'success': True})
-
+# -------------------------
+# LISTADO GENERAL DE USUARIOS
+# -------------------------
 def gestion_usuarios(request):
     if not usuario_logueado(request) or not es_admin(request):
         return redirect('core:home')
 
-    # Traer todos los usuarios (o aplica tu filtro de roles)
     usuarios = Usuario.objects.all().order_by('apellido')
-
-    if request.method == 'POST':
-        usuario_id = request.POST.get('usuario_id')
-        usuario = Usuario.objects.filter(id=usuario_id).first()
-        if usuario:
-            usuario.delete()
-            messages.success(request, f'Usuario {usuario.nombre_usuario} eliminado correctamente.')
-        return redirect('usuarios:gestion_usuarios')
-
     return render(request, 'usuarios/gestion_usuarios.html', {'usuarios': usuarios})
 
+
+# -------------------------
+# CAMBIAR ESTADO / ACTIVAR / DESACTIVAR
+# -------------------------
+def cambiar_estado(request, id):
+    if not usuario_logueado(request) or not es_admin(request):
+        return redirect('core:home')
+
+    usuario = get_object_or_404(Usuario, id=id)
+
+    # Cambiar estado directo
+    if usuario.estado:
+        usuario.estado = False
+        messages.warning(request, f'Usuario {usuario.nombre_usuario} desactivado correctamente.')
+    else:
+        usuario.estado = True
+        messages.success(request, f'Usuario {usuario.nombre_usuario} activado correctamente.')
+
+    usuario.save()
+    return redirect('usuarios:detalle_cliente', id=id)
+
+# -------------------------
+# ENVIAR INVITACIÓN
+# -------------------------
 def enviar_invitacion_view(request):
-    # lógica para el formulario
+    # Solo admin puede enviar invitaciones
+    if not request.session.get('usuario_id') or request.session.get('usuario_rol') != 'admin':
+        messages.error(request, "No tienes permiso para acceder a esta página.")
+        return redirect('core:home')
+
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip().lower()
+
+        # Validación básica
+        if not email:
+            messages.error(request, "Debes proporcionar un correo electrónico.")
+            return render(request, 'usuarios/enviar_invitacion.html')
+
+        # Evitar duplicados
+        if Usuario.objects.filter(email=email).exists() or InvitacionAdmin.objects.filter(email=email).exists():
+            messages.warning(request, "Ya existe un usuario o invitación para este correo.")
+            return render(request, 'usuarios/enviar_invitacion.html', {'mensaje': 'Ya existe una invitación para ese correo.'})
+
+        # Generar token único
+        token = get_random_string(48)
+        invitacion = InvitacionAdmin.objects.create(email=email, token=token, fecha_creacion=timezone.now())
+
+        # Generar enlace correcto usando reverse
+        accept_url = request.build_absolute_uri(reverse('usuarios:registro_admin_invitado', args=[token]))
+
+        # Preparar email
+        subject = "Invitación para ser administrador - VineFresh"
+        message = (
+            f"Hola 👋\n\n"
+            f"Has sido invitado a formar parte del equipo administrativo de VineFresh.\n\n"
+            f"Para aceptar la invitación y completar tu registro, haz clic en el siguiente enlace:\n{accept_url}\n\n"
+            f"Este enlace es único y expirará después de usarlo.\n\n"
+            f"Saludos,\nEquipo VineFresh"
+        )
+        from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@example.com')
+        try:
+            send_mail(subject, message, from_email, [email], fail_silently=False)
+            messages.success(request, f"Invitación enviada correctamente a {email}.")
+            email_enviado = True
+        except BadHeaderError:
+            logger.exception("BadHeaderError al enviar invitación")
+            messages.error(request, "Encabezado de correo inválido. No se envió la invitación.")
+            email_enviado = False
+        except Exception as e:
+            logger.exception("Error al enviar correo de invitación")
+            messages.warning(request, f"No se pudo enviar el correo (revisa la configuración de email). La invitación quedó registrada.")
+            email_enviado = False
+
+        # Renderizar plantilla de éxito
+        return render(request, 'usuarios/invitacion_exito.html', {
+            'email': email,
+            'email_enviado': email_enviado,
+            'accept_url': accept_url,  # opcional para debug
+        })
+
+    # GET -> mostrar formulario
     return render(request, 'usuarios/enviar_invitacion.html')
+
+
+# Vista para registrar administrador invitado
+def registro_admin_invitado_view(request, token):
+    # 1️⃣ Verificar que el token exista
+    invitacion = get_object_or_404(InvitacionAdmin, token=token)
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        nombre_usuario = request.POST.get('nombre_usuario')
+        email = request.POST.get('email')
+        cedula = request.POST.get('cedula')
+        fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        telefono = request.POST.get('telefono')
+        pais = request.POST.get('pais')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+
+        if password != password2:
+            messages.error(request, "Las contraseñas no coinciden.")
+        else:
+            # Crear usuario con rol admin
+            usuario = Usuario.objects.create(
+                nombre=nombre,
+                apellido=apellido,
+                nombre_usuario=nombre_usuario,
+                email=email,
+                cedula=cedula,
+                fecha_nacimiento=fecha_nacimiento,
+                telefono=telefono,
+                pais=pais,
+                password=make_password(password),
+                rol='admin',
+                estado=True
+            )
+            # Eliminar invitación usada
+            invitacion.delete()
+            messages.success(request, "✅ Registro de administrador completado.")
+            return redirect('usuarios:login')
+
+    # GET -> mostrar formulario normal de registro
+    return render(request, 'usuarios/registro_admin_invitado.html')

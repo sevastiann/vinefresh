@@ -1,52 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Invitación enviada</title>
-    <style>
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background: linear-gradient(135deg, #2e7d32, #66bb6a);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-        }
-        .card {
-            background: rgba(255,255,255,0.1);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-        }
-        h1 {
-            font-size: 2em;
-            margin-bottom: 15px;
-        }
-        p {
-            font-size: 1.1em;
-            margin-bottom: 25px;
-        }
-        a {
-            background: white;
-            color: #2e7d32;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-        a:hover {
-            background: #e8f5e9;
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>✅ ¡Invitación enviada!</h1>
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Invitación Enviada - VineFresh{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh; background: linear-gradient(135deg, #2e7d32, #66bb6a);">
+    <div class="card text-center shadow-lg border-0" style="background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; color: white; max-width: 500px;">
+        <h1 class="mb-3">✅ ¡Invitación enviada!</h1>
         <p>Se ha enviado un correo de invitación a <strong>{{ email }}</strong>.</p>
-        <a href="{% url 'admin_dashboard' %}">Volver al panel</a>
+
+        <a href="{% url 'usuarios:enviar_invitacion' %}" class="btn btn-light mt-3 fw-bold px-4 py-2" style="color: #2e7d32; border-radius: 10px;">
+            Volver al panel
+        </a>
     </div>
-</body>
-</html>
+</div>
+
+
+{% endblock %}
+

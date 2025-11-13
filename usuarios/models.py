@@ -13,6 +13,11 @@ class Usuario(models.Model):
     rol = models.CharField(max_length=20, default='cliente')
     solicitud_eliminacion = models.BooleanField(default=False)
 
+# 🔹 Nuevo campo
+    estado = models.BooleanField(default=True)  # True = activo, False = inactivo
+    
+    
+    
     def __str__(self):
         return self.nombre_usuario
 

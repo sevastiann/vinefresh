@@ -9,31 +9,47 @@
 
     {% if usuarios %}
     <div class="table-responsive">
-        <table class="table table-striped table-bordered shadow-sm">
-            <thead class="thead-dark">
+        <table class="table table-striped table-bordered shadow-sm align-middle">
+            <thead class="thead-dark text-center">
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Correo</th>
                     <th>Rol</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for u in usuarios %}
-                <tr>
+                <tr class="text-center">
                     <td>{{ u.id }}</td>
                     <td>{{ u.nombre }} {{ u.apellido }}</td>
                     <td>{{ u.email }}</td>
-                    <td>{{ u.rol }}</td>
+                    <td>{{ u.rol|title }}</td>
+                    <td>
+                        {% if u.estado %}
+                            <span class="badge bg-success">Activo</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactivo</span>
+                        {% endif %}
+                    </td>
                     <td>
                         <a href="{% url 'usuarios:detalle_cliente' u.id %}" class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i> Ver
                         </a>
-                        <a href="{% url 'usuarios:eliminar_usuario' u.id %}" class="btn btn-danger btn-sm"
-                           onclick="return confirm('¿Está seguro de eliminar este usuario?');">
-                            <i class="fas fa-trash-alt"></i> Eliminar
-                        </a>
+
+                        {% if u.estado %}
+                            <a href="{% url 'usuarios:cambiar_estado' u.id %}" class="btn btn-warning btn-sm"
+                               onclick="return confirm('¿Desea desactivar este usuario?');">
+                                <i class="fas fa-user-slash"></i> Desactivar
+                            </a>
+                        {% else %}
+                            <a href="{% url 'usuarios:cambiar_estado' u.id %}" class="btn btn-success btn-sm"
+                               onclick="return confirm('¿Desea activar este usuario?');">
+                                <i class="fas fa-user-check"></i> Activar
+                            </a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

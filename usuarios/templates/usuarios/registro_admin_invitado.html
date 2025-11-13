@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Administrador - VineFresh</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #4a0e0e, #7b1f1f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #3e2723;
+        }
+
+        .form-container {
+            background-color: #fdf6f0;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            width: 380px;
+            border: 2px solid #7b1f1f;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .form-title {
+            font-size: 1.8em;
+            color: #4a0e0e;
+        }
+
+        .form-subtitle {
+            color: #5c4033;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #4a0e0e;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #b08b57;
+            border-radius: 6px;
+            background-color: #fff8f5;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #7b1f1f;
+            box-shadow: 0 0 5px #7b1f1f;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #7b1f1f;
+            color: #fdf6f0;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #5e1010;
+        }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        a {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            color: #7b1f1f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <div class="form-header">
+        <h1 class="form-title">Registro de Administrador</h1>
+        <p class="form-subtitle">Complete sus datos para activar su cuenta</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="token" value="{{ token }}">
+
+        <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" name="nombre" required>
+        </div>
+
+        <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" name="apellido" required>
+        </div>
+
+        <div class="form-group">
+            <label>Nombre de usuario</label>
+            <input type="text" name="nombre_usuario" required>
+        </div>
+
+        <div class="form-group">
+            <label>Cédula</label>
+            <input type="text" name="cedula" pattern="[0-9]{6,12}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" name="telefono" pattern="[0-9]{7,10}" required>
+        </div>
+
+        <div class="form-group">
+            <label>País</label>
+            <input type="text" name="pais" required>
+        </div>
+
+        <div class="form-group">
+            <label>Fecha de Nacimiento</label>
+            <input type="date" name="fecha_nacimiento" required>
+        </div>
+
+        <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" name="password1" minlength="8" required>
+        </div>
+
+        <div class="form-group">
+            <label>Confirmar Contraseña</label>
+            <input type="password" name="password2" minlength="8" required>
+        </div>
+
+        <button type="submit">Registrar</button>
+        <p class="message">{{ mensaje }}</p>
+    </form>
+
+    <a href="{% url 'core:home' %}">⬅ Volver al inicio</a>
+</div>
+</body>
+</html>
