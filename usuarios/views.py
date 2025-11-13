@@ -274,22 +274,22 @@ def gestion_usuarios(request):
 # -------------------------
 # CAMBIAR ESTADO / ACTIVAR / DESACTIVAR
 # -------------------------
-def cambiar_estado(request, id):
+def cambiar_estado(request, usuario_id):
     if not usuario_logueado(request) or not es_admin(request):
         return redirect('core:home')
 
-    usuario = get_object_or_404(Usuario, id=id)
+    usuario = get_object_or_404(Usuario, id=usuario_id)
 
-    # Cambiar estado directo
+    # Cambiar el estado (activo/inactivo)
     if usuario.estado:
         usuario.estado = False
-        messages.warning(request, f'Usuario {usuario.nombre_usuario} desactivado correctamente.')
+        messages.warning(request, f'⚠️ Usuario {usuario.nombre_usuario} desactivado correctamente.')
     else:
         usuario.estado = True
-        messages.success(request, f'Usuario {usuario.nombre_usuario} activado correctamente.')
+        messages.success(request, f'✅ Usuario {usuario.nombre_usuario} activado correctamente.')
 
     usuario.save()
-    return redirect('usuarios:detalle_cliente', id=id)
+    return redirect('usuarios:detalle_cliente', id=usuario.id)
 
 # -------------------------
 # ENVIAR INVITACIÓN
@@ -354,12 +354,25 @@ def enviar_invitacion_view(request):
     return render(request, 'usuarios/enviar_invitacion.html')
 
 
-# Vista para registrar administrador invitado
+# ✅ Vista para registrar administrador invitado
 def registro_admin_invitado_view(request, token):
-    # 1️⃣ Verificar que el token exista
+    from django.utils import timezone
+    from django.contrib import messages
+    from django.shortcuts import render, redirect, get_object_or_404
+    from django.contrib.auth.hashers import make_password
+    from .models import Usuario, InvitacionAdmin
+
     invitacion = get_object_or_404(InvitacionAdmin, token=token)
 
+    # 🧩 Verificar si ya fue usada
+    if getattr(invitacion, 'aceptada', False):
+        messages.warning(request, "Esta invitación ya fue utilizada.")
+        return redirect('usuarios:login')
+
     if request.method == 'POST':
+        print("📩 Datos recibidos:", request.POST)
+
+        # 🧠 Capturar los datos
         nombre = request.POST.get('nombre')
         apellido = request.POST.get('apellido')
         nombre_usuario = request.POST.get('nombre_usuario')
@@ -368,30 +381,55 @@ def registro_admin_invitado_view(request, token):
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
         telefono = request.POST.get('telefono')
         pais = request.POST.get('pais')
-        password = request.POST.get('password')
+        password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
 
-        if password != password2:
-            messages.error(request, "Las contraseñas no coinciden.")
-        else:
-            # Crear usuario con rol admin
-            usuario = Usuario.objects.create(
-                nombre=nombre,
-                apellido=apellido,
-                nombre_usuario=nombre_usuario,
-                email=email,
-                cedula=cedula,
-                fecha_nacimiento=fecha_nacimiento,
-                telefono=telefono,
-                pais=pais,
-                password=make_password(password),
-                rol='admin',
-                estado=True
-            )
-            # Eliminar invitación usada
-            invitacion.delete()
-            messages.success(request, "✅ Registro de administrador completado.")
-            return redirect('usuarios:login')
+        # 🧩 Validaciones básicas
+        if not all([nombre, apellido, nombre_usuario, email, password1, password2]):
+            messages.error(request, "Por favor completa todos los campos obligatorios.")
+            return render(request, 'usuarios/registro_admin_invitado.html', {'token': token})
 
-    # GET -> mostrar formulario normal de registro
-    return render(request, 'usuarios/registro_admin_invitado.html')
+        if password1 != password2:
+            messages.error(request, "Las contraseñas no coinciden.")
+            return render(request, 'usuarios/registro_admin_invitado.html', {'token': token})
+
+        if Usuario.objects.filter(email=email).exists():
+            messages.error(request, "Ya existe un usuario con este correo electrónico.")
+            return render(request, 'usuarios/registro_admin_invitado.html', {'token': token})
+
+        # 🧠 Crear el nuevo administrador
+        nuevo_usuario = Usuario.objects.create(
+            nombre=nombre,
+            apellido=apellido,
+            nombre_usuario=nombre_usuario,
+            email=email,
+            cedula=cedula,
+            fecha_nacimiento=fecha_nacimiento,
+            telefono=telefono,
+            pais=pais,
+            password=make_password(password1),
+            rol='admin',
+            estado=True
+        )
+
+        print("✅ Usuario creado con ID:", nuevo_usuario.id)
+
+        # 🕒 Marcar la invitación como usada
+        if hasattr(invitacion, 'aceptada'):
+            invitacion.aceptada = True
+            invitacion.fecha_uso = timezone.now()
+            invitacion.save()
+        else:
+            invitacion.delete()
+
+        # 🎉 Mensaje de éxito y redirección
+        messages.success(request, "✅ Registro de administrador completado. Ya puedes iniciar sesión.")
+        return redirect('usuarios:registro_exitoso')
+
+    # GET → Mostrar formulario
+    return render(request, 'usuarios/registro_admin_invitado.html', {'token': token})
+
+
+# ✅ Vista de confirmación de registro exitoso
+def registro_exitoso_view(request):
+    return render(request, 'usuarios/registro_exitoso.html')

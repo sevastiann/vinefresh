@@ -12,12 +12,17 @@
            class="nav-item {% if seccion == 'combos' %}activo{% endif %}">Combos</a>
     </div>
 
+
+    
     <div class="main-content">
         <!-- 🔸 Sidebar (Filtros) -->
         {% include 'catalogo/sidebar.html' with seccion=seccion %}
 
+
+
+
         <!-- 🔸 Área central -->
-        <div class="productos-section">
+        <div class="productos-section" id="productos-container">
             <div class="productos-grid">
                 {% for item in productos %}
                     <div class="card-producto">
@@ -38,16 +43,20 @@
                         </div>
                         {% endif %}
 
-                        <!-- 🔹 Botones de acción -->
-                            <div class="acciones-producto">
-                                <button type="button" class="btn-detalle" onclick="abrirModal('modal-detalle-{{ seccion }}-{{ item.id }}')">👁️ Detalle</button>
-<form action="" method="post" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit" class="btn-carrito">🛒 Agregar al carrito</button>
-</form>
+<!-- 🔹 Botones de acción -->
+<div class="acciones-producto">
+    <button type="button" class="btn-detalle" onclick="abrirModal('modal-detalle-{{ seccion }}-{{ item.id }}')">👁️ Detalle</button>
 
-                            </div>
-                    </div>
+    {% if request.session.usuario_id and request.session.usuario_rol == 'cliente' %}
+        <form action="{% url 'ventas:agregar_al_carrito' producto_id=item.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn-carrito">🛒 Agregar al carrito</button>
+        </form>
+    {% else %}
+        <a href="{% url 'usuarios:login' %}" class="btn-carrito">🛒 Agregar al carrito</a>
+    {% endif %}
+</div>
+
 
                     <!-- Modal Detalle -->
                     <div id="modal-detalle-{{ seccion }}-{{ item.id }}" class="modal">
@@ -281,20 +290,44 @@ body {
 
 <!-- Modal JS -->
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Escuchar cambios en los filtros
+    document.querySelectorAll('input[name="categoria"]').forEach(input => {
+        input.addEventListener('change', () => {
+            console.log("Filtro cambiado");
+
+            // Obtener las categorías seleccionadas
+            const seleccionados = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
+                .map(i => i.value);
+
+            // Petición al servidor
+            fetch(`/catalogo/filtrar/?categorias=${seleccionados.join(",")}`)
+                .then(response => response.text())
+                .then(html => {
+                    console.log("Respuesta recibida, actualizando...");
+                    document.querySelector("#productos-container").innerHTML = html;
+                })
+                .catch(err => console.error("Error al filtrar:", err));
+        });
+    });
+}); // ← 🧩 ESTA llave faltaba para cerrar el addEventListener
+
+// 🔹 Funciones de los modales
 function abrirModal(id) {
     const modal = document.getElementById(id);
-    if(modal) modal.style.display = 'block';
+    if (modal) modal.style.display = 'block';
 }
 
 function cerrarModal(id) {
     const modal = document.getElementById(id);
-    if(modal) modal.style.display = 'none';
+    if (modal) modal.style.display = 'none';
 }
 
 window.addEventListener('click', function(event) {
-    if(event.target.classList.contains('modal')) {
+    if (event.target.classList.contains('modal')) {
         event.target.style.display = 'none';
     }
 });
 </script>
+
 {% endblock %}

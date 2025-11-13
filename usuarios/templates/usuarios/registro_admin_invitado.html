@@ -80,9 +80,17 @@
             background-color: #5e1010;
         }
 
-        .message {
-            margin-top: 15px;
+        .messages {
             text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .messages p {
+            background-color: #f5d7d7;
+            border: 1px solid #7b1f1f;
+            color: #4a0e0e;
+            padding: 8px;
+            border-radius: 5px;
             font-weight: bold;
         }
 
@@ -108,6 +116,15 @@
         <p class="form-subtitle">Complete sus datos para activar su cuenta</p>
     </div>
 
+    <!-- 🔹 Mostrar mensajes de error o éxito -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <form method="post">
         {% csrf_token %}
         <input type="hidden" name="token" value="{{ token }}">
@@ -125,6 +142,12 @@
         <div class="form-group">
             <label>Nombre de usuario</label>
             <input type="text" name="nombre_usuario" required>
+        </div>
+
+        <!-- 🔹 Campo faltante -->
+        <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" name="email" required>
         </div>
 
         <div class="form-group">
@@ -158,7 +181,6 @@
         </div>
 
         <button type="submit">Registrar</button>
-        <p class="message">{{ mensaje }}</p>
     </form>
 
     <a href="{% url 'core:home' %}">⬅ Volver al inicio</a>

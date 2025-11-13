@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cuenta creada - VineFresh</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg,#f9efe6,#faf3e0);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            height:100vh;
+            margin:0;
+        }
+        .mensaje {
+            background:white;
+            border:2px solid #7b1f1f;
+            padding:28px 36px;
+            border-radius:10px;
+            text-align:center;
+            color:#4a0e0e;
+            box-shadow:0 6px 20px rgba(0,0,0,0.08);
+            width: min(520px, 92%);
+        }
+        .mensaje h2 { margin:0 0 12px 0; }
+        .mensaje p { margin:0 0 18px 0; color:#5c4033; }
+        .btn {
+            display:inline-block;
+            padding:10px 18px;
+            background:#7b1f1f;
+            color:#fff;
+            text-decoration:none;
+            border-radius:6px;
+            font-weight:600;
+        }
+        .link-secondary { display:block; margin-top:12px; color:#7b1f1f; text-decoration:none; font-weight:600; }
+    </style>
+</head>
+<body>
+  <div class="mensaje" role="status" aria-live="polite">
+    <h2>🎉 ¡Cuenta creada con éxito!</h2>
+    <p>Tu cuenta de administrador se creó correctamente. Ya puedes iniciar sesión y acceder al panel.</p>
+
+    <!-- botón principal: ir al login de la app usuarios -->
+    <a class="btn" href="{% url 'usuarios:login' %}">Ir a Iniciar Sesión</a>
+
+    <!-- enlace secundario: volver al inicio -->
+    <a class="link-secondary" href="{% url 'core:home' %}">Volver al inicio</a>
+  </div>
+</body>
+</html>

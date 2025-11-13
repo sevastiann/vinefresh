@@ -6,62 +6,135 @@ from .models import CarritoCompra, Pedido, PedidoItem, Factura, Cupon
 from catalogo.models import Producto
 from usuarios.models import Usuario
 
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from .models import Producto, CarritoCompra
+
 # ============================================================
-# 🛒 CARRITO
+# 🛒 VER CARRITO EN HTML
 # ============================================================
-def agregar_al_carrito(request, usuario_id, producto_id, cantidad):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+def carrito(request):
+    carrito_items = []
+    total = 0
+
+    if request.user.is_authenticated:
+        # Carrito desde DB para usuarios logueados
+        carrito = CarritoCompra.objects.filter(usuario=request.user)
+        for item in carrito:
+            subtotal = item.producto.precio * item.cantidad
+            carrito_items.append({
+                "id": item.id,
+                "producto": item.producto,
+                "cantidad": item.cantidad,
+                "subtotal": subtotal
+            })
+            total += subtotal
+    else:
+        # Carrito desde sesión para usuarios no logueados
+        carrito_sesion = request.session.get("carrito", {})
+        for pid, cantidad in carrito_sesion.items():
+            producto = get_object_or_404(Producto, id=pid)
+            subtotal = producto.precio * cantidad
+            carrito_items.append({
+                "id": pid,
+                "producto": producto,
+                "cantidad": cantidad,
+                "subtotal": subtotal
+            })
+            total += subtotal
+
+    context = {
+        "carrito": carrito_items,
+        "total": total,
+    }
+
+    return render(request, "ventas/carrito.html", context)
+
+
+
+# ============================================================
+# 🛒 AGREGAR PRODUCTO AL CARRITO
+# ============================================================
+def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
 
-    # Validar cantidad
+    if request.user.is_authenticated:
+        # Usuario logueado → carrito en DB
+        carrito, creado = CarritoCompra.objects.get_or_create(
+            usuario=request.user,
+            producto=producto,
+            defaults={"cantidad": 1}
+        )
+        if not creado:
+            carrito.cantidad += 1
+            carrito.save()
+    else:
+        # Usuario anónimo → carrito en sesión
+        carrito_sesion = request.session.get("carrito", {})
+        pid = str(producto.id)
+        carrito_sesion[pid] = carrito_sesion.get(pid, 0) + 1
+        request.session["carrito"] = carrito_sesion
+
+    return redirect("ventas:carrito")
+
+
+# ============================================================
+# 🛒 ACTUALIZAR CANTIDAD
+# ============================================================
+def actualizar_cantidad(request, item_id):
+    if request.method != "POST":
+        return JsonResponse({"error": "Método no permitido"}, status=405)
+
+    nueva_cantidad = request.POST.get("cantidad", None)
+    if nueva_cantidad is None:
+        return JsonResponse({"error": "No se recibió cantidad"}, status=400)
+
     try:
-        cantidad = int(cantidad)
-        if cantidad <= 0:
+        nueva_cantidad = int(nueva_cantidad)
+        if nueva_cantidad <= 0:
             return JsonResponse({"error": "La cantidad debe ser mayor que 0"}, status=400)
     except ValueError:
         return JsonResponse({"error": "La cantidad debe ser un número válido"}, status=400)
 
-    # Crear o actualizar el carrito
-    carrito, creado = CarritoCompra.objects.get_or_create(
-        usuario=usuario,
-        producto=producto,
-        defaults={"cantidad": cantidad}
-    )
+    if request.user.is_authenticated:
+        carrito_item = get_object_or_404(CarritoCompra, id=item_id, usuario=request.user)
+        carrito_item.cantidad = nueva_cantidad
+        carrito_item.save()
+    else:
+        # Usuario anónimo → actualizar cantidad en sesión
+        carrito_sesion = request.session.get("carrito", {})
+        pid = str(item_id)
+        if pid in carrito_sesion:
+            carrito_sesion[pid] = nueva_cantidad
+            request.session["carrito"] = carrito_sesion
+        else:
+            return JsonResponse({"error": "Producto no encontrado en el carrito"}, status=404)
 
-    if not creado:
-        carrito.cantidad += cantidad
-        carrito.save()
-
-    return JsonResponse({
-        "mensaje": "Producto agregado al carrito",
-        "producto": producto.nombre,
-        "cantidad_total": carrito.cantidad
-    })
-
-
-def ver_carrito(request, usuario_id):
-    usuario = get_object_or_404(Usuario, id=usuario_id)
-    carrito = CarritoCompra.objects.filter(usuario=usuario)
-
-    data = [
-        {
-            "producto": item.producto.nombre,
-            "precio_unitario": item.producto.precio,
-            "cantidad": item.cantidad,
-            "subtotal": item.subtotal(),
-        }
-        for item in carrito
-    ]
-
-    return JsonResponse(data, safe=False)
+    return JsonResponse({"mensaje": "Cantidad actualizada", "item_id": item_id, "cantidad_total": nueva_cantidad})
 
 
-def carrito(request):
-    """Versión HTML del carrito."""
-    usuario = request.user
-    carrito = CarritoCompra.objects.filter(usuario=usuario) if usuario.is_authenticated else []
-    return render(request, "ventas/carrito.html", {"carrito": carrito})
+# ============================================================
+# 🛒 ELIMINAR PRODUCTO DEL CARRITO
+# ============================================================
+def eliminar_del_carrito(request, item_id):
+    if request.method != "POST":
+        return JsonResponse({"error": "Método no permitido"}, status=405)
 
+    if request.user.is_authenticated:
+        carrito_item = get_object_or_404(CarritoCompra, id=item_id, usuario=request.user)
+        carrito_item.delete()
+    else:
+        carrito_sesion = request.session.get("carrito", {})
+        pid = str(item_id)
+        if pid in carrito_sesion:
+            carrito_sesion.pop(pid)
+            request.session["carrito"] = carrito_sesion
+        else:
+            return JsonResponse({"error": "Producto no encontrado en el carrito"}, status=404)
+
+    return JsonResponse({"mensaje": "Producto eliminado del carrito", "item_id": item_id})
 
 # ============================================================
 # 📦 PEDIDOS

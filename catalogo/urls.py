@@ -4,6 +4,7 @@ from . import views
 app_name = 'catalogo'
 
 urlpatterns = [
+    
     # 🧩 Inventario para administradores
     path('inventario/', views.inventario, name='inventario'),
     path('productos/', views.productos, name='productos'),

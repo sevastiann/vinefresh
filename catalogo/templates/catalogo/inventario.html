@@ -337,7 +337,53 @@ window.addEventListener('click', function(event) {
         event.target.style.display = 'none';
     }
 });
+
+
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar-filtros');
+    const productosGrid = document.querySelector('.productos-grid');
+
+    if (!sidebar || !productosGrid) return;
+
+    // Cuando cambie algo en los filtros
+    sidebar.addEventListener('change', function() {
+        aplicarFiltros();
+    });
+
+    // Si hay un botón de "Buscar"
+    const form = sidebar.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            aplicarFiltros();
+        });
+    }
+
+    function aplicarFiltros() {
+        const formData = new FormData(sidebar.querySelector('form'));
+        const params = new URLSearchParams(formData);
+        const seccion = "{{ seccion }}";
+
+        fetch(`{% url 'catalogo:inventario' %}?seccion=${seccion}&${params.toString()}`, {
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+        .then(res => res.text())
+        .then(html => {
+            // Crear un DOM temporal para extraer solo el grid
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const nuevosProductos = doc.querySelector('.productos-grid');
+            if (nuevosProductos) {
+                productosGrid.innerHTML = nuevosProductos.innerHTML;
+            }
+        })
+        .catch(err => console.error('Error en filtros:', err));
+    }
+});
+</script>
+
 {% endblock %}
 
 

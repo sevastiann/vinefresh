@@ -7,12 +7,19 @@ from .models import Producto, Combo
 # VISTA INVENTARIO
 # --------------------------
 def inventario(request):
-    seccion = request.GET.get('seccion', 'vinos')  # default: 'vinos'
+    seccion = request.GET.get('seccion', 'vinos')
+    productos = Producto.objects.all() if seccion == 'vinos' else Combo.objects.all()
 
-    if seccion == 'vinos':
-        productos = Producto.objects.all()
-    else:  # seccion == 'combos'
-        productos = Combo.objects.all()
+    # Aquí puedes filtrar por categoría, precio, etiqueta, etc.
+    categoria = request.GET.get('categoria')
+    if categoria:
+        productos = productos.filter(categoria__nombre__icontains=categoria)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return render(request, 'catalogo/inventario.html', {
+            'productos': productos,
+            'seccion': seccion
+        })
 
     return render(request, 'catalogo/inventario.html', {
         'productos': productos,

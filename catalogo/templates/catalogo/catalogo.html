@@ -1,0 +1,9 @@
+{% for item in productos %}
+<div class="producto-card">
+    <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
+    <h3>{{ item.nombre }}</h3>
+    <p>${{ item.precio }}</p>
+</div>
+{% empty %}
+<p class="sin-productos">No hay productos disponibles.</p>
+{% endfor %}

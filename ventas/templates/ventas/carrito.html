@@ -5,37 +5,106 @@
 {% block content %}
 <div class="container mt-4">
     <h2>🛒 Carrito de Compras</h2>
-
-    <a href="" class="btn btn-secondary mt-2">⬅ Volver</a>
+    <a href="{% url 'catalogo:productos' %}" class="btn btn-secondary mt-2">⬅ Volver</a>
 
     {% if carrito %}
         <table class="table table-bordered table-striped mt-3">
             <thead class="table-dark">
                 <tr>
                     <th>Producto</th>
+                    <th>Imagen</th>
+                    <th>Precio</th>
                     <th>Cantidad</th>
-                    <th>Usuario</th>
+                    <th>Subtotal</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="carrito-body">
                 {% for item in carrito %}
-                <tr>
+                <tr id="carrito-item-{{ item.id }}">
                     <td>{{ item.producto.nombre }}</td>
-                    <td>{{ item.cantidad }}</td>
-                    <td>{{ item.usuario.nombre }}</td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-primary">Editar</a>
-                        <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                        <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" width="70">
+                    </td>
+                    <td class="precio">${{ item.producto.precio }}</td>
+                    <td>
+                        <input type="number" class="cantidad-input form-control" data-id="{{ item.id }}" value="{{ item.cantidad }}" min="1" style="width:80px;">
+                    </td>
+                    <td class="subtotal" id="subtotal-{{ item.id }}">${{ item.subtotal }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-actualizar" data-id="{{ item.id }}">Actualizar</button>
+                        <button class="btn btn-danger btn-eliminar" data-id="{{ item.id }}">Eliminar</button>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <a href="#" class="btn btn-success mt-3">✅ Procesar Pedido</a>
+        <h4 class="mt-3">Total: $<span id="total">{{ total }}</span></h4>
+        <a href="" class="btn btn-success mt-3">✅ Procesar Pedido</a>
+
     {% else %}
         <p class="mt-3">El carrito está vacío.</p>
     {% endif %}
 </div>
+
+<script>
+const csrfToken = '{{ csrf_token }}';
+
+function actualizarTotal() {
+    let total = 0;
+    document.querySelectorAll('.subtotal').forEach(sub => {
+        total += parseFloat(sub.textContent.replace('$',''));
+    });
+    document.getElementById('total').textContent = total.toFixed(2);
+}
+
+// Actualizar cantidad
+document.querySelectorAll('.btn-actualizar').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const itemId = btn.dataset.id;
+        const cantidad = document.querySelector(`.cantidad-input[data-id='${itemId}']`).value;
+
+        fetch("{% url 'ventas:actualizar_cantidad' 0 %}".replace('0', itemId), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({cantidad})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.mensaje){
+                const precio = parseFloat(document.querySelector(`#carrito-item-${itemId} .precio`).textContent.replace('$',''));
+                document.getElementById('subtotal-' + itemId).textContent = '$' + (precio * cantidad).toFixed(2);
+                actualizarTotal();
+            } else {
+                alert(data.error);
+            }
+        });
+    });
+});
+
+// Eliminar producto
+document.querySelectorAll('.btn-eliminar').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const itemId = btn.dataset.id;
+
+        fetch("{% url 'ventas:eliminar_del_carrito' 0 %}".replace('0', itemId), {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrfToken},
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.mensaje){
+                document.getElementById('carrito-item-' + itemId).remove();
+                actualizarTotal();
+            } else {
+                alert(data.error);
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

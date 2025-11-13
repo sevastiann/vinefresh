@@ -44,12 +44,20 @@
 
             <!-- Sección derecha: carrito y usuario -->
             <ul class="navbar-nav ml-auto align-items-center">
-                <!-- Icono de carrito -->
-                <li class="nav-item mr-3">
-                    <a class="nav-link" href="{% url 'ventas:carrito' %}">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
-                    </a>
-                </li>
+<!-- Icono de carrito -->
+<li class="nav-item mr-3">
+    {% if request.session.usuario_id and request.session.usuario_rol == 'cliente' %}
+        <a class="nav-link" href="{% url 'ventas:carrito' %}">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+        </a>
+    {% else %}
+        <a class="nav-link" href="{% url 'usuarios:login' %}">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+        </a>
+    {% endif %}
+</li>
+
+
 
                 <!-- Dropdown de usuario -->
                 <li class="nav-item dropdown">

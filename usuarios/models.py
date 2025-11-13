@@ -26,6 +26,9 @@ class InvitacionAdmin(models.Model):
     email = models.EmailField(unique=True)
     token = models.CharField(max_length=100, unique=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    aceptada = models.BooleanField(default=False)  # nuevo campo
+    fecha_uso = models.DateTimeField(blank=True, null=True)  # nuevo campo
 
     def __str__(self):
         return self.email
+
