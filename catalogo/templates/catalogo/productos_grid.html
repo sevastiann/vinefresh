@@ -1,0 +1,47 @@
+{% load static %}
+<div class="productos-grid">
+
+    {% for item in productos %}
+    <div class="card-producto"
+         data-nombre="{{ item.nombre }}"
+         data-precio="{{ item.precio }}">
+
+        {% if item.imagen %}
+            <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
+        {% else %}
+            <img src="{% static 'img/default.png' %}" alt="Sin imagen">
+        {% endif %}
+
+        <h4>{{ item.nombre }}</h4>
+        <p class="precio">${{ item.precio }}</p>
+
+        {% if item.etiquetas.exists %}
+        <div class="etiquetas-producto">
+            {% for etiqueta in item.etiquetas.all %}
+                <span class="etiqueta">{{ etiqueta.nombre }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="acciones-producto">
+            <button type="button" class="btn-detalle"
+                    onclick="abrirModal('modal-detalle-{{ seccion }}-{{ item.id }}')">
+                👁️ Detalle
+            </button>
+
+            {% if request.session.usuario_id and request.session.usuario_rol == 'cliente' %}
+                <form action="{% url 'ventas:agregar_al_carrito' producto_id=item.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-carrito">🛒 Agregar al carrito</button>
+                </form>
+            {% else %}
+                <a href="{% url 'usuarios:login' %}" class="btn-carrito">🛒 Agregar al carrito</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% empty %}
+        <p class="no-productos">No hay productos con esos filtros.</p>
+    {% endfor %}
+
+</div>

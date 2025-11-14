@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Pago Rechazado{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center">
+        <div style="font-size: 80px;">❌</div>
+        <h2 class="mt-3 text-danger">¡Pago Rechazado!</h2>
+        <p class="lead">Hubo un problema al procesar tu pago. Por favor, verifica los datos e inténtalo de nuevo.</p>
+
+        {% if pedido %}
+        <div class="alert alert-danger mt-4">
+            <p><strong>Pedido #{{ pedido.id }}</strong></p>
+            <p>Total: ${{ pedido.total }}</p>
+            <p>Método de pago: {{ pedido.metodo_pago|capfirst }}</p>
+        </div>
+        {% endif %}
+
+        <div class="mt-4">
+            <a href="{% url 'ventas:comprar' %}" class="btn btn-warning me-2">💳 Intentar de nuevo</a>
+            <a href="{% url 'core:home' %}" class="btn btn-secondary">🏠 Volver al Inicio</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

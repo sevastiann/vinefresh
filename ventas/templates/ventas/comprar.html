@@ -1,0 +1,176 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Confirmar Pedido{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📝 Confirmar Pedido</h2>
+    <a href="{% url 'ventas:carrito' %}" class="btn btn-secondary mt-2">⬅ Volver al Carrito</a>
+
+    <!-- PROGRESO -->
+    <div class="progress-bar mt-3" style="height: 20px; background: #e9ecef; border-radius: 10px;">
+        <div id="progressFill" style="width: 33%; height: 100%; background: #198754; border-radius: 10px;"></div>
+    </div>
+
+    <!-- FORMULARIO -->
+    <form method="post" id="pedidoForm" action="{% url 'ventas:comprar' %}">
+        {% csrf_token %}
+
+        <!-- SECCIÓN 1: DATOS CLIENTE -->
+        <div class="form-section" id="section1">
+            <h4>👤 Tus Datos</h4>
+
+            <div class="mb-3">
+                <label class="form-label">Nombre:</label>
+                <input type="text" name="nombre" class="form-control" value="{{ user.nombre_usuario|default:'' }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Dirección:</label>
+                <input type="text" name="direccion" class="form-control" value="{{ user.direccion|default:'' }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Teléfono:</label>
+                <input type="text" name="telefono" class="form-control" value="{{ user.telefono|default:'' }}" required>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: PRODUCTOS -->
+        <div class="form-section" id="section2" style="display:none;">
+            <h4>📦 Productos</h4>
+
+            <table class="table mb-3">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unit.</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in carrito %}
+                    <tr>
+                        <td>{{ item.producto.nombre }}</td>
+
+                        <td>
+                            <input type="number" 
+                                   name="cantidad_{{ item.producto.id }}" 
+                                   value="{{ item.cantidad }}" 
+                                   min="1"
+                                   data-precio="{{ item.producto.precio }}"
+                                   class="form-control cantidad-input">
+                        </td>
+
+                        <td>${{ item.producto.precio|floatformat:2 }}</td>
+
+                        <td class="subtotal">
+                            ${{ item.subtotal|floatformat:2 }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="mb-3 d-flex justify-content-between">
+                <strong>Total:</strong>
+                <input type="text" id="totalCarrito" class="form-control w-auto" value="${{ total|floatformat:2 }}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Notas adicionales</label>
+                <textarea name="notas" class="form-control"></textarea>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: MÉTODO DE PAGO -->
+        <div class="form-section" id="section3" style="display:none;">
+            <h4>💳 Método de Pago</h4>
+
+            <div class="mb-3">
+                <label>Método:</label>
+                <select name="metodo_pago" class="form-select" required>
+                    <option value="">-- Selecciona --</option>
+                    <option value="tarjeta">Tarjeta</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="efectivo">Contra entrega</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label>Código / Tarjeta</label>
+                <input type="text" name="codigo_pago" class="form-control" required>
+            </div>
+        </div>
+
+        <!-- BOTONES -->
+        <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-secondary" id="prevBtn">Anterior</button>
+            <button type="button" class="btn btn-primary" id="nextBtn">Siguiente</button>
+            <button type="submit" id="submitBtn" class="btn btn-success" style="display:none;">
+                Confirmar Pedido
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+const sections = document.querySelectorAll(".form-section");
+let index = 0;
+
+const nextBtn = document.getElementById("nextBtn");
+const prevBtn = document.getElementById("prevBtn");
+const submitBtn = document.getElementById("submitBtn");
+const progressFill = document.getElementById("progressFill");
+
+function showSection(i){
+    sections.forEach((s, n) => s.style.display = (i === n ? "block" : "none"));
+
+    progressFill.style.width = ((i+1) / sections.length * 100) + "%";
+
+    prevBtn.style.display = i === 0 ? "none" : "inline-block";
+    nextBtn.style.display = i === sections.length - 1 ? "none" : "inline-block";
+    submitBtn.style.display = i === sections.length - 1 ? "inline-block" : "none";
+}
+
+nextBtn.addEventListener("click", () => {
+    if(index < sections.length - 1){
+        index++;
+        showSection(index);
+    }
+});
+
+prevBtn.addEventListener("click", () => {
+    if(index > 0){
+        index--;
+        showSection(index);
+    }
+});
+
+showSection(index);
+
+
+// === CÁLCULOS DEL TOTAL ===
+function actualizarTotal(){
+    let total = 0;
+    document.querySelectorAll(".cantidad-input").forEach(input => {
+        const cantidad = Number(input.value);
+        const precio = Number(input.dataset.precio);
+        const subtotal = cantidad * precio;
+
+        input.closest("tr").querySelector(".subtotal").textContent = "$" + subtotal.toFixed(2);
+
+        total += subtotal;
+    });
+    document.getElementById("totalCarrito").value = "$" + total.toFixed(2);
+}
+
+document.querySelectorAll(".cantidad-input").forEach(input => {
+    input.addEventListener("input", actualizarTotal);
+});
+
+actualizarTotal();
+</script>
+{% endblock %}

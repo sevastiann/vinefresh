@@ -8,6 +8,9 @@ urlpatterns = [
     # 🧩 Inventario para administradores
     path('inventario/', views.inventario, name='inventario'),
     path('productos/', views.productos, name='productos'),
+    path("filtrar_productos/", views.filtrar_productos, name="filtrar_productos"),
+    path("filtrar_inventarios/", views.filtrar_inventarios, name="filtrar_inventarios"),
+
 
     # 🍷 Vinos / Productos
     path('vinos/agregar/', views.agregar_producto, name='agregar_producto'),

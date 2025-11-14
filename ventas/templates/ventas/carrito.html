@@ -19,29 +19,46 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="carrito-body">
+
+            <tbody>
                 {% for item in carrito %}
                 <tr id="carrito-item-{{ item.id }}">
                     <td>{{ item.producto.nombre }}</td>
-                    <td>
-                        <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" width="70">
-                    </td>
+                    <td><img src="{{ item.producto.imagen.url }}" width="70"></td>
                     <td class="precio">${{ item.producto.precio }}</td>
+
                     <td>
-                        <input type="number" class="cantidad-input form-control" data-id="{{ item.id }}" value="{{ item.cantidad }}" min="1" style="width:80px;">
+                        <input 
+                            type="number" 
+                            class="cantidad-input form-control"
+                            name="cantidades_{{ item.producto.id }}"
+                            data-id="{{ item.id }}"
+                            value="{{ item.cantidad }}" 
+                            min="1" 
+                            style="width:80px;">
                     </td>
+
                     <td class="subtotal" id="subtotal-{{ item.id }}">${{ item.subtotal }}</td>
+
                     <td>
-                        <button class="btn btn-primary btn-actualizar" data-id="{{ item.id }}">Actualizar</button>
-                        <button class="btn btn-danger btn-eliminar" data-id="{{ item.id }}">Eliminar</button>
+                        <button type="button" class="btn btn-primary btn-actualizar" data-id="{{ item.id }}">
+                            Actualizar
+                        </button>
+                        <button type="button" class="btn btn-danger btn-eliminar" data-id="{{ item.id }}">
+                            Eliminar
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <h4 class="mt-3">Total: $<span id="total">{{ total }}</span></h4>
-        <a href="" class="btn btn-success mt-3">✅ Procesar Pedido</a>
+        <h4>Total: $<span id="total">{{ total }}</span></h4>
+
+        <!-- 🔥 BOTÓN CORRECTO: lleva a comprar.html (NO envía POST) -->
+        <a href="{% url 'ventas:comprar' %}" class="btn btn-success mt-3 btn-lg">
+            ✅ Procesar Pedido
+        </a>
 
     {% else %}
         <p class="mt-3">El carrito está vacío.</p>
@@ -59,11 +76,12 @@ function actualizarTotal() {
     document.getElementById('total').textContent = total.toFixed(2);
 }
 
-// Actualizar cantidad
+// Actualizar cantidad vía AJAX
 document.querySelectorAll('.btn-actualizar').forEach(btn => {
     btn.addEventListener('click', () => {
         const itemId = btn.dataset.id;
-        const cantidad = document.querySelector(`.cantidad-input[data-id='${itemId}']`).value;
+        const cantidadInput = document.querySelector(`.cantidad-input[data-id='${itemId}']`);
+        const cantidad = cantidadInput.value;
 
         fetch("{% url 'ventas:actualizar_cantidad' 0 %}".replace('0', itemId), {
             method: 'POST',
@@ -86,7 +104,7 @@ document.querySelectorAll('.btn-actualizar').forEach(btn => {
     });
 });
 
-// Eliminar producto
+// Eliminar producto vía AJAX
 document.querySelectorAll('.btn-eliminar').forEach(btn => {
     btn.addEventListener('click', () => {
         const itemId = btn.dataset.id;
@@ -106,5 +124,18 @@ document.querySelectorAll('.btn-eliminar').forEach(btn => {
         });
     });
 });
+
+// Actualizar subtotales al escribir cantidad manualmente
+document.querySelectorAll('.cantidad-input').forEach(input => {
+    input.addEventListener('change', () => {
+        const itemId = input.dataset.id;
+        const cantidad = input.value;
+        const precio = parseFloat(document.querySelector(`#carrito-item-${itemId} .precio`).textContent.replace('$',''));
+        document.getElementById('subtotal-' + itemId).textContent = '$' + (precio * cantidad).toFixed(2);
+        actualizarTotal();
+    });
+});
+
+actualizarTotal();
 </script>
 {% endblock %}

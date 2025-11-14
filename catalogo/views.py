@@ -3,42 +3,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from .models import Producto, Combo
 
-# --------------------------
-# VISTA INVENTARIO
-# --------------------------
-def inventario(request):
-    seccion = request.GET.get('seccion', 'vinos')
-    productos = Producto.objects.all() if seccion == 'vinos' else Combo.objects.all()
 
-    # Aquí puedes filtrar por categoría, precio, etiqueta, etc.
-    categoria = request.GET.get('categoria')
-    if categoria:
-        productos = productos.filter(categoria__nombre__icontains=categoria)
-
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return render(request, 'catalogo/inventario.html', {
-            'productos': productos,
-            'seccion': seccion
-        })
-
-    return render(request, 'catalogo/inventario.html', {
-        'productos': productos,
-        'seccion': seccion
-    })
-
-# --------------------------
-# Vista de productos (Cliente)
-# --------------------------
-def productos(request):
-    seccion = request.GET.get('seccion', 'vinos')
-    if seccion == 'combos':
-        productos = Combo.objects.filter(activo=True)
-    else:
-        productos = Producto.objects.filter(activo=True)
-    return render(request, 'catalogo/productos.html', {
-        'productos': productos,
-        'seccion': seccion,
-    })
 
 # --------------------------
 # AGREGAR PRODUCTO / COMBO
@@ -230,3 +195,160 @@ def detalle_producto(request, producto_id):
 def detalle_combo(request, combo_id):
     combo = get_object_or_404(Combo, id=combo_id, activo=True)
     return render(request, 'catalogo/detalle_combo.html', {'combo': combo})
+
+
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Producto
+
+def filtrar_productos(request):
+    # Partimos de todos los productos activos
+    productos = Producto.objects.filter(activo=True)
+
+    # 🔍 Buscar por nombre
+    buscar = request.GET.get("buscar", "")
+    if buscar:
+        productos = productos.filter(nombre__icontains=buscar)
+
+    # 💰 Filtro de precio
+    precio_min = request.GET.get("precio_min")
+    if precio_min:
+        productos = productos.filter(precio__gte=precio_min)
+
+    precio_max = request.GET.get("precio_max")
+    if precio_max:
+        productos = productos.filter(precio__lte=precio_max)
+
+    # 🌎 Filtro por país
+    pais = request.GET.get("pais", "")
+    if pais:
+        paises = pais.split(",")
+        productos = productos.filter(pais_origen__in=paises)
+
+    # 🎨 Filtro por color (CharField)
+    color = request.GET.get("color", "")
+    if color:
+        colores = color.split(",")
+        q_color = Q()
+        for c in colores:
+            q_color |= Q(categoria__icontains=c)
+        productos = productos.filter(q_color)
+
+    # 🍇 Filtro por tipo de uva
+    uva = request.GET.get("uva", "")
+    if uva:
+        uvas = uva.split(",")
+        productos = productos.filter(tipo_fruto__in=uvas)
+
+    # 🔥 Filtro por grado de alcohol
+    alcohol = request.GET.get("alcohol", "")
+    if alcohol:
+        grados = alcohol.split(",")
+        productos = productos.filter(grado_alcohol__in=grados)
+
+    # 🧪 Filtro por volumen
+    vol = request.GET.get("vol", "")
+    if vol:
+        volumenes = vol.split(",")
+        productos = productos.filter(subcategoria__in=volumenes)
+
+    # Para combos: festividad, premium, regalo
+    fest = request.GET.get("fest", "")
+    if fest:
+        festividades = fest.split(",")
+        productos = productos.filter(festividad__in=festividades)
+
+    prem = request.GET.get("prem", "")
+    if prem:
+        premiums = prem.split(",")
+        productos = productos.filter(premium__in=premiums)
+
+    reg = request.GET.get("reg", "")
+    if reg:
+        regalos = reg.split(",")
+        productos = productos.filter(regalo__in=regalos)
+
+    productos = productos.distinct()
+
+    # Renderizamos solo el grid (productos_grid.html)
+    return render(request, "catalogo/productos_grid.html", {
+        "productos": productos,
+        "seccion": "inventario"
+    })
+
+
+def filtrar_inventarios(request):
+    # Partimos de todos los productos activos
+    productos = Producto.objects.all()
+
+    # 🔍 Buscar por nombre
+    buscar = request.GET.get("buscar", "")
+    if buscar:
+        productos = productos.filter(nombre__icontains=buscar)
+
+    # 💰 Filtro de precio
+    precio_min = request.GET.get("precio_min")
+    if precio_min:
+        productos = productos.filter(precio__gte=precio_min)
+
+    precio_max = request.GET.get("precio_max")
+    if precio_max:
+        productos = productos.filter(precio__lte=precio_max)
+
+    # 🌎 Filtro por país
+    pais = request.GET.get("pais", "")
+    if pais:
+        paises = pais.split(",")
+        productos = productos.filter(pais_origen__in=paises)
+
+    # 🎨 Filtro por color (CharField)
+    color = request.GET.get("color", "")
+    if color:
+        colores = color.split(",")
+        q_color = Q()
+        for c in colores:
+            q_color |= Q(categoria__icontains=c)
+        productos = productos.filter(q_color)
+
+    # 🍇 Filtro por tipo de uva
+    uva = request.GET.get("uva", "")
+    if uva:
+        uvas = uva.split(",")
+        productos = productos.filter(tipo_fruto__in=uvas)
+
+    # 🔥 Filtro por grado de alcohol
+    alcohol = request.GET.get("alcohol", "")
+    if alcohol:
+        grados = alcohol.split(",")
+        productos = productos.filter(grado_alcohol__in=grados)
+
+    # 🧪 Filtro por volumen
+    vol = request.GET.get("vol", "")
+    if vol:
+        volumenes = vol.split(",")
+        productos = productos.filter(subcategoria__in=volumenes)
+
+    # Para combos: festividad, premium, regalo
+    fest = request.GET.get("fest", "")
+    if fest:
+        festividades = fest.split(",")
+        productos = productos.filter(festividad__in=festividades)
+
+    prem = request.GET.get("prem", "")
+    if prem:
+        premiums = prem.split(",")
+        productos = productos.filter(premium__in=premiums)
+
+    reg = request.GET.get("reg", "")
+    if reg:
+        regalos = reg.split(",")
+        productos = productos.filter(regalo__in=regalos)
+
+    productos = productos.distinct()
+
+    # Renderizamos solo el grid (productos_grid.html)
+    return render(request, "catalogo/inventarios_grid.html", {
+        "productos": productos,
+        "seccion": "inventario"
+    })
+

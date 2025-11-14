@@ -1,0 +1,76 @@
+{% load static %}
+<div class="productos-grid">
+    {% for item in productos %}
+    <div class="card-producto">
+        {% if item.imagen %}
+            <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
+        {% else %}
+            <img src="{% static 'img/default.png' %}" alt="Sin imagen">
+        {% endif %}
+
+        <h4>{{ item.nombre }}</h4>
+        <p class="precio">${{ item.precio }}</p>
+
+        {% if item.etiquetas.exists %}
+        <div class="etiquetas-producto">
+            {% for etiqueta in item.etiquetas.all %}
+                <span class="etiqueta">{{ etiqueta.nombre }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+<!-- 🔹 Botones de acción -->
+                        <div class="acciones-producto">
+                            <!-- Abrir modal detalle -->
+                            <button type="button" class="btn-detalle" onclick="abrirModal('modal-detalle-{{ seccion }}-{{ item.id }}')">👁️ Detalle</button>
+
+                            <!-- Editar -->
+                            {% if seccion == 'vinos' %}
+                                <a href="{% url 'catalogo:editar_producto' item.id %}" class="btn-editar">✏️ Editar</a>
+                            {% else %}
+                                <a href="{% url 'catalogo:editar_combo' item.id %}" class="btn-editar">✏️ Editar</a>
+                            {% endif %}
+
+                            <!-- Eliminar modal -->
+                            <button type="button" class="btn-eliminar" onclick="abrirModal('modal-eliminar-{{ seccion }}-{{ item.id }}')">🗑️ Eliminar</button>
+                        </div>
+                    </div>
+
+
+                    <!-- Modal Detalle -->
+                    <div id="modal-detalle-{{ seccion }}-{{ item.id }}" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="cerrarModal('modal-detalle-{{ seccion }}-{{ item.id }}')">&times;</span>
+                            {% if item.imagen %}
+                                <img src="{{ item.imagen.url }}" class="modal-img">
+                            {% endif %}
+                            <h2>{{ item.nombre }}</h2>
+                            <p><strong>Precio:</strong> ${{ item.precio }}</p>
+                            {% if item.descripcion %}
+                                <p><strong>Descripción:</strong> {{ item.descripcion }}</p>
+                            {% endif %}
+                            {% if item.categoria %}
+                                <p><strong>Categorías:</strong> {{ item.categoria }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Modal Eliminar -->
+                    <div id="modal-eliminar-{{ seccion }}-{{ item.id }}" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="cerrarModal('modal-eliminar-{{ seccion }}-{{ item.id }}')">&times;</span>
+                            <p>¿Estás seguro que deseas eliminar <strong>{{ item.nombre }}</strong>?</p>
+                            <form action="{% if seccion == 'vinos' %}{% url 'catalogo:eliminar_producto' item.id %}{% else %}{% url 'catalogo:eliminar_combo' item.id %}{% endif %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-eliminar">Eliminar</button>
+                                <button type="button" class="btn-secundario" onclick="cerrarModal('modal-eliminar-{{ seccion }}-{{ item.id }}')">Cancelar</button>
+                            </form>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="no-productos">No hay {{ seccion }} registrados aún.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

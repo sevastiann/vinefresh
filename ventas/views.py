@@ -137,113 +137,142 @@ def eliminar_del_carrito(request, item_id):
     return JsonResponse({"mensaje": "Producto eliminado del carrito", "item_id": item_id})
 
 # ============================================================
-# 📦 PEDIDOS
+# 📦 CREAR PEDIDO (FUNCIONAL Y LIMPIO)
 # ============================================================
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.db import transaction
+from .models import CarritoCompra, Pedido, PedidoItem
+
 def pedido_crear(request):
-    """Crea un pedido desde el carrito actual del usuario."""
     usuario = request.user
+
+    if not usuario.is_authenticated:
+        messages.error(request, "Debes iniciar sesión para realizar un pedido.")
+        return redirect("ventas:carrito")
+
     carrito = CarritoCompra.objects.filter(usuario=usuario)
 
     if not carrito.exists():
         messages.error(request, "Tu carrito está vacío.")
-        return redirect("ventas:carrito_html")
+        return redirect("ventas:carrito")
 
-    pedido = Pedido.objects.create(usuario=usuario)
+    # ============================
+    # GET → Mostrar formulario
+    # ============================
+    if request.method == "GET":
+        total_carrito = sum(item.producto.precio * item.cantidad for item in carrito)
 
-    for item in carrito:
-        PedidoItem.objects.create(
-            pedido=pedido,
-            producto=item.producto,
-            cantidad=item.cantidad,
-            precio=item.producto.precio
-        )
+        return render(request, "ventas/comprar.html", {
+            "carrito_items": carrito,
+            "total_carrito": total_carrito,
+            "user": usuario
+        })
 
-    carrito.delete()  # Vaciar el carrito tras crear el pedido
-    messages.success(request, "✅ Pedido creado correctamente.")
-    return redirect("ventas:pedidos_html")
+    # ============================
+    # POST → Crear pedido
+    # ============================
+    if request.method == "POST":
+        metodo_pago = request.POST.get("metodo_pago")
+        codigo_pago = request.POST.get("codigo_pago", "")
+
+        if not metodo_pago:
+            messages.error(request, "Debes seleccionar un método de pago.")
+            return redirect("ventas:comprar.html")
+
+        try:
+            with transaction.atomic():
+
+                pedido = Pedido.objects.create(usuario=usuario)
+
+                for item in carrito:
+                    PedidoItem.objects.create(
+                        pedido=pedido,
+                        producto=item.producto,
+                        cantidad=item.cantidad,
+                        precio=item.producto.precio
+                    )
+
+                carrito.delete()
+
+                return redirect("ventas:pago_exitoso")
+
+        except Exception:
+            messages.error(request, "Ocurrió un error al procesar el pedido.")
+            return redirect("ventas:carrito")
+
+    # ======================================
+    # GET → Mostrar formulario de compra
+    # ======================================
+    total_carrito = sum(item.producto.precio * item.cantidad for item in carrito)
+
+    return render(request, "ventas/comprar.html", {
+        "carrito_items": carrito,
+        "total_carrito": total_carrito,
+        "user": usuario
+    })
 
 
-def pedidos(request):
-    """Muestra todos los pedidos del usuario."""
+def pago_exitoso(request):
+    return render(request, "ventas/pago_exitoso.html")
+
+
+def pago_rechazado(request):
+    return render(request, "ventas/pago_rechazado.html")
+
+
+
+def pedidos_cliente(request):
     usuario = request.user
-    pedidos = Pedido.objects.filter(usuario=usuario)
+    if not hasattr(usuario, 'id') or usuario.id is None:
+        # Si por alguna razón no es un usuario válido, retorna vacío
+        pedidos = Pedido.objects.none()
+    else:
+        pedidos = Pedido.objects.filter(usuario=usuario).order_by("-id")
+
     return render(request, "ventas/pedidos.html", {"pedidos": pedidos})
+
+
+def admin_pedidos(request):
+    """Vista que carga el template de gestión de pedidos."""
+    pedidos = Pedido.objects.all().order_by('-id')
+    return render(request, "ventas/gestion_pedidos.html", {"pedidos": pedidos})
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+from .models import Pedido
+
+def actualizar_estado(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    if request.method == "POST":
+        nuevo_estado = request.POST.get("estado")
+        pedido.estado = nuevo_estado
+        pedido.save()
+        messages.success(request, f"✅ Estado del pedido #{pedido.id} actualizado a {nuevo_estado}.")
+    return redirect("ventas:gestion_pedidos")
 
 
 # ============================================================
 # 🧾 FACTURAS
 # ============================================================
-def factura_crear(request):
-    pedidos = Pedido.objects.all()
+import tempfile
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from .models import Pedido
 
-    if request.method == "POST":
-        pedido_id = request.POST.get("pedido_id")
-        metodo_pago = request.POST.get("metodo_pago")
-
-        pedido = get_object_or_404(Pedido, id=pedido_id)
-        total = pedido.total()
-
-        Factura.objects.create(
-            pedido=pedido,
-            metodo_pago=metodo_pago,
-            total_pagado=total
-        )
-
-        messages.success(request, "✅ Factura creada correctamente.")
-        return redirect("ventas:facturas_html")
-
-    return render(request, "ventas/factura_crear.html", {"pedidos": pedidos})
-
-
-def facturas(request):
-    """Lista de facturas creadas."""
-    facturas = Factura.objects.all()
-    return render(request, "ventas/facturas.html", {"facturas": facturas})
-
-
-# ============================================================
-# 🎟️ CUPONES
-# ============================================================
-def validar_cupon(request, codigo):
-    cupon = get_object_or_404(Cupon, codigo=codigo)
-
-    if not cupon.activo or cupon.fecha_expiracion < date.today():
-        return JsonResponse({"mensaje": "Cupón inválido o expirado"}, status=400)
-
-    return JsonResponse({
-        "mensaje": "Cupón válido",
-        "descuento": cupon.descuento
-    })
-
-
-def cupones_crear(request):
-    if request.method == "POST":
-        codigo = request.POST.get("codigo")
-        descuento = request.POST.get("descuento")
-        fecha_expiracion = request.POST.get("fecha_expiracion")
-        activo = request.POST.get("activo") == "true"
-
-        Cupon.objects.create(
-            codigo=codigo,
-            descuento=descuento,
-            fecha_expiracion=fecha_expiracion,
-            activo=activo
-        )
-
-        messages.success(request, "✅ Cupón creado correctamente.")
-        return redirect("ventas:cupones_html")
-
-    return render(request, "ventas/cupones_crear.html")
-
-
-def cupones(request):
-    cupones = Cupon.objects.all()
-    return render(request, "ventas/cupones.html", {"cupones": cupones})
-
-
-# ============================================================
-# 🌍 HOME
-# ============================================================
-def ventas_home(request):
-    """Página principal de la app de ventas."""
-    return render(request, "ventas/home.html")
+def factura_pdf(request, pedido_id):
+    # Obtener pedido del usuario actual
+    pedido = get_object_or_404(Pedido, id=pedido_id, usuario=request.user)
+    
+    # Renderizar plantilla a HTML
+    html_string = render_to_string('ventas/factura.html', {'pedido': pedido})
+    
+    # Crear PDF en memoria
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="Factura_{pedido.id}.pdf"'
+    
+    # Generar PDF
+    HTML(string=html_string).write_pdf(response)
+    return response

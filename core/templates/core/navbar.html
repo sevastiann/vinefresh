@@ -69,7 +69,7 @@
                         {% if request.session.usuario_id %}
                             {% if request.session.usuario_rol == 'admin' %}
                                 <a class="dropdown-item" href="{% url 'usuarios:gestion_usuarios' %}">Gestión de Usuarios</a>
-                                <a class="dropdown-item" href="">Gestión de Pedidos</a>
+                                <a class="dropdown-item" href="{% url 'ventas:gestion_pedidos' %}">Gestión de Pedidos</a>
                                 <a class="dropdown-item" href="{% url 'usuarios:enviar_invitacion' %}">Invitar Admin</a>
                                 <a class="dropdown-item" href="{% url 'soporte:panel_admin_soporte' %}">Gestión PQRS</a>
                             {% elif request.session.usuario_rol == 'cliente' %}
@@ -80,7 +80,7 @@
                                 <div class="dropdown-item-text font-weight-bold">Soporte / PQRS</div>
                                 <a class="dropdown-item" href="{% url 'soporte:lista_soporte' %}">Mis PQRS</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="">Favoritos</a>
+                                <a class="dropdown-item" href="{% url 'ventas:pedidos' %}">mid pedidos</a>
                             {% endif %}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item text-danger" href="{% url 'usuarios:logout' %}">
