@@ -39,7 +39,6 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'core:nosotros' %}">Nosotros</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'core:terminos' %}">Términos</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'reseñas:lista_reseñas' %}">Reseñas</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'core:contacto' %}">Contáctanos</a></li>
             </ul>
 
             <!-- Sección derecha: carrito y usuario -->
@@ -73,7 +72,7 @@
                                 <a class="dropdown-item" href="{% url 'usuarios:enviar_invitacion' %}">Invitar Admin</a>
                                 <a class="dropdown-item" href="{% url 'soporte:panel_admin_soporte' %}">Gestión PQRS</a>
                             {% elif request.session.usuario_rol == 'cliente' %}
-                                <a class="dropdown-item" href="">Configuración de Perfil</a>
+                                <a class="dropdown-item" href="{% url 'usuarios:configuracion_perfil' %}">Configuración de Perfil</a>
                                 <a class="dropdown-item" href="">Historial de Compras</a>
                                 <!-- Soporte desplegable para cliente -->
                                 <div class="dropdown-divider"></div>

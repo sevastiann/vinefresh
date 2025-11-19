@@ -11,13 +11,6 @@
         <h4>{{ item.nombre }}</h4>
         <p class="precio">${{ item.precio }}</p>
 
-        {% if item.etiquetas.exists %}
-        <div class="etiquetas-producto">
-            {% for etiqueta in item.etiquetas.all %}
-                <span class="etiqueta">{{ etiqueta.nombre }}</span>
-            {% endfor %}
-        </div>
-        {% endif %}
 
 <!-- 🔹 Botones de acción -->
                         <div class="acciones-producto">

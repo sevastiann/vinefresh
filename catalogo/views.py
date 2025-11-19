@@ -2,30 +2,55 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from .models import Producto, Combo
-
+from django.contrib import messages
 
 
 # --------------------------
 # AGREGAR PRODUCTO / COMBO
 # --------------------------
-
 def agregar_producto(request):
-    seccion = 'vinos'
-    if request.method == 'POST':
-        categorias = request.POST.getlist('categoria')
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        precio = request.POST.get("precio")
+        descripcion = request.POST.get("descripcion", "")
+
+        # Campos de filtro
+        pais_origen = request.POST.get("pais_origen", "")
+        categoria = request.POST.get("categoria", "")  # Color
+        grado_alcohol = request.POST.get("grado_alcohol", "")
+        tipo_fruto = request.POST.get("tipo_fruto", "")
+        subcategoria = request.POST.get("subcategoria", "")
+
+        imagen = request.FILES.get("imagen")
+
+        # Validación básica
+        if not nombre or not precio:
+            messages.error(request, "El nombre y el precio son obligatorios.")
+            return redirect("catalogo:agregar_producto")
+
+        # Crear producto
         producto = Producto(
-            nombre=request.POST.get('nombre'),
-            precio=request.POST.get('precio'),
-            descripcion=request.POST.get('descripcion', ''),
-            categoria=", ".join(categorias),
-            activo=request.POST.get('activo') == 'on'
+            nombre=nombre,
+            precio=precio,
+            descripcion=descripcion,
+            pais_origen=pais_origen,
+            categoria=categoria,
+            grado_alcohol=grado_alcohol if grado_alcohol else None,
+            tipo_fruto=tipo_fruto,
+            subcategoria=subcategoria,
+            activo=True
         )
-        if request.FILES.get('imagen'):
-            producto.imagen = request.FILES.get('imagen')
+
+        if imagen:
+            producto.imagen = imagen
+
         producto.save()
-        return HttpResponseRedirect(reverse('catalogo:inventario') + f'?seccion={seccion}')
-    
-    return render(request, 'catalogo/agregar_producto.html', {'seccion': seccion})
+
+        messages.success(request, "Producto agregado correctamente.")
+        return redirect("catalogo:inventario")  # Ajusta según tu URL real
+
+    return render(request, "catalogo/agregar_producto.html")
+
 
 
 def agregar_combo(request):
@@ -52,50 +77,48 @@ def agregar_combo(request):
 def editar_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
 
-    # Listas para los checkboxes
-    paises = ["Chile","Argentina","España","Italia","Francia","Colombia","México"]
-    colores = ["Tinto","Blanco","Rosado"]
-    grados = ["Menos de 10%","10% - 13%","Más de 13%"]
-    uvas = ["Cabernet Sauvignon","Malbec","Merlot","Sauvignon Blanc","Verdejo","Carménère","Nebbiolo","Pinot Noir","Grenache"]
-    volumenes = ["375 ml","750 ml","1 L"]
+    # 🔥 Listas para selects (país, color, alcohol, uva, volumen)
+    PAISES = ["Chile", "Argentina", "España", "Italia", "Francia", "Colombia", "México"]
+    COLORES = ["Tinto", "Blanco", "Rosado"]
+    ALCOHOLES = ["Menos de 10%", "10% - 13%", "Más de 13%"]
+    UVAS = [
+        "Cabernet Sauvignon", "Malbec", "Merlot", "Sauvignon Blanc",
+        "Verdejo", "Carménère", "Nebbiolo", "Pinot Noir", "Grenache"
+    ]
+    VOLUMENES = ["375 ml", "750 ml", "1 L"]
 
-    if request.method == 'POST':
-        # Obtener listas de cada categoría
-        categorias_pais = request.POST.getlist('categoria_pais')
-        categorias_color = request.POST.getlist('categoria_color')
-        categorias_grado = request.POST.getlist('categoria_grado')
-        categorias_uva = request.POST.getlist('categoria_uva')
-        categorias_volumen = request.POST.getlist('categoria_volumen')
+    if request.method == "POST":
+        producto.nombre = request.POST.get("nombre")
+        producto.precio = request.POST.get("precio")
+        producto.descripcion = request.POST.get("descripcion", "")
 
-        # Guardar los datos
-        producto.nombre = request.POST.get('nombre')
-        producto.precio = request.POST.get('precio')
-        producto.descripcion = request.POST.get('descripcion', '')
-        
-        # Aquí dependiendo de cómo tengas el modelo, puedes guardar las relaciones de categoría/subcategoría
-        # Por simplicidad, si solo usas un campo texto:
-        producto.categoria = ", ".join(categorias_pais + categorias_color + categorias_grado + categorias_uva)
-        producto.subcategorias = ", ".join(categorias_volumen)
+        # 🔹 Filtros (coinciden con los del catálogo)
+        producto.pais_origen = request.POST.get("pais_origen", "")
+        producto.categoria = request.POST.get("categoria", "")  # Color
+        producto.grado_alcohol = request.POST.get("grado_alcohol") or None
+        producto.tipo_fruto = request.POST.get("tipo_fruto", "")
+        producto.subcategoria = request.POST.get("subcategoria", "")
 
-        if request.FILES.get('imagen'):
-            producto.imagen = request.FILES.get('imagen')
+        # Imagen nueva
+        imagen_nueva = request.FILES.get("imagen")
+        if imagen_nueva:
+            producto.imagen = imagen_nueva
 
-        producto.activo = request.POST.get('activo') == 'on'
         producto.save()
+        messages.success(request, "Producto actualizado correctamente.")
+        return redirect("catalogo:inventario")
 
-        return HttpResponseRedirect(reverse('catalogo:inventario') + '?seccion=vinos')
+    return render(request, "catalogo/editar_producto.html", {
+        "producto": producto,
 
-    context = {
-        'producto': producto,
-        'seccion': 'vinos',
-        'paises': paises,
-        'colores': colores,
-        'grados': grados,
-        'uvas': uvas,
-        'volumenes': volumenes,
-    }
+        # 🔥 Enviar listas para el formulario
+        "paises": PAISES,
+        "colores": COLORES,
+        "alcoholes": ALCOHOLES,
+        "uvas": UVAS,
+        "volumenes": VOLUMENES,
+    })
 
-    return render(request, 'catalogo/editar_producto.html', context)
 
 def editar_combo(request, combo_id):
     combo = get_object_or_404(Combo, id=combo_id)
@@ -196,159 +219,149 @@ def detalle_combo(request, combo_id):
     combo = get_object_or_404(Combo, id=combo_id, activo=True)
     return render(request, 'catalogo/detalle_combo.html', {'combo': combo})
 
-
-from django.shortcuts import render
 from django.db.models import Q
+from django.shortcuts import render
 from .models import Producto
 
 def filtrar_productos(request):
-    # Partimos de todos los productos activos
     productos = Producto.objects.filter(activo=True)
 
-    # 🔍 Buscar por nombre
-    buscar = request.GET.get("buscar", "")
+    # --------------------------------
+    # 🔍 BUSCAR
+    # --------------------------------
+    buscar = request.GET.get("buscar")
     if buscar:
         productos = productos.filter(nombre__icontains=buscar)
 
-    # 💰 Filtro de precio
-    precio_min = request.GET.get("precio_min")
-    if precio_min:
-        productos = productos.filter(precio__gte=precio_min)
+    # --------------------------------
+    # 💰 PRECIO
+    # --------------------------------
+    pmin = request.GET.get("precio_min")
+    pmax = request.GET.get("precio_max")
 
-    precio_max = request.GET.get("precio_max")
-    if precio_max:
-        productos = productos.filter(precio__lte=precio_max)
+    if pmin and pmin.isdigit():
+        productos = productos.filter(precio__gte=float(pmin))
 
-    # 🌎 Filtro por país
-    pais = request.GET.get("pais", "")
-    if pais:
-        paises = pais.split(",")
-        productos = productos.filter(pais_origen__in=paises)
+    if pmax and pmax.isdigit():
+        productos = productos.filter(precio__lte=float(pmax))
 
-    # 🎨 Filtro por color (CharField)
-    color = request.GET.get("color", "")
-    if color:
-        colores = color.split(",")
-        q_color = Q()
-        for c in colores:
-            q_color |= Q(categoria__icontains=c)
-        productos = productos.filter(q_color)
+    # --------------------------------
+    # 🌍 PAÍSES
+    # --------------------------------
+    paises = request.GET.get("pais")
+    if paises:
+        lista = paises.split(",")
+        productos = productos.filter(pais_origen__in=lista)
 
-    # 🍇 Filtro por tipo de uva
-    uva = request.GET.get("uva", "")
-    if uva:
-        uvas = uva.split(",")
-        productos = productos.filter(tipo_fruto__in=uvas)
+    # --------------------------------
+    # 🎨 COLOR (categoría)
+    # --------------------------------
+    colores = request.GET.get("color")
+    if colores:
+        lista = colores.split(",")
+        productos = productos.filter(categoria__in=lista)
 
-    # 🔥 Filtro por grado de alcohol
-    alcohol = request.GET.get("alcohol", "")
+    # --------------------------------
+    # 🍇 TIPO DE UVA (tipo_fruto)
+    # --------------------------------
+    uvas = request.GET.get("uva")
+    if uvas:
+        lista = uvas.split(",")
+        productos = productos.filter(tipo_fruto__in=lista)
+
+    # --------------------------------
+    # 🔥 GRADO DE ALCOHOL
+    # --------------------------------
+    alcohol = request.GET.get("alcohol")
     if alcohol:
-        grados = alcohol.split(",")
-        productos = productos.filter(grado_alcohol__in=grados)
+        lista = alcohol.split(",")
+        q = Q()
+        for val in lista:
+            if val == "Menos de 10%":
+                q |= Q(grado_alcohol__lt=10)
+            elif val == "10%-13%":
+                q |= Q(grado_alcohol__gte=10, grado_alcohol__lte=13)
+            elif val == "Más de 13%":
+                q |= Q(grado_alcohol__gt=13)
+        productos = productos.filter(q)
 
-    # 🧪 Filtro por volumen
-    vol = request.GET.get("vol", "")
+    # --------------------------------
+    # 🧪 VOLÚMENES
+    # --------------------------------
+    vol = request.GET.get("vol")
     if vol:
-        volumenes = vol.split(",")
-        productos = productos.filter(subcategoria__in=volumenes)
-
-    # Para combos: festividad, premium, regalo
-    fest = request.GET.get("fest", "")
-    if fest:
-        festividades = fest.split(",")
-        productos = productos.filter(festividad__in=festividades)
-
-    prem = request.GET.get("prem", "")
-    if prem:
-        premiums = prem.split(",")
-        productos = productos.filter(premium__in=premiums)
-
-    reg = request.GET.get("reg", "")
-    if reg:
-        regalos = reg.split(",")
-        productos = productos.filter(regalo__in=regalos)
+        lista = vol.split(",")
+        productos = productos.filter(subcategoria__in=lista)
 
     productos = productos.distinct()
 
-    # Renderizamos solo el grid (productos_grid.html)
     return render(request, "catalogo/productos_grid.html", {
         "productos": productos,
-        "seccion": "inventario"
+        "seccion": "vinos",
     })
 
-
 def filtrar_inventarios(request):
-    # Partimos de todos los productos activos
     productos = Producto.objects.all()
 
-    # 🔍 Buscar por nombre
-    buscar = request.GET.get("buscar", "")
+    # BUSCAR
+    buscar = request.GET.get("buscar")
     if buscar:
         productos = productos.filter(nombre__icontains=buscar)
 
-    # 💰 Filtro de precio
-    precio_min = request.GET.get("precio_min")
-    if precio_min:
-        productos = productos.filter(precio__gte=precio_min)
+    # PRECIO
+    pmin = request.GET.get("precio_min")
+    pmax = request.GET.get("precio_max")
 
-    precio_max = request.GET.get("precio_max")
-    if precio_max:
-        productos = productos.filter(precio__lte=precio_max)
+    if pmin and pmin.isdigit():
+        productos = productos.filter(precio__gte=float(pmin))
 
-    # 🌎 Filtro por país
-    pais = request.GET.get("pais", "")
-    if pais:
-        paises = pais.split(",")
-        productos = productos.filter(pais_origen__in=paises)
+    if pmax and pmax.isdigit():
+        productos = productos.filter(precio__lte=float(pmax))
 
-    # 🎨 Filtro por color (CharField)
-    color = request.GET.get("color", "")
-    if color:
-        colores = color.split(",")
-        q_color = Q()
-        for c in colores:
-            q_color |= Q(categoria__icontains=c)
-        productos = productos.filter(q_color)
+    # PAÍS
+    paises = request.GET.get("pais")
+    if paises:
+        lista = paises.split(",")
+        productos = productos.filter(pais_origen__in=lista)
 
-    # 🍇 Filtro por tipo de uva
-    uva = request.GET.get("uva", "")
-    if uva:
-        uvas = uva.split(",")
-        productos = productos.filter(tipo_fruto__in=uvas)
+    # COLOR
+    colores = request.GET.get("color")
+    if colores:
+        lista = colores.split(",")
+        productos = productos.filter(categoria__in=lista)
 
-    # 🔥 Filtro por grado de alcohol
-    alcohol = request.GET.get("alcohol", "")
+    # UVA
+    uvas = request.GET.get("uva")
+    if uvas:
+        lista = uvas.split(",")
+        productos = productos.filter(tipo_fruto__in=lista)
+
+    # ALCOHOL
+    alcohol = request.GET.get("alcohol")
     if alcohol:
-        grados = alcohol.split(",")
-        productos = productos.filter(grado_alcohol__in=grados)
+        lista = alcohol.split(",")
+        q = Q()
+        for val in lista:
+            if val == "Menos de 10%":
+                q |= Q(grado_alcohol__lt=10)
+            elif val == "10%-13%":
+                q |= Q(grado_alcohol__gte=10, grado_alcohol__lte=13)
+            elif val == "Más de 13%":
+                q |= Q(grado_alcohol__gt=13)
+        productos = productos.filter(q)
 
-    # 🧪 Filtro por volumen
-    vol = request.GET.get("vol", "")
+    # VOLUMEN
+    vol = request.GET.get("vol")
     if vol:
-        volumenes = vol.split(",")
-        productos = productos.filter(subcategoria__in=volumenes)
-
-    # Para combos: festividad, premium, regalo
-    fest = request.GET.get("fest", "")
-    if fest:
-        festividades = fest.split(",")
-        productos = productos.filter(festividad__in=festividades)
-
-    prem = request.GET.get("prem", "")
-    if prem:
-        premiums = prem.split(",")
-        productos = productos.filter(premium__in=premiums)
-
-    reg = request.GET.get("reg", "")
-    if reg:
-        regalos = reg.split(",")
-        productos = productos.filter(regalo__in=regalos)
+        lista = vol.split(",")
+        productos = productos.filter(subcategoria__in=lista)
 
     productos = productos.distinct()
 
-    # Renderizamos solo el grid (productos_grid.html)
     return render(request, "catalogo/inventarios_grid.html", {
         "productos": productos,
-        "seccion": "inventario"
+        "seccion": "vinos",
     })
+
+
 

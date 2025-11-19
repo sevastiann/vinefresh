@@ -23,5 +23,7 @@ urlpatterns = [
     path('aceptar-invitacion/<str:token>/', views.registro_admin_invitado_view, name='registro_admin_invitado'),
     path('registro-exitoso/', views.registro_exitoso_view, name='registro_exitoso'),
 
+    # Configuración de perfil
+    path('perfil/configuracion/', views.configuracion_perfil, name='configuracion_perfil'),
 
 ]

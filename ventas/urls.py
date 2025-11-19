@@ -22,5 +22,5 @@ urlpatterns = [
 
     # 🛠 Gestión de pedidos (admin)
     path("admin/pedidos/", views.admin_pedidos, name="gestion_pedidos"),
-    path("admin/pedidos/<int:pedido_id>/cambiar_estado/", views.actualizar_estado, name="cambiar_estado"),
+    path("admin/pedidos/<int:pedido_id>/cambiar_estado/", views.actualizar_estado, name="actualizar_estado"),
 ]

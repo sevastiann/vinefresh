@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends 'core/base.html' %} 
 
 {% block title %}Mis Pedidos{% endblock %}
 
@@ -21,25 +21,31 @@
             {% for pedido in pedidos %}
             <tr>
                 <td>{{ pedido.id }}</td>
-                <td>{{ pedido.created_at|date:"d/m/Y H:i" }}</td>
+                <td>{{ pedido.fecha_pedido|date:"d/m/Y H:i" }}</td>
                 <td>${{ pedido.total }}</td>
+
                 <td>
-                    {% if pedido.estado == "pendiente_pago" %}
+                    {% if pedido.estado == "Pendiente" %}
                         <span class="badge bg-warning">Pendiente</span>
-                    {% elif pedido.estado == "pago_exitoso" %}
+
+                    {% elif pedido.estado == "Pagado" %}
                         <span class="badge bg-success">Pagado</span>
-                    {% elif pedido.estado == "pago_rechazado" %}
-                        <span class="badge bg-danger">Rechazado</span>
-                    {% elif pedido.estado == "en_preparacion" %}
-                        <span class="badge bg-info">En preparación</span>
-                    {% elif pedido.estado == "enviado" %}
+
+                    {% elif pedido.estado == "Enviado" %}
                         <span class="badge bg-primary">Enviado</span>
-                    {% elif pedido.estado == "entregado" %}
+
+                    {% elif pedido.estado == "Entregado" %}
                         <span class="badge bg-secondary">Entregado</span>
+
+                    {% elif pedido.estado == "Cancelado" %}
+                        <span class="badge bg-danger">Cancelado</span>
                     {% endif %}
                 </td>
+
                 <td>
-                    <a href="{% url 'ventas:factura_pdf' pedido.id %}" class="btn btn-sm btn-outline-primary" target="_blank">
+                    <a href="{% url 'ventas:factura_pdf' pedido.id %}" 
+                       class="btn btn-sm btn-outline-primary" 
+                       target="_blank">
                         🧾 Ver Factura
                     </a>
                 </td>

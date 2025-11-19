@@ -2,144 +2,131 @@
 {% load static %}
 
 {% block content %}
-<div class="form-container">
-    <h2>Editar Vino</h2>
 
-    <form id="form-vinos" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+<h1 class="titulo">Editar Producto</h1>
 
-        <!-- Nombre -->
-        <div class="form-group">
-            <label>Nombre del Producto:</label>
-            <input type="text" name="nombre" value="{{ producto.nombre }}" required>
-        </div>
+<form action="" method="POST" enctype="multipart/form-data" class="formulario">
+    {% csrf_token %}
 
-        <!-- Precio -->
-        <div class="form-group">
-            <label>Precio:</label>
-            <input type="number" step="0.01" name="precio" value="{{ producto.precio }}" required>
-        </div>
+    <!-- Nombre -->
+    <label>Nombre del Producto:</label>
+    <input type="text" name="nombre" value="{{ producto.nombre }}" required>
 
-        <!-- Descripción -->
-        <div class="form-group">
-            <label>Descripción:</label>
-            <textarea name="descripcion" rows="3">{{ producto.descripcion }}</textarea>
-        </div>
+    <!-- Precio -->
+    <label>Precio:</label>
+    <input type="number" step="0.01" name="precio" value="{{ producto.precio }}" required>
 
-        <!-- Imagen -->
-        <div class="form-group">
-            <label>Foto del Producto (opcional):</label>
-            <input type="file" name="imagen" accept="image/*">
-            {% if producto.imagen %}
-                <p>Imagen actual: <img src="{{ producto.imagen.url }}" width="100"></p>
-            {% endif %}
-        </div>
+    <!-- Descripción -->
+    <label>Descripción:</label>
+    <textarea name="descripcion">{{ producto.descripcion }}</textarea>
 
-        <!-- Categorías -->
-        <div class="form-group">
-            <label>Categorías:</label>
+    <!-- Imagen -->
+    <label>Foto del Producto (opcional):</label>
+    {% if producto.imagen %}
+        <img src="{{ producto.imagen.url }}" width="120" style="display:block; margin-bottom:10px;">
+    {% endif %}
+    <input type="file" name="imagen">
 
-            <!-- País -->
-            <details open>
-                <summary>País</summary>
-                <ul class="lista-filtro">
-                    {% for pais in paises %}
-                        <li>
-                            <input type="checkbox" name="categoria_pais" value="{{ pais }}" id="pais{{ forloop.counter }}"
-                            {% if pais in producto.categoria %}checked{% endif %}>
-                            <label for="pais{{ forloop.counter }}">{{ pais }}</label>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </details>
+    <h3>Categorías:</h3>
 
-            <!-- Color -->
-            <details>
-                <summary>Color</summary>
-                <ul class="lista-filtro">
-                    {% for color in colores %}
-                        <li>
-                            <input type="checkbox" name="categoria_color" value="{{ color }}" id="color{{ forloop.counter }}"
-                            {% if color in producto.categoria %}checked{% endif %}>
-                            <label for="color{{ forloop.counter }}">{{ color }}</label>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </details>
+    <!-- País -->
+    <details open>
+        <summary>País</summary>
+        <select name="pais_origen">
+            <option value="">-- Seleccionar --</option>
+            {% for pais in paises %}
+            <option value="{{ pais }}" {% if producto.pais_origen == pais %}selected{% endif %}>
+                {{ pais }}
+            </option>
+            {% endfor %}
+        </select>
+    </details>
 
-            <!-- Grado de Alcohol -->
-            <details>
-                <summary>Grado de Alcohol</summary>
-                <ul class="lista-filtro">
-                    {% for grado in grados %}
-                        <li>
-                            <input type="checkbox" name="categoria_grado" value="{{ grado }}" id="alcohol{{ forloop.counter }}"
-                            {% if grado in producto.categoria %}checked{% endif %}>
-                            <label for="alcohol{{ forloop.counter }}">{{ grado }}</label>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </details>
+    <!-- Color -->
+    <details>
+        <summary>Color</summary>
+        <select name="categoria">
+            <option value="">-- Seleccionar --</option>
+            {% for color in colores %}
+            <option value="{{ color }}" {% if producto.categoria == color %}selected{% endif %}>
+                {{ color }}
+            </option>
+            {% endfor %}
+        </select>
+    </details>
 
-            <!-- Tipo de Uva -->
-            <details>
-                <summary>Tipo de Uva</summary>
-                <ul class="lista-filtro">
-                    {% for uva in uvas %}
-                        <li>
-                            <input type="checkbox" name="categoria_uva" value="{{ uva }}" id="uva{{ forloop.counter }}"
-                            {% if uva in producto.categoria %}checked{% endif %}>
-                            <label for="uva{{ forloop.counter }}">{{ uva }}</label>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </details>
+    <!-- Grado de alcohol -->
+    <details>
+        <summary>Grado de Alcohol</summary>
+        <select name="grado_alcohol">
+            <option value="">-- Seleccionar --</option>
+            {% for ga in alcoholes %}
+            <option value="{{ ga }}" 
+                {% if producto.grado_alcohol|stringformat:"s" == ga %}
+                    selected
+                {% endif %}
+            >
+                {{ ga }}
+            </option>
+            {% endfor %}
+        </select>
+    </details>
 
-            <!-- Volumen -->
-            <details>
-                <summary>Volumen</summary>
-                <ul class="lista-filtro">
-                    {% for vol in volumenes %}
-                        <li>
-                            <input type="checkbox" name="categoria_volumen" value="{{ vol }}" id="vol{{ forloop.counter }}"
-                            {% if vol in producto.subcategorias %}checked{% endif %}>
-                            <label for="vol{{ forloop.counter }}">{{ vol }}</label>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </details>
-        </div>
+    <!-- Tipo de uva -->
+    <details>
+        <summary>Tipo de Uva</summary>
+        <select name="tipo_fruto">
+            <option value="">-- Seleccionar --</option>
+            {% for uva in uvas %}
+            <option value="{{ uva }}" {% if producto.tipo_fruto == uva %}selected{% endif %}>
+                {{ uva }}
+            </option>
+            {% endfor %}
+        </select>
+    </details>
 
-        <!-- Activo -->
-        <div class="form-group">
-            <label>Activo:</label>
-            <input type="checkbox" name="activo" {% if producto.activo %}checked{% endif %}>
-        </div>
+    <!-- Volumen -->
+    <details>
+        <summary>Volumen</summary>
+        <select name="subcategoria">
+            <option value="">-- Seleccionar --</option>
+            {% for vol in volumenes %}
+            <option value="{{ vol }}" {% if producto.subcategoria == vol %}selected{% endif %}>
+                {{ vol }}
+            </option>
+            {% endfor %}
+        </select>
+    </details>
 
-        <!-- Botones -->
-        <div class="form-group botones">
-            <button type="submit" class="btn">Guardar cambios</button>
-            <a href="{% url 'catalogo:inventario' %}?seccion=vinos" class="btn btn-secondary">Cancelar</a>
-        </div>
-    </form>
-</div>
+    <button type="submit" class="btn-guardar">Guardar Cambios</button>
+    <a href="{% url 'catalogo:inventario' %}" class="btn-cancelar">Cancelar</a>
 
-<!-- Estilos -->
+</form>
+
 <style>
-body { background-color: #fdf9f6; font-family: 'Poppins', sans-serif; color: #3b2f2f; }
-.form-container { background: #fffaf2; max-width: 600px; margin: 50px auto; padding: 40px 50px; border-radius: 15px; box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
-h2 { text-align: center; margin-bottom: 25px; color: #5a2a27; }
-.form-group { margin-bottom: 18px; }
-label { display: block; font-weight: 600; margin-bottom: 6px; }
-input, textarea { width: 100%; padding: 8px; border: 1px solid #d6c7b5; border-radius: 6px; background-color: #fffdf9; }
-textarea { resize: none; }
-.btn { background-color: #5a2a27; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-.btn:hover { background-color: #7a3b35; }
-.btn-secondary { background-color: #c18b5b; text-decoration: none; padding: 10px 18px; color: white; margin-left: 10px; border-radius: 8px; }
-.btn-secondary:hover { background-color: #a97444; }
-.botones { display: flex; justify-content: flex-end; }
-.lista-filtro { list-style: none; padding-left: 0; }
-.lista-filtro li { margin-bottom: 6px; }
-details summary { cursor: pointer; font-weight: 600; margin-bottom: 5px; }
+    .formulario { 
+        max-width: 600px; 
+        margin: auto; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 15px; 
+    }
+    label { font-weight: bold; }
+    input, textarea, select { 
+        width: 100%; 
+        padding: 8px; 
+        border-radius: 5px; 
+        border: 1px solid #ccc; 
+    }
+    summary { cursor: pointer; font-weight: bold; margin: 5px 0; }
+    .btn-guardar, .btn-cancelar {
+        padding: 10px 15px; 
+        border-radius: 6px; 
+        text-align: center; 
+        font-weight: bold;
+    }
+    .btn-guardar { background: #8c2f39; color: white; }
+    .btn-cancelar { background: #b9a89a; color: white; display: inline-block; }
 </style>
+
 {% endblock %}

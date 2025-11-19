@@ -62,19 +62,32 @@ def login_view(request):
     if request.method == 'POST':
         usuario_input = request.POST.get('usuario')
         clave = request.POST.get('password')
+
         if not usuario_input or not clave:
             mensaje = 'Por favor completa todos los campos.'
         else:
             user = Usuario.objects.filter(email__iexact=usuario_input).first() or \
                    Usuario.objects.filter(nombre_usuario__iexact=usuario_input).first()
-            if user and check_password(clave, user.password):
-                request.session['usuario_id'] = user.id
-                request.session['usuario_nombre'] = user.nombre_usuario
-                request.session['usuario_rol'] = user.rol
-                return redirect('core:home')
+
+            if user:
+                # 🔥 1. Verificar si está desactivado ANTES de validar la contraseña
+                if not user.estado:
+                    mensaje = '⚠️ Tu cuenta ha sido desactivada. Contacta al administrador.'
+                    return render(request, 'usuarios/login.html', {'mensaje': mensaje})
+
+                # 🔥 2. Validar contraseña
+                if check_password(clave, user.password):
+                    request.session['usuario_id'] = user.id
+                    request.session['usuario_nombre'] = user.nombre_usuario
+                    request.session['usuario_rol'] = user.rol
+                    return redirect('core:home')
+                else:
+                    mensaje = 'Usuario o contraseña incorrectos.'
             else:
                 mensaje = 'Usuario o contraseña incorrectos.'
+
     return render(request, 'usuarios/login.html', {'mensaje': mensaje})
+
 
 # -------------------------
 # LOGOUT
@@ -433,3 +446,67 @@ def registro_admin_invitado_view(request, token):
 # ✅ Vista de confirmación de registro exitoso
 def registro_exitoso_view(request):
     return render(request, 'usuarios/registro_exitoso.html')
+
+def configuracion_perfil(request):
+
+    # -------------------------
+    # 1️⃣ OBTENER USUARIO LOGUEADO DESDE LA SESIÓN
+    # -------------------------
+    user_id = request.session.get("usuario_id")
+    if not user_id:
+        messages.error(request, "Debes iniciar sesión.")
+        return redirect("usuarios:login")
+
+    usuario = Usuario.objects.get(id=user_id)
+
+    # -------------------------
+    # 2️⃣ SI VIENE UN POST → EDITAR PERFIL
+    # -------------------------
+    if request.method == "POST":
+
+        nombre = request.POST.get("nombre")
+        apellido = request.POST.get("apellido")
+        username = request.POST.get("username")
+        telefono = request.POST.get("telefono")
+        email = request.POST.get("email")
+
+        nueva_pass = request.POST.get("nueva_contrasena")
+        confirm_pass = request.POST.get("confirmar_contrasena")
+
+        # --- Validaciones ---
+        if Usuario.objects.filter(nombre_usuario=username).exclude(id=usuario.id).exists():
+            messages.error(request, "El nombre de usuario ya está en uso.")
+            return redirect("usuarios:configuracion_perfil")
+
+        if Usuario.objects.filter(email=email).exclude(id=usuario.id).exists():
+            messages.error(request, "El correo electrónico ya está registrado.")
+            return redirect("usuarios:configuracion_perfil")
+
+        if nueva_pass and nueva_pass != confirm_pass:
+            messages.error(request, "Las contraseñas no coinciden.")
+            return redirect("usuarios:configuracion_perfil")
+
+        # -------------------------
+        # 3️⃣ GUARDAR CAMBIOS
+        # -------------------------
+        usuario.nombre = nombre
+        usuario.apellido = apellido
+        usuario.nombre_usuario = username
+        usuario.telefono = telefono
+        usuario.email = email
+
+        # Cambiar contraseña solo si escribe nueva
+        if nueva_pass:
+            usuario.password = make_password(nueva_pass)
+
+        usuario.save()
+
+        messages.success(request, "Perfil actualizado correctamente.")
+        return redirect("usuarios:configuracion_perfil")
+
+    # -------------------------
+    # 4️⃣ MOSTRAR PÁGINA
+    # -------------------------
+    return render(request, "usuarios/configuracion_perfil.html", {
+        "usuario": usuario
+    })

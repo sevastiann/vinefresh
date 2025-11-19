@@ -2,282 +2,314 @@
 {% load static %}
 
 {% block content %}
-    <div class="layout-container">
 
-        <!-- ===========================
-              🔸 SIDEBAR
-        ============================ -->
-        <aside class="sidebar">
+<div class="layout-container">
 
-            <!-- 🔍 Buscador -->
-            <div class="buscador mb-4">
-                <input type="text" id="buscar" placeholder="Buscar por nombre..." class="input-buscar">
-                <button class="btn-buscar">🔍</button>
+    <!-- ===========================
+         🔸 SIDEBAR
+    ============================ -->
+    <aside class="sidebar">
+
+        <!-- 🔍 Buscador -->
+        <div class="buscador mb-4">
+            <input type="text" id="buscar" placeholder="Buscar por nombre..." class="input-buscar">
+            <button class="btn-buscar">🔍</button>
+        </div>
+
+        <!-- 💰 Filtro de precio -->
+        <div class="filtro-precio mb-5">
+            <label class="bloque-texto font-semibold mb-2">Filtrar por precio</label>
+            <div class="precio-inputs">
+                <input type="number" id="precio_min" placeholder="Mínimo" class="input-precio">
+                <span>—</span>
+                <input type="number" id="precio_max" placeholder="Máximo" class="input-precio">
             </div>
+        </div>
 
-            <!-- 💰 Filtro de precio -->
-            <div class="filtro-precio mb-5">
-                <label class="bloque-texto font-semibold mb-2">Filtrar por precio</label>
-                <div class="precio-inputs">
-                    <input type="number" id="precio_min" placeholder="Mínimo" class="input-precio">
-                    <span>—</span>
-                    <input type="number" id="precio_max" placeholder="Máximo" class="input-precio">
+        <!-- 🍇 Filtros según sección -->
+        <div class="filtros-plegables">
+            {% if seccion == "vinos" %}
+            <details open>
+                <summary>País</summary>
+                <ul class="lista-filtro">
+                    <li><input type="checkbox" name="pais" value="Chile" id="pais1"><label for="pais1">Chile</label></li>
+                    <li><input type="checkbox" name="pais" value="Argentina" id="pais2"><label for="pais2">Argentina</label></li>
+                    <li><input type="checkbox" name="pais" value="España" id="pais3"><label for="pais3">España</label></li>
+                    <li><input type="checkbox" name="pais" value="Italia" id="pais4"><label for="pais4">Italia</label></li>
+                    <li><input type="checkbox" name="pais" value="Francia" id="pais5"><label for="pais5">Francia</label></li>
+                    <li><input type="checkbox" name="pais" value="Colombia" id="pais6"><label for="pais6">Colombia</label></li>
+                    <li><input type="checkbox" name="pais" value="México" id="pais7"><label for="pais7">México</label></li>
+                </ul>
+            </details>
+
+            <details>
+                <summary>Color</summary>
+                <ul class="lista-filtro">
+                    <li><input type="checkbox" name="color" value="Tinto" id="color1"><label for="color1">Tinto</label></li>
+                    <li><input type="checkbox" name="color" value="Blanco" id="color2"><label for="color2">Blanco</label></li>
+                    <li><input type="checkbox" name="color" value="Rosado" id="color3"><label for="color3">Rosado</label></li>
+                </ul>
+            </details>
+
+            <details>
+                <summary>Grado de Alcohol</summary>
+                <ul class="lista-filtro">
+                    <li><input type="checkbox" name="alcohol" value="Menos de 10%" id="alcohol1"><label
+                            for="alcohol1">Menos de 10%</label></li>
+                    <li><input type="checkbox" name="alcohol" value="10% - 13%" id="alcohol2"><label
+                            for="alcohol2">10% - 13%</label></li>
+                    <li><input type="checkbox" name="alcohol" value="Más de 13%" id="alcohol3"><label for="alcohol3">Más de
+                            13%</label></li>
+                </ul>
+            </details>
+
+            <details>
+                <summary>Tipo de Uva</summary>
+                <ul class="lista-filtro">
+                    <li><input type="checkbox" name="uva" value="Cabernet Sauvignon" id="uva1"><label
+                            for="uva1">Cabernet Sauvignon</label></li>
+                    <li><input type="checkbox" name="uva" value="Malbec" id="uva2"><label for="uva2">Malbec</label></li>
+                    <li><input type="checkbox" name="uva" value="Merlot" id="uva3"><label for="uva3">Merlot</label></li>
+                    <li><input type="checkbox" name="uva" value="Sauvignon Blanc" id="uva4"><label
+                            for="uva4">Sauvignon Blanc</label></li>
+                    <li><input type="checkbox" name="uva" value="Verdejo" id="uva5"><label for="uva5">Verdejo</label></li>
+                    <li><input type="checkbox" name="uva" value="Carménère" id="uva6"><label for="uva6">Carménère</label>
+                    </li>
+                    <li><input type="checkbox" name="uva" value="Nebbiolo" id="uva7"><label for="uva7">Nebbiolo</label></li>
+                    <li><input type="checkbox" name="uva" value="Pinot Noir" id="uva8"><label for="uva8">Pinot Noir</label>
+                    </li>
+                    <li><input type="checkbox" name="uva" value="Grenache" id="uva9"><label for="uva9">Grenache</label></li>
+                </ul>
+            </details>
+
+            <details>
+                <summary>Volumen</summary>
+                <ul class="lista-filtro">
+                    <li><input type="checkbox" name="vol" value="375 ml" id="vol1"><label for="vol1">375 ml</label></li>
+                    <li><input type="checkbox" name="vol" value="750 ml" id="vol2"><label for="vol2">750 ml</label></li>
+                    <li><input type="checkbox" name="vol" value="1 L" id="vol3"><label for="vol3">1 L</label></li>
+                </ul>
+            </details>
+
+            {% elif seccion == "combos" %}
+
+            <details open>
+                <summary>Festividad</summary>
+                <ul class="lista-filtro">
+                    <li><input type="checkbox" name="fest" value="Navidad" id="fest1"><label for="fest1">Navidad</label></li>
+                    <li><input type="checkbox" name="fest" value="Año Nuevo" id="fest2"><label for="fest2">Año Nuevo</label>
+                    </li>
+                    <li><input type="checkbox" name="fest" value="San Valentín" id="fest3"><label for="fest3">San Valentín</label></li>
+                    <li><input type="checkbox" name="fest" value="Día del Padre" id="fest4"><label for="fest4">Día del Padre</label></li>
+                    <li><input type="checkbox" name="fest" value="Día de la Madre" id="fest5"><label for="fest5">Día de la Madre</label></li>
+                </ul>
+            </details>
+
+            <details>
+                <summary>Premium</summary>
+                <ul class="lista-filtro">
+                    <li><input type="checkbox" name="prem" value="premium_gold" id="prem1"><label for="prem1">Gold</label>
+                    </li>
+                    <li><input type="checkbox" name="prem" value="premium_platinum" id="prem2"><label
+                            for="prem2">Platinum</label></li>
+                    <li><input type="checkbox" name="prem" value="premium_black_label" id="prem3"><label
+                            for="prem3">Black Label</label></li>
+                </ul>
+            </details>
+
+            <details>
+                <summary>Regalo</summary>
+                <ul class="lista-filtro">
+                    <li><input type="checkbox" name="reg" value="regalo_amistad" id="reg1"><label
+                            for="reg1">Amistad</label></li>
+                    <li><input type="checkbox" name="reg" value="regalo_cumpleaños" id="reg2"><label
+                            for="reg2">Cumpleaños</label></li>
+                    <li><input type="checkbox" name="reg" value="regalo_pareja" id="reg3"><label for="reg3">Pareja</label>
+                    </li>
+                    <li><input type="checkbox" name="reg" value="regalo_corporativo" id="reg4"><label
+                            for="reg4">Corporativo</label></li>
+                </ul>
+            </details>
+
+            {% endif %}
+        </div>
+
+    </aside>
+
+    <!-- ===========================
+         🔸 CONTENIDO PRINCIPAL
+    ============================ -->
+    <main class="catalogo-contenido">
+
+        <!-- Mini Navbar -->
+        <div class="mini-navbar" align="center">
+            <a href="{% url 'catalogo:productos' %}?seccion=vinos"
+                class="nav-item {% if seccion == 'vinos' %}activo{% endif %}">Vinos</a>
+
+            <a href="{% url 'catalogo:productos' %}?seccion=combos"
+                class="nav-item {% if seccion == 'combos' %}activo{% endif %}">Combos</a>
+        </div>
+
+        <!-- GRID productos -->
+        <div id="productos-container" data-filtrar-url="{% url 'catalogo:filtrar_productos' %}">
+            <div class="productos-grid">
+
+                {% for item in productos %}
+                <div class="card-producto">
+
+                    <!-- Imagen -->
+                    <img src="{% if item.imagen %}{{ item.imagen.url }}{% else %}{% static 'img/default.png' %}{% endif %}" alt="Producto">
+
+
+                    <!-- Datos -->
+                    <h4>{{ item.nombre }}</h4>
+                    <p class="precio">${{ item.precio }}</p>
+
+                    {% if item.etiquetas.exists %}
+                    <div class="etiquetas-producto">
+                        {% for etiqueta in item.etiquetas.all %}
+                            <span class="etiqueta">{{ etiqueta.nombre }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="acciones-producto">
+
+                    <!-- Botón Detalle -->
+                    <button 
+                            type="button" 
+                            class="btn-detalle" 
+                            data-modal="modal-detalle-{{ seccion }}-{{ item.id }}">
+                            👁️ Detalle
+                        </button>
+                    
+                        <!-- Botón carrito -->
+                        {% if request.session.usuario_id and request.session.usuario_rol == 'cliente' %}
+                        <form action="{% url 'ventas:agregar_al_carrito' producto_id=item.id %}"
+                              method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-carrito">🛒 Agregar al carrito</button>
+                        </form>
+                        {% else %}
+                        <a href="{% url 'usuarios:login' %}" class="btn-carrito">🛒 Agregar al carrito</a>
+                        {% endif %}
+                    
+                    </div>
+
                 </div>
-            </div>
 
-            <!-- 🍇 Filtros según sección -->
-            <div class="filtros-plegables">
-
-                {% if seccion == "vinos" %}
-
-                    <details open>
-                        <summary>País</summary>
-                        <ul class="lista-filtro">
-                            <li><input type="checkbox" name="pais" value="Chile" id="pais1"><label for="pais1">Chile</label></li>
-                            <li><input type="checkbox" name="pais" value="Argentina" id="pais2"><label for="pais2">Argentina</label></li>
-                            <li><input type="checkbox" name="pais" value="España" id="pais3"><label for="pais3">España</label></li>
-                            <li><input type="checkbox" name="pais" value="Italia" id="pais4"><label for="pais4">Italia</label></li>
-                            <li><input type="checkbox" name="pais" value="Francia" id="pais5"><label for="pais5">Francia</label></li>
-                            <li><input type="checkbox" name="pais" value="Colombia" id="pais6"><label for="pais6">Colombia</label></li>
-                            <li><input type="checkbox" name="pais" value="México" id="pais7"><label for="pais7">México</label></li>
-                        </ul>
-                    </details>
-
-                    <details>
-                        <summary>Color</summary>
-                        <ul class="lista-filtro">
-                            <li><input type="checkbox" name="color" value="Tinto" id="color1"><label for="color1">Tinto</label></li>
-                            <li><input type="checkbox" name="color" value="Blanco" id="color2"><label for="color2">Blanco</label></li>
-                            <li><input type="checkbox" name="color" value="Rosado" id="color3"><label for="color3">Rosado</label></li>
-                        </ul>
-                    </details>
-
-                    <details>
-                        <summary>Grado de Alcohol</summary>
-                        <ul class="lista-filtro">
-                            <li><input type="checkbox" name="alcohol" value="Menos de 10%" id="alcohol1"><label for="alcohol1">Menos de 10%</label></li>
-                            <li><input type="checkbox" name="alcohol" value="10% - 13%" id="alcohol2"><label for="alcohol2">10% - 13%</label></li>
-                            <li><input type="checkbox" name="alcohol" value="Más de 13%" id="alcohol3"><label for="alcohol3">Más de 13%</label></li>
-                        </ul>
-                    </details>
-
-                    <details>
-                        <summary>Tipo de Uva</summary>
-                        <ul class="lista-filtro">
-                            <li><input type="checkbox" name="uva" value="Cabernet Sauvignon" id="uva1"><label for="uva1">Cabernet Sauvignon</label></li>
-                            <li><input type="checkbox" name="uva" value="Malbec" id="uva2"><label for="uva2">Malbec</label></li>
-                            <li><input type="checkbox" name="uva" value="Merlot" id="uva3"><label for="uva3">Merlot</label></li>
-                            <li><input type="checkbox" name="uva" value="Sauvignon Blanc" id="uva4"><label for="uva4">Sauvignon Blanc</label></li>
-                            <li><input type="checkbox" name="uva" value="Verdejo" id="uva5"><label for="uva5">Verdejo</label></li>
-                            <li><input type="checkbox" name="uva" value="Carménère" id="uva6"><label for="uva6">Carménère</label></li>
-                            <li><input type="checkbox" name="uva" value="Nebbiolo" id="uva7"><label for="uva7">Nebbiolo</label></li>
-                            <li><input type="checkbox" name="uva" value="Pinot Noir" id="uva8"><label for="uva8">Pinot Noir</label></li>
-                            <li><input type="checkbox" name="uva" value="Grenache" id="uva9"><label for="uva9">Grenache</label></li>
-                        </ul>
-                    </details>
-
-                    <details>
-                        <summary>Volumen</summary>
-                        <ul class="lista-filtro">
-                            <li><input type="checkbox" name="vol" value="375 ml" id="vol1"><label for="vol1">375 ml</label></li>
-                            <li><input type="checkbox" name="vol" value="750 ml" id="vol2"><label for="vol2">750 ml</label></li>
-                            <li><input type="checkbox" name="vol" value="1 L" id="vol3"><label for="vol3">1 L</label></li>
-                        </ul>
-                    </details>
-
-                {% elif seccion == "combos" %}
-
-                    <details open>
-                        <summary>Festividad</summary>
-                        <ul class="lista-filtro">
-                            <li><input type="checkbox" name="fest" value="Navidad" id="fest1"><label for="fest1">Navidad</label></li>
-                            <li><input type="checkbox" name="fest" value="Año Nuevo" id="fest2"><label for="fest2">Año Nuevo</label></li>
-                            <li><input type="checkbox" name="fest" value="San Valentín" id="fest3"><label for="fest3">San Valentín</label></li>
-                            <li><input type="checkbox" name="fest" value="Día del Padre" id="fest4"><label for="fest4">Día del Padre</label></li>
-                            <li><input type="checkbox" name="fest" value="Día de la Madre" id="fest5"><label for="fest5">Día de la Madre</label></li>
-                        </ul>
-                    </details>
-
-                    <details>
-                        <summary>Premium</summary>
-                        <ul class="lista-filtro">
-                            <li><input type="checkbox" name="prem" value="premium_gold" id="prem1"><label for="prem1">Gold</label></li>
-                            <li><input type="checkbox" name="prem" value="premium_platinum" id="prem2"><label for="prem2">Platinum</label></li>
-                            <li><input type="checkbox" name="prem" value="premium_black_label" id="prem3"><label for="prem3">Black Label</label></li>
-                        </ul>
-                    </details>
-
-                    <details>
-                        <summary>Regalo</summary>
-                        <ul class="lista-filtro">
-                            <li><input type="checkbox" name="reg" value="regalo_amistad" id="reg1"><label for="reg1">Amistad</label></li>
-                            <li><input type="checkbox" name="reg" value="regalo_cumpleaños" id="reg2"><label for="reg2">Cumpleaños</label></li>
-                            <li><input type="checkbox" name="reg" value="regalo_pareja" id="reg3"><label for="reg3">Pareja</label></li>
-                            <li><input type="checkbox" name="reg" value="regalo_corporativo" id="reg4"><label for="reg4">Corporativo</label></li>
-                        </ul>
-                    </details>
-
-                {% endif %}
-            </div>
-        </aside>
-
-        <!-- ===========================
-              🔸 CONTENIDO PRINCIPAL
-        ============================ -->
-        <main class="catalogo-contenido">
-
-            <!-- Mini Navbar -->
-            <div class="mini-navbar" align="center">
-                <a href="{% url 'catalogo:productos' %}?seccion=vinos"
-                   class="nav-item {% if seccion == 'vinos' %}activo{% endif %}">Vinos</a>
-
-                <a href="{% url 'catalogo:productos' %}?seccion=combos"
-                   class="nav-item {% if seccion == 'combos' %}activo{% endif %}">Combos</a>
-            </div>
-
-            <!-- GRID de productos -->
-            <div class="productos-section" id="productos-container" data-filtrar-url="{% url 'catalogo:filtrar_productos' %}">
-              {% include "catalogo/productos_grid.html" %}
-                <div class="productos-grid">
-
-                    {% for item in productos %}
-                    <div class="card-producto"
-                         data-nombre="{{ item.nombre }}"
-                         data-precio="{{ item.precio }}">
+                <!-- Modal -->
+                <div id="modal-detalle-{{ seccion }}-{{ item.id }}" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
 
                         {% if item.imagen %}
-                            <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
-                        {% else %}
-                            <img src="{% static 'img/default.png' %}" alt="Sin imagen">
+                        <img src="{{ item.imagen.url }}" class="modal-img">
                         {% endif %}
 
-                        <h4>{{ item.nombre }}</h4>
-                        <p class="precio">${{ item.precio }}</p>
+                        <h2>{{ item.nombre }}</h2>
+                        <p><strong>Precio:</strong> ${{ item.precio }}</p>
 
-                        {% if item.etiquetas.exists %}
-                        <div class="etiquetas-producto">
-                            {% for etiqueta in item.etiquetas.all %}
-                                <span class="etiqueta">{{ etiqueta.nombre }}</span>
-                            {% endfor %}
-                        </div>
+                        {% if item.descripcion %}
+                        <p><strong>Descripción:</strong> {{ item.descripcion }}</p>
                         {% endif %}
 
-                        <div class="acciones-producto">
-                            <button type="button" class="btn-detalle"
-                                    onclick="abrirModal('modal-detalle-{{ seccion }}-{{ item.id }}')">
-                                👁️ Detalle
-                            </button>
-
-                            {% if request.session.usuario_id and request.session.usuario_rol == 'cliente' %}
-                                <form action="{% url 'ventas:agregar_al_carrito' producto_id=item.id %}" method="post" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn-carrito">🛒 Agregar al carrito</button>
-                                </form>
-                            {% else %}
-                                <a href="{% url 'usuarios:login' %}" class="btn-carrito">🛒 Agregar al carrito</a>
-                            {% endif %}
-                        </div>
-
-                        <!-- Modal Detalle -->
-                        <div id="modal-detalle-{{ seccion }}-{{ item.id }}" class="modal">
-                            <div class="modal-content">
-                                <span class="close"
-                                      onclick="cerrarModal('modal-detalle-{{ seccion }}-{{ item.id }}')">
-                                      &times;
-                                </span>
-
-                                {% if item.imagen %}
-                                    <img src="{{ item.imagen.url }}" class="modal-img">
-                                {% endif %}
-
-                                <h2>{{ item.nombre }}</h2>
-                                <p><strong>Precio:</strong> ${{ item.precio }}</p>
-
-                                {% if item.descripcion %}
-                                    <p><strong>Descripción:</strong> {{ item.descripcion }}</p>
-                                {% endif %}
-
-                                {% if item.categoria %}
-                                    <p><strong>Categorías:</strong> {{ item.categoria }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-
+                        {% if item.categoria %}
+                        <p><strong>Categorías:</strong> {{ item.categoria }}</p>
+                        {% endif %}
                     </div>
-                    {% empty %}
-                        <p class="no-productos">No hay {{ seccion }} registrados aún.</p>
-                    {% endfor %}
-
                 </div>
+
+                {% empty %}
+                <p class="no-productos">No hay {{ seccion }} registrados aún.</p>
+                {% endfor %}
             </div>
+        </div>
 
-        </main>
-    </div>
+    </main>
+</div>
 
+
+<!-- ===========================
+     🧠 SCRIPTS
+=========================== -->
 <script>
+/* ======================
+   1️⃣ FILTROS AJAX
+======================*/
 document.addEventListener('DOMContentLoaded', function () {
 
     function filtrarProductos() {
-        const buscar = document.querySelector(".input-buscar").value;
-        const precioMin = document.querySelectorAll(".input-precio")[0].value;
-        const precioMax = document.querySelectorAll(".input-precio")[1].value;
 
-        const params = new URLSearchParams();
+        const buscar     = document.querySelector(".input-buscar").value;
+        const precioMin  = document.querySelectorAll(".input-precio")[0].value;
+        const precioMax  = document.querySelectorAll(".input-precio")[1].value;
+        const params     = new URLSearchParams();
+
         params.append("buscar", buscar);
         params.append("precio_min", precioMin);
         params.append("precio_max", precioMax);
 
-        // Todos los checkboxes que sí existen
-        const grupos = ["pais", "color", "alcohol", "uva", "vol", "fest", "prem", "reg"];
+        const grupos = ["pais","color","alcohol","uva","vol","fest","prem","reg"];
+
         grupos.forEach(grupo => {
-            const seleccionados = Array.from(document.querySelectorAll(`input[name="${grupo}"]:checked`))
-                .map(c => c.value);
+            const seleccionados = [...document.querySelectorAll(`input[name="${grupo}"]:checked`)]
+                                    .map(c => c.value);
             if (seleccionados.length > 0) {
                 params.append(grupo, seleccionados.join(","));
             }
         });
 
-        fetch(`/catalogo/filtrar/?${params.toString()}`)
-            .then(response => response.text())
+        const url = document.querySelector("#productos-container").dataset.filtrarUrl;
+
+        fetch(`${url}?${params.toString()}`)
+            .then(r => r.text())
             .then(html => {
                 document.querySelector("#productos-container").innerHTML = html;
             })
             .catch(err => console.error("Error en filtrado:", err));
     }
 
-    // Event listeners
     document.querySelector(".input-buscar").addEventListener("input", filtrarProductos);
-    document.querySelectorAll(".input-precio").forEach(input => {
-        input.addEventListener("input", filtrarProductos);
-    });
-    document.querySelectorAll("input[type='checkbox']").forEach(chk => {
-        chk.addEventListener("change", filtrarProductos);
-    });
+    document.querySelectorAll(".input-precio").forEach(i => i.addEventListener("input", filtrarProductos));
+    document.querySelectorAll("input[type='checkbox']").forEach(c => c.addEventListener("change", filtrarProductos));
     document.querySelector(".btn-buscar").addEventListener("click", filtrarProductos);
 });
 
 
-// 🔹 Funciones de los modales
-function abrirModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.style.display = 'block';
-}
+/* ======================
+   2️⃣ MODALES (EVENTOS DELEGADOS)
+======================*/
+document.addEventListener("click", function (e) {
 
-function cerrarModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.style.display = 'none';
-}
+    // ✔ Abrir modal
+    if (e.target.classList.contains("btn-detalle")) {
+        const id = e.target.dataset.modal;
+        const modal = document.getElementById(id);
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden";
+    }
 
-window.addEventListener('click', function(event) {
-    if (event.target.classList.contains('modal')) {
-        event.target.style.display = 'none';
+    // ✔ Cerrar modal con X
+    if (e.target.classList.contains("close")) {
+        const modal = e.target.closest(".modal");
+        modal.classList.remove("show");
+        document.body.style.overflow = "";
+    }
+
+    // ✔ Cerrar haciendo click fuera
+    if (e.target.classList.contains("modal")) {
+        e.target.classList.remove("show");
+        document.body.style.overflow = "";
     }
 });
-
 </script>
+
 <style>
 
-/* Base */
+/* -----------------------------------
+   🌿 BASE
+----------------------------------- */
 body {
   background-color: #fdf9f6;
   font-family: 'Poppins', sans-serif;
@@ -290,7 +322,9 @@ body {
   margin: 0 auto;
 }
 
-/* 🔸 Mini Navbar */
+/* -----------------------------------
+   🔸 MINI NAVBAR
+----------------------------------- */
 .mini-navbar {
   display: flex;
   justify-content: center;
@@ -317,26 +351,57 @@ body {
   border-color: #5a2a27;
 }
 
-.main-content {
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
+/* -----------------------------------
+   🧩 CONTENEDOR PRINCIPAL
+----------------------------------- */
+.main-content { 
+    display: flex; 
+    align-items: flex-start; 
+    gap: 40px; 
 }
 
-.productos-section {
-  flex: 1;
+/* Sidebar fijo */
+.sidebar-filtros {
+    flex: 0 0 260px;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
 }
 
-/* 🔹 Mostrar productos en filas de 5 */
+/* Productos ocupan el resto */
+.productos-section { 
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* -----------------------------------
+   🛒 GRID DE PRODUCTOS
+----------------------------------- */
+
+/* ✔️ Versión definitiva: 5 por fila en desktop */
 .productos-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 productos por fila */
-  gap: 25px;
-  justify-items: center;
-  padding-bottom: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 25px;
+    width: 100%;
+    justify-items: center;
 }
 
-/* 🔹 Tarjetas de producto */
+/* Responsive */
+@media (max-width: 1200px) {
+  .productos-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 900px) {
+  .productos-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .productos-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* -----------------------------------
+   🍷 TARJETAS DE PRODUCTO
+----------------------------------- */
 .card-producto {
   width: 260px;
   background-color: #fff;
@@ -382,13 +447,16 @@ body {
   margin: 2px 2px 0 0;
 }
 
-/* 🔸 Botones y acciones */
+/* -----------------------------------
+   🎯 ACCIONES
+----------------------------------- */
 .acciones-producto {
   display: flex;
   justify-content: space-around;
   padding: 10px;
   border-top: 1px solid #eae0d5;
   background-color: #fdfaf7;
+  min-height: 50px; /* 🔥 Mantiene altura fija */
 }
 
 .acciones-producto button,
@@ -400,6 +468,10 @@ body {
   font-weight: 600;
   transition: 0.2s;
   text-decoration: none;
+  width: 100px;          /* 🔥 Mantiene tamaño constante */
+  display: flex;         /* 🔥 Centra el contenido */
+  justify-content: center;
+  align-items: center;
 }
 
 .acciones-producto button:hover,
@@ -426,88 +498,60 @@ body {
   font-style: italic;
 }
 
-/* 🔸 Modal */
+/* -----------------------------------
+   🔔 MODAL SUAVE SIN PARPADEO
+----------------------------------- */
 .modal {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
   position: fixed;
+  inset: 0;
   z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.55);
+  transition: opacity 0.25s ease-in-out;
+}
+
+.modal.show {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .modal-content {
   background-color: #fff;
-  margin: 10% auto;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 12px;
   width: 300px;
   position: relative;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transform: scale(0.92);
+  transition: transform 0.25s ease;
+}
+
+.modal.show .modal-content {
+  transform: scale(1);
 }
 
 .close {
   position: absolute;
-  top: 5px;
+  top: 6px;
   right: 10px;
-  color: #333;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 22px;
   cursor: pointer;
+  color: #333;
+  font-weight: bold;
 }
 
 .modal-img {
   width: 100%;
-  border-radius: 5px;
+  border-radius: 6px;
   margin-bottom: 10px;
 }
 
-/* 🔹 Responsive (ajuste automático) */
-@media (max-width: 1200px) {
-  .productos-grid { grid-template-columns: repeat(4, 1fr); }
-}
-
-@media (max-width: 900px) {
-  .productos-grid { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 600px) {
-  .productos-grid { grid-template-columns: repeat(2, 1fr); }
-}
-.main-content { 
-    display: flex; 
-    align-items: flex-start; 
-    gap: 40px; 
-}
-
-/* Sidebar fijo a la izquierda */
-.sidebar-filtros {
-    flex: 0 0 260px; /* ancho fijo */
-    position: sticky;
-    top: 20px;
-    height: fit-content;
-}
-
-/* Productos ocupan el resto del espacio */
-.productos-section { 
-    flex: 1; 
-    display: flex;
-    flex-direction: column;
-}
-
-/* Grid: máximo 3 por fila */
-.productos-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    width: 100%;
-    justify-items: center;
-}
 
 </style>
-</style>
+
 {% endblock %}
 

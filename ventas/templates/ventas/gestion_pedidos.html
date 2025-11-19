@@ -21,28 +21,37 @@
             {% for pedido in pedidos %}
             <tr>
                 <td>{{ pedido.id }}</td>
-                <td>{{ pedido.nombre }} ({{ pedido.usuario.username }})</td>
-                <td>{{ pedido.created_at|date:"d/m/Y H:i" }}</td>
+
+                <!-- Cliente -->
+                <td>{{ pedido.usuario.nombre_usuario }}</td>
+
+                <!-- Fecha -->
+                <td>{{ pedido.fecha_pedido|date:"d/m/Y H:i" }}</td>
+
+                <!-- Total -->
                 <td>${{ pedido.total }}</td>
+
+                <!-- Cambiar estado -->
                 <td>
                     <form method="post" action="{% url 'ventas:actualizar_estado' pedido.id %}">
                         {% csrf_token %}
                         <select name="estado" class="form-select form-select-sm" onchange="this.form.submit()">
-                            <option value="pendiente_pago" {% if pedido.estado == 'pendiente_pago' %}selected{% endif %}>Pendiente</option>
-                            <option value="pago_exitoso" {% if pedido.estado == 'pago_exitoso' %}selected{% endif %}>Pagado</option>
-                            <option value="pago_rechazado" {% if pedido.estado == 'pago_rechazado' %}selected{% endif %}>Rechazado</option>
-                            <option value="en_preparacion" {% if pedido.estado == 'en_preparacion' %}selected{% endif %}>En preparación</option>
-                            <option value="enviado" {% if pedido.estado == 'enviado' %}selected{% endif %}>Enviado</option>
-                            <option value="entregado" {% if pedido.estado == 'entregado' %}selected{% endif %}>Entregado</option>
-                            <option value="devolucion" {% if pedido.estado == 'devolucion' %}selected{% endif %}>Devolución</option>
-                            <option value="reembolso" {% if pedido.estado == 'reembolso' %}selected{% endif %}>Reembolso</option>
-                            <option value="cancelado" {% if pedido.estado == 'cancelado' %}selected{% endif %}>Cancelado</option>
-                            <option value="anulado" {% if pedido.estado == 'anulado' %}selected{% endif %}>Anulado</option>
+
+                            <option value="Pendiente" {% if pedido.estado == "Pendiente" %}selected{% endif %}>Pendiente</option>
+                            <option value="Pagado" {% if pedido.estado == "Pagado" %}selected{% endif %}>Pagado</option>
+                            <option value="Enviado" {% if pedido.estado == "Enviado" %}selected{% endif %}>Enviado</option>
+                            <option value="Entregado" {% if pedido.estado == "Entregado" %}selected{% endif %}>Entregado</option>
+                            <option value="Cancelado" {% if pedido.estado == "Cancelado" %}selected{% endif %}>Cancelado</option>
+
                         </select>
                     </form>
                 </td>
+
+                <!-- Factura -->
                 <td>
-                    <a href="{% url 'ventas:factura_pdf' pedido.id %}" class="btn btn-sm btn-outline-primary" target="_blank">
+                    <a href="{% url 'ventas:factura_pdf' pedido.id %}" 
+                       class="btn btn-sm btn-outline-primary" 
+                       target="_blank">
                         🧾 Ver Factura
                     </a>
                 </td>

@@ -41,9 +41,7 @@
                     <td class="subtotal" id="subtotal-{{ item.id }}">${{ item.subtotal }}</td>
 
                     <td>
-                        <button type="button" class="btn btn-primary btn-actualizar" data-id="{{ item.id }}">
-                            Actualizar
-                        </button>
+
                         <button type="button" class="btn btn-danger btn-eliminar" data-id="{{ item.id }}">
                             Eliminar
                         </button>
@@ -138,4 +136,145 @@ document.querySelectorAll('.cantidad-input').forEach(input => {
 
 actualizarTotal();
 </script>
+<style>
+ /* ===========================================================
+   ESTILO PREMIUM – ELEGANTE
+   Inspirado en tiendas de lujo (negro + dorado + crema)
+   =========================================================== */
+
+/* ------ TITULO ------ */
+.container h2 {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    font-size: 34px;
+    color: #2a2a2a;
+    border-bottom: 1px solid #d7c7a3;
+    padding-bottom: 8px;
+    margin-bottom: 25px;
+}
+
+/* ------ BOTÓN VOLVER ------ */
+.btn-secondary {
+    background: transparent !important;
+    border: 1px solid #b9a87b !important;
+    color: #6b5a2e !important;
+    border-radius: 10px;
+    padding: 6px 14px;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    background: #b9a87b !important;
+    color: #fff !important;
+}
+
+/* ------ TABLA ------ */
+.table {
+    background: #f8f6f2;
+    border-radius: 14px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.table thead {
+    background: #1f1f1f !important;
+    color: #d9c9a0 !important;   /* Dorado apagado */
+    font-family: "Playfair Display", serif;
+    font-size: 17px;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #e4dcc3;
+    transition: background 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background: #f1ede6;
+}
+
+/* ------ IMÁGENES ------ */
+.table img {
+    border-radius: 10px;
+    border: 1px solid #d5c9a4;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    object-fit: cover;
+}
+
+/* ------ PRECIO & SUBTOTAL ------ */
+.precio, .subtotal {
+    font-weight: 600;
+    color: #5a4c2f;
+    font-size: 16px;
+}
+
+/* ------ INPUT DE CANTIDAD ------ */
+.cantidad-input {
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #c7bb96;
+    text-align: center;
+    font-weight: 600;
+    color: #3e361f;
+    padding: 5px 0;
+    transition: 0.25s;
+}
+
+.cantidad-input:focus {
+    border-color: #9a8855;
+    box-shadow: 0 0 6px rgba(154, 136, 85, 0.5);
+}
+
+/* ------ BOTÓN ELIMINAR ------ */
+.btn-eliminar {
+    background: #831f1f;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-weight: 600;
+    color: #fff;
+    transition: 0.3s;
+    box-shadow: 0 2px 10px rgba(131, 31, 31, 0.35);
+}
+
+.btn-eliminar:hover {
+    background: #a62828;
+}
+
+/* ------ BOTÓN PROCESAR PEDIDO ------ */
+.btn-success {
+    font-size: 20px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-family: "Playfair Display", serif;
+    background: linear-gradient(135deg, #c7b37c, #b49c63);
+    border: none;
+    color: #fff;
+    box-shadow: 0 5px 18px rgba(180, 156, 99, 0.45);
+    transition: 0.3s ease;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #bda56e, #a88f5a);
+    box-shadow: 0 4px 14px rgba(130, 110, 70, 0.5);
+}
+
+/* ------ TOTAL ------ */
+#total {
+    font-size: 32px;
+    font-weight: 800;
+    font-family: "Playfair Display", serif;
+    color: #3a311d;
+}
+
+h4 {
+    margin-top: 25px;
+    color: #5d4c2c;
+    font-family: "Playfair Display", serif;
+}
+
+
+</style>
 {% endblock %}

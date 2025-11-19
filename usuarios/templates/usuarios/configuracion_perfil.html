@@ -1,0 +1,84 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Configuración del Perfil{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2 class="text-center mb-4">Configuración del Perfil</h2>
+
+    <!-- Mensajes -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card shadow p-4">
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Nombre -->
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="nombre" class="form-control"
+                       value="{{ usuario.nombre }}" required>
+            </div>
+
+            <!-- Apellido -->
+            <div class="mb-3">
+                <label class="form-label">Apellido</label>
+                <input type="text" name="apellido" class="form-control"
+                       value="{{ usuario.apellido }}" required>
+            </div>
+
+            <!-- Nombre de usuario -->
+            <div class="mb-3">
+                <label class="form-label">Nombre de usuario</label>
+                <input type="text" name="username" class="form-control"
+                       value="{{ usuario.nombre_usuario }}" required>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="mb-3">
+                <label class="form-label">Teléfono</label>
+                <input type="text" name="telefono" class="form-control"
+                       value="{{ usuario.telefono }}">
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label">Correo electrónico</label>
+                <input type="email" name="email" class="form-control"
+                       value="{{ usuario.email }}" required>
+            </div>
+
+            <hr>
+
+            <h5 class="mb-3">Cambiar contraseña (opcional)</h5>
+
+            <!-- Nueva contraseña -->
+            <div class="mb-3">
+                <label class="form-label">Nueva contraseña</label>
+                <input type="password" name="nueva_contrasena" class="form-control">
+            </div>
+
+            <!-- Confirmar nueva contraseña -->
+            <div class="mb-3">
+                <label class="form-label">Confirmar nueva contraseña</label>
+                <input type="password" name="confirmar_contrasena" class="form-control">
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success px-4">
+                    Guardar cambios
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}
