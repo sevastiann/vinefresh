@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block title %}Restablecer Contraseña{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <h3 class="text-center mb-4">Restablecer contraseña</h3>
+
+    {% if mensaje %}
+        <div class="alert alert-info text-center">{{ mensaje }}</div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Nueva contraseña</label>
+            <input type="password" name="password" class="form-control" placeholder="Nueva contraseña" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Confirmar contraseña</label>
+            <input type="password" name="confirmar_password" class="form-control" placeholder="Confirma la contraseña" required>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">
+            Guardar nueva contraseña
+        </button>
+
+        <div class="text-center mt-3">
+            <a href="{% url 'usuarios:login' %}">Volver al inicio de sesión</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -139,6 +139,7 @@ def registro_view(request):
 # -------------------------
 # OLVIDAR CONTRASEÑA
 # -------------------------
+
 def olvidar_contrasena_view(request):
     mensaje = ''
     if request.method == 'POST':
@@ -150,7 +151,11 @@ def olvidar_contrasena_view(request):
             if usuario:
                 token = secrets.token_urlsafe(20)
                 tokens_recuperacion[token] = usuario.id
-                enlace = request.build_absolute_uri(reverse('restablecer_contrasena', args=[token]))
+
+                # URL corregida con namespace
+                enlace = request.build_absolute_uri(
+                    reverse('usuarios:restablecer_contrasena', args=[token])
+                )
 
                 asunto = 'Recuperación de contraseña - VineFresh'
                 mensaje_correo = (
@@ -169,6 +174,7 @@ def olvidar_contrasena_view(request):
                 mensaje = '❌ No existe ninguna cuenta asociada a ese correo.'
 
     return render(request, 'usuarios/olvidar_contrasena.html', {'mensaje': mensaje})
+
 
 # -------------------------
 # RESTABLECER CONTRASEÑA
@@ -196,7 +202,7 @@ def restablecer_contrasena_view(request, token):
             usuario.save()
             del tokens_recuperacion[token]
             messages.success(request, 'Contraseña restablecida correctamente. Ahora puedes iniciar sesión.')
-            return redirect('login')
+            return redirect('usuarios:login')  # <--- CORREGIDO
 
     return render(request, 'usuarios/restablecer_contrasena.html', {'mensaje': mensaje, 'token': token})
 
