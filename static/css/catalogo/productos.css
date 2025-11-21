@@ -1,0 +1,295 @@
+/* =======================================================
+   🍷 VINEFRESH – Catálogo Premium
+   Estética vino / dorado / crema
+======================================================= */
+
+/* -----------------------------------
+   BASE GENERAL
+----------------------------------- */
+body {
+    margin: 0;
+    padding: 0;
+
+    background:
+        linear-gradient(135deg, rgba(37, 35, 33, 0.8), rgba(67, 16, 16, 0.8)),
+        url("../../img/bg.jpg") center/cover no-repeat;
+
+    font-family: "Poppins", sans-serif;
+    color: #3d2b2b;
+    min-height: 100vh;
+}
+
+
+/* Contenedor general */
+.layout-container {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+    max-width: 1600px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* -----------------------------------
+   MINI NAVBAR (Vinos / Combos)
+----------------------------------- */
+.mini-navbar {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 25px;
+}
+
+.mini-navbar a {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #5a2a2a;
+    padding-bottom: 6px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.25s ease-in-out;
+}
+
+.mini-navbar a:hover {
+    color: #c18b5b;
+    border-color: #c18b5b;
+}
+
+.mini-navbar .activo {
+    border-bottom: 2px solid #5a2a2a;
+}
+
+/* -----------------------------------
+   SIDEBAR
+----------------------------------- */
+.sidebar {
+    width: 260px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 25px;
+    height: fit-content;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 40px;
+}
+
+/* Buscador */
+.buscador {
+    display: flex;
+    gap: 8px;
+}
+
+.input-buscar {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d9cec4;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.btn-buscar {
+    background: #7b1f1f;
+    color: #fff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.25s;
+}
+
+.btn-buscar:hover {
+    background: #5e1212;
+}
+
+/* Filtros */
+summary {
+    font-weight: bold;
+    cursor: pointer;
+    color: #5a2a2a;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+details {
+    padding: 10px 0;
+    border-bottom: 1px solid #e8ded7;
+}
+
+.lista-filtro {
+    list-style: none;
+    padding-left: 10px;
+    margin-top: 8px;
+}
+
+.lista-filtro li {
+    margin-bottom: 6px;
+}
+
+.lista-filtro label {
+    margin-left: 4px;
+    color: #4b3c3c;
+}
+
+/* Precio */
+.input-precio {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #d9cec4;
+    margin-bottom: 10px;
+}
+
+/* -----------------------------------
+   GRID DE PRODUCTOS
+----------------------------------- */
+.catalogo-contenido {
+    flex: 1;
+    width: 100%;
+}
+
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 30px;
+}
+
+/* -----------------------------------
+   TARJETA DE PRODUCTO
+----------------------------------- */
+.card-producto {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #eaded6;
+    overflow: hidden;
+    transition: 0.25s ease;
+    text-align: center;
+}
+
+.card-producto:hover {
+    box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+    transform: translateY(-4px);
+}
+
+.card-producto img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+}
+
+.card-producto h4 {
+    font-size: 1.1rem;
+    margin: 12px 0 5px;
+    color: #5a2a2a;
+}
+
+.precio {
+    color: #7c2f27;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* Etiquetas */
+.etiquetas-producto {
+    margin-bottom: 10px;
+}
+
+.etiqueta {
+    background: #fff2df;
+    color: #7c3f34;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin: 2px;
+    font-size: 0.75rem;
+}
+
+/* -----------------------------------
+   ACCIONES
+----------------------------------- */
+.acciones-producto {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 12px;
+    border-top: 1px solid #efdcd0;
+    background: #fffaf7;
+}
+
+.btn-detalle {
+    background: transparent;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    color: #5a2a2a;
+}
+
+.btn-detalle:hover {
+    color: #c18b5b;
+}
+
+.btn-carrito {
+    background: #b23b3b;
+    color: white;
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-carrito:hover {
+    background: #8e2c2c;
+}
+
+/* -----------------------------------
+   MODAL PREMIUM
+----------------------------------- */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    z-index: 2000;
+}
+
+.modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    width: 350px;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    position: relative;
+    text-align: center;
+}
+
+.close {
+    position: absolute;
+    top: 6px;
+    right: 12px;
+    font-size: 1.6rem;
+    cursor: pointer;
+    color: #7a5959;
+}
+
+.modal-img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+/* -----------------------------------
+   SIN PRODUCTOS
+----------------------------------- */
+.no-productos {
+    text-align: center;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #7c524a;
+    margin-top: 40px;
+}

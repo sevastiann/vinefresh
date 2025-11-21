@@ -1,0 +1,183 @@
+/* ----------------------------------------------------
+   VINEFRESH – Carrito Premium
+   Tarjeta elegante + botones centrados + efecto vino
+-----------------------------------------------------*/
+
+/* CONTENEDOR PRINCIPAL */
+.cart-wrapper {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 25px;
+}
+
+/* TÍTULO */
+.cart-wrapper h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    color: #5e2129;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 3px 12px rgba(94,33,41,0.2);
+}
+
+/* CARD GENERAL */
+.cart-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 25px 35px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+    border: 1px solid #f1e0e2;
+}
+
+/* TABLA PREMIUM */
+.table {
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.table thead {
+    background: linear-gradient(to right, #5e2129, #7b2a31);
+}
+
+.table thead th {
+    color: #fff !important;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.6px;
+    padding: 14px;
+    border: none !important;
+}
+
+/* FILAS */
+.table tbody tr {
+    background: #fffdfd;
+}
+
+.table tbody tr:nth-child(odd) {
+    background: #faf4f6;
+}
+
+.table tbody tr:hover {
+    background-color: #f5e7ea !important;
+    transform: scale(1.01);
+    transition: 0.3s;
+}
+
+/* IMAGEN DEL PRODUCTO */
+.table img {
+    width: 80px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+}
+
+/* INPUT CANTIDAD */
+.cantidad-input {
+    border-radius: 12px;
+    border: 1px solid #c79ba0;
+    padding: 6px 10px;
+    width: 70px;
+    background: #fff8fb;
+    text-align: center;
+    font-family: "Poppins";
+    font-size: 0.95rem;
+}
+
+.cantidad-input:focus {
+    border: 1px solid #5e2129;
+    box-shadow: 0 0 8px rgba(94,33,41,0.25);
+}
+
+/* PRECIOS */
+.precio,
+.subtotal {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #5e2129;
+}
+
+/* BOTÓN ELIMINAR */
+.btn-danger {
+    background-color: #a12020 !important;
+    border-color: #a12020 !important;
+    padding: 7px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.btn-danger:hover {
+    background-color: #7d1616 !important;
+    transform: translateY(-2px);
+}
+
+/* TARJETA DE TOTAL */
+.total-box {
+    margin-top: 25px;
+    background: #fff6f4;
+    border-left: 6px solid #5e2129;
+    padding: 18px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+}
+
+.total-box h4 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #5e2129;
+    margin: 0;
+}
+
+/* CONTENEDOR DE BOTONES */
+.cart-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 35px;
+}
+
+/* BOTÓN VOLVER */
+.btn-volver {
+    background: #5e2129;
+    border-radius: 12px;
+    padding: 10px 22px;
+    color: white !important;
+    font-family: "Poppins";
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 6px 15px rgba(94,33,41,0.3);
+    transition: 0.3s;
+}
+
+.btn-volver:hover {
+    background: #42151f;
+    transform: translateY(-3px);
+}
+
+/* BOTÓN PROCESAR */
+.btn-procesar {
+    background: linear-gradient(to right, #3fa168, #60c388);
+    border-radius: 12px;
+    padding: 12px 26px;
+    color: white !important;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 6px 12px rgba(63,161,104,0.35);
+    transition: 0.3s;
+}
+
+.btn-procesar:hover {
+    background: #2d7a50;
+    transform: translateY(-3px);
+}
+
+/* MENSAJE CARRITO VACÍO */
+.empty-text {
+    text-align: center;
+    font-family: "Poppins";
+    font-size: 1.2rem;
+    color: #7a5b61;
+}

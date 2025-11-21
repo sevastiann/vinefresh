@@ -1,0 +1,206 @@
+/* ----------------------------------------------------
+   VINEFRESH – Confirmar Pedido
+   Estética elegante vino + formulario multipasos
+-----------------------------------------------------*/
+
+/* TÍTULO PRINCIPAL */
+.container h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #5e2129;
+    letter-spacing: 0.7px;
+    margin-bottom: 20px;
+}
+
+/* BOTÓN VOLVER */
+.btn-secondary {
+    background-color: #5e2129 !important;
+    border-color: #5e2129 !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-family: "Poppins", sans-serif;
+}
+
+.btn-secondary:hover {
+    background-color: #42151f !important;
+    transform: translateY(-2px);
+}
+
+/* --------------------------
+   PROGRESS BAR ELEGANTE
+--------------------------- */
+.progress-bar {
+    background: #f2e4e8 !important;
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+}
+
+#progressFill {
+    background: linear-gradient(90deg, #5e2129, #8b4a52);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+/* --------------------------
+   FORM SECTIONS PREMIUM
+--------------------------- */
+.form-section {
+    background: #ffffff;
+    padding: 25px 30px;
+    border-radius: 14px;
+    margin-top: 25px;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.form-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+}
+
+/* SECCIÓN TÍTULOS */
+.form-section h4 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.7rem;
+    color: #5e2129;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* LABELS */
+.form-label {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    color: #5e2129;
+}
+
+/* INPUTS Y SELECTS */
+.form-control,
+.form-select {
+    border-radius: 10px;
+    border: 1px solid #c9a2a8 !important;
+    background: #fff8fb;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.95rem;
+    padding: 10px 12px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #5e2129 !important;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(94,33,41,0.25);
+}
+
+/* TEXTAREA */
+textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* --------------------------
+   TABLA DE PRODUCTOS PREMIUM
+--------------------------- */
+.table {
+    font-family: "Poppins", sans-serif;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.table th {
+    background-color: #5e2129 !important;
+    color: #fff;
+    font-weight: 600;
+    padding: 12px;
+    border: none !important;
+}
+
+.table td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.table tbody tr:nth-of-type(odd) {
+    background-color: #faf6f7;
+}
+
+.table tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #f4e7ea;
+}
+
+/* SUBTOTAL */
+.subtotal {
+    font-weight: bold;
+    color: #5e2129;
+}
+
+/* TOTAL */
+#totalCarrito {
+    border-radius: 10px;
+    background: #fff8fb;
+    border: 1px solid #c9a2a8;
+    font-weight: bold;
+    color: #5e2129;
+}
+
+/* --------------------------
+   BOTONES MULTIPASOS
+--------------------------- */
+#nextBtn,
+#prevBtn,
+#submitBtn {
+    font-family: "Poppins", sans-serif;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: 0.3s ease;
+}
+
+/* Botón siguiente */
+.btn-primary#nextBtn {
+    background-color: #5e2129 !important;
+    border-color: #5e2129 !important;
+    color: #fff !important;
+}
+
+.btn-primary#nextBtn:hover {
+    background-color: #42151f !important;
+    transform: translateY(-3px);
+}
+
+/* Botón anterior */
+#prevBtn {
+    background-color: #8b6066 !important;
+    border-color: #8b6066 !important;
+    color: #fff !important;
+}
+
+#prevBtn:hover {
+    background-color: #6a464b !important;
+    transform: translateY(-3px);
+}
+
+/* Botón confirmar */
+#submitBtn.btn-success {
+    background-color: #3fa168 !important;
+    border-color: #3fa168 !important;
+}
+
+#submitBtn.btn-success:hover {
+    background-color: #2d7a50 !important;
+    transform: translateY(-3px);
+}
+
+/* SUAVIDAD GLOBAL */
+* {
+    transition: all 0.25s ease;
+}

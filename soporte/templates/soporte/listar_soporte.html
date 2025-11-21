@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/soporte/listar_soporte.css' %}">
 <h2>Soportes / PQRS</h2>
 {% if rol == 'cliente' %}
   <a href="{% url 'soporte:crear_soporte' %}" class="btn btn-success mb-3">Crear nuevo PQRS</a>

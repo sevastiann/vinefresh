@@ -12,11 +12,13 @@ body {
     padding: 0;
 }
 
+
 /* --- Encabezado principal --- */
 .nosotros-header {
     position: relative;
-    background: linear-gradient(to right, rgba(59, 47, 47, 0.8), rgba(167, 50, 50, 0.5)),
-                url("../../img/viñedo_banner.jpg") center/cover no-repeat;
+    background: 
+        linear-gradient(to right, rgba(59, 47, 47, 0.8), rgba(167, 50, 50, 0.5)),
+        url("../../img/bg.jpg") center/cover no-repeat;
     height: 60vh;
     display: flex;
     justify-content: center;
@@ -24,6 +26,9 @@ body {
     color: #fff;
     text-align: center;
 }
+
+
+
 
 .nosotros-header .overlay {
     position: absolute;

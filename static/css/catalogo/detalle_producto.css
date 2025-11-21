@@ -1,0 +1,130 @@
+/* ============================================================
+   VINEFRESH – Modal Detalle de Producto
+   Estética vino premium + card elegante
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Poppins:wght@300;400;500&display=swap');
+
+/* Fondo difuminado */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+/* Tarjeta del modal */
+.modal-content {
+    background: #ffffff;
+    width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 30px 32px;
+    border-radius: 22px;
+    border: 1px solid #e4d5d5;
+    box-shadow: 0px 12px 30px rgba(0,0,0,0.18);
+    animation: modalIn 0.32s ease;
+    position: relative;
+}
+
+/* Animación */
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(-15px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Botón cerrar */
+.close {
+    position: absolute;
+    right: 20px;
+    top: 14px;
+    font-size: 30px;
+    color: #5e2129;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease;
+}
+
+.close:hover {
+    color: #2e0f14;
+    transform: scale(1.25);
+}
+
+/* Título */
+.modal-content h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.2rem;
+    text-align: center;
+    color: #5e2129;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #e4cccc;
+    padding-bottom: 10px;
+}
+
+/* Labels */
+.modal-content label {
+    font-family: "Cormorant Garamond", serif;
+    color: #5e2129;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Inputs y textarea */
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content textarea {
+    width: 100%;
+    padding: 10px 13px;
+    border-radius: 12px;
+    border: 1px solid #d6b9bd;
+    background: #fcf7f8;
+    color: #4a3737;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.96rem;
+    margin-bottom: 16px;
+    transition: 0.25s ease;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    border-color: #5e2129;
+    background: #ffffff;
+    box-shadow: 0 0 7px rgba(94,33,41,0.25);
+    outline: none;
+}
+
+/* Textarea */
+.modal-content textarea {
+    min-height: 90px;
+    resize: none;
+}
+
+/* Imagen vino */
+.modal-img {
+    width: 100%;
+    border-radius: 18px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+    object-fit: cover;
+    box-shadow: 0 5px 16px rgba(0,0,0,0.12);
+}
+
+/* Checkbox activo */
+.modal-content input[type="checkbox"] {
+    transform: scale(1.3);
+    accent-color: #5e2129;
+    margin-top: 6px;
+}
+
+/* Suavidad global */
+* {
+    transition: 0.25s ease;
+}

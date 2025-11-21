@@ -1,0 +1,120 @@
+/* ----------------------------------------------------
+   VINEFRESH – Mis Pedidos (Cliente)
+   Estética premium vino + tabla elegante + badges
+-----------------------------------------------------*/
+
+/* TÍTULO PRINCIPAL */
+.container h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #5e2129;
+    letter-spacing: 0.6px;
+    margin-bottom: 25px;
+    border-left: 5px solid #5e2129;
+    padding-left: 12px;
+}
+
+/* --------------------------
+   TABLA PREMIUM
+--------------------------- */
+.table {
+    font-family: "Poppins", sans-serif;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.07);
+}
+
+.table thead th {
+    background-color: #5e2129 !important;
+    color: #fff;
+    font-weight: 600;
+    padding: 12px;
+    border: none !important;
+    letter-spacing: 0.5px;
+}
+
+.table tbody td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #faf6f7;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #f0e5e9;
+    transition: 0.25s ease;
+}
+
+/* --------------------------
+   BADGES PERSONALIZADOS
+--------------------------- */
+
+.badge {
+    font-family: "Poppins", sans-serif;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+/* Pendiente */
+.bg-warning {
+    background-color: #d9a441 !important;
+    color: #4a3607 !important;
+}
+
+/* Pagado */
+.bg-success {
+    background-color: #3fa168 !important;
+}
+
+/* Enviado */
+.bg-primary {
+    background-color: #5e2129 !important;  /* tono vino */
+}
+
+/* Entregado */
+.bg-secondary {
+    background-color: #827377 !important;
+}
+
+/* Cancelado */
+.bg-danger {
+    background-color: #a12020 !important;
+}
+
+/* --------------------------
+   BOTÓN VER FACTURA
+--------------------------- */
+.btn-outline-primary {
+    border-radius: 8px;
+    border-color: #5e2129 !important;
+    color: #5e2129 !important;
+    font-family: "Poppins", sans-serif;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    transition: 0.25s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #5e2129 !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+/* MENSAJE SIN PEDIDOS */
+.container p {
+    font-family: "Poppins", sans-serif;
+    color: #6f5a5e;
+}
+
+/* SUAVIDAD GLOBAL */
+* {
+    transition: all 0.25s ease;
+}

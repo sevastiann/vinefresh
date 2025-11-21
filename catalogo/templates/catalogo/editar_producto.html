@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/catalogo/editar_producto.css' %}">
 
 <h1 class="titulo">Editar Producto</h1>
 
@@ -103,30 +104,6 @@
 
 </form>
 
-<style>
-    .formulario { 
-        max-width: 600px; 
-        margin: auto; 
-        display: flex; 
-        flex-direction: column; 
-        gap: 15px; 
-    }
-    label { font-weight: bold; }
-    input, textarea, select { 
-        width: 100%; 
-        padding: 8px; 
-        border-radius: 5px; 
-        border: 1px solid #ccc; 
-    }
-    summary { cursor: pointer; font-weight: bold; margin: 5px 0; }
-    .btn-guardar, .btn-cancelar {
-        padding: 10px 15px; 
-        border-radius: 6px; 
-        text-align: center; 
-        font-weight: bold;
-    }
-    .btn-guardar { background: #8c2f39; color: white; }
-    .btn-cancelar { background: #b9a89a; color: white; display: inline-block; }
-</style>
+
 
 {% endblock %}

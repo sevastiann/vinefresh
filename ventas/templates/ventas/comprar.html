@@ -1,8 +1,9 @@
 {% extends 'core/base.html' %}
 
 {% block title %}Confirmar Pedido{% endblock %}
-
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/ventas/comprar.css' %}">
 <div class="container mt-4">
     <h2>📝 Confirmar Pedido</h2>
     <a href="{% url 'ventas:carrito' %}" class="btn btn-secondary mt-2">⬅ Volver al Carrito</a>

@@ -1,0 +1,71 @@
+/* ----------------------------------------------------
+   VINEFRESH – Eliminar Envío
+   Estilo premium vino + serif
+-----------------------------------------------------*/
+
+/* Título */
+.container h2 {
+    font-family: "Cormorant Garamond", serif;
+    color: #5e2129;
+    font-weight: 700;
+    font-size: 2rem;
+    border-left: 5px solid #5e2129;
+    padding-left: 12px;
+    margin-bottom: 20px;
+}
+
+/* Alerta elegante */
+.alert-danger {
+    background: #fbeaea;
+    border: 1px solid #e3b1b1;
+    color: #7a1f1f;
+    font-size: 1rem;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* Contenedor de botones */
+.mt-3 {
+    margin-top: 20px !important;
+}
+
+/* Botón confirmar (peligro elegante) */
+.btn-danger {
+    background-color: #a12020 !important;
+    border-color: #a12020 !important;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    font-family: "Poppins", sans-serif;
+}
+
+.btn-danger:hover {
+    background-color: #7d1616 !important;
+    transform: translateY(-2px);
+}
+
+/* Botón cancelar (tema vino) */
+.btn-secondary {
+    background-color: #5e2129 !important;
+    border-color: #5e2129 !important;
+    color: #fff !important;
+    padding: 8px 18px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    margin-left: 6px;
+    font-family: "Poppins", sans-serif;
+}
+
+.btn-secondary:hover {
+    background-color: #43161e !important;
+    transform: translateY(-2px);
+    color: #fff !important;
+}
+
+/* Suavidad global */
+* {
+    transition: all 0.2s ease;
+}

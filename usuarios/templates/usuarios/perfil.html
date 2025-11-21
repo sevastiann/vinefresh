@@ -1,6 +1,8 @@
 {% extends 'admin_panel/base_admin.html' %}
 {% block title %}Perfil del Administrador{% endblock %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/usuarios/perfil.css' %}">
 <h3>Mi perfil</h3>
 <form method="POST">
   {% csrf_token %}

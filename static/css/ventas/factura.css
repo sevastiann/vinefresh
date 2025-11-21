@@ -1,0 +1,91 @@
+/* ----------------------------------------------------
+   VINEFRESH – Factura de Pedido
+   Estética premium vino + diseño imprimible
+-----------------------------------------------------*/
+
+body {
+    font-family: "Poppins", sans-serif;
+    color: #333;
+    font-size: 14px;
+    margin: 40px;
+}
+
+/* TÍTULO */
+h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 28px;
+    color: #5e2129;
+    text-align: center;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #5e2129;
+    padding-bottom: 6px;
+}
+
+/* DATOS DEL CLIENTE */
+p {
+    margin: 4px 0;
+    font-size: 14px;
+}
+
+p strong {
+    color: #5e2129;
+}
+
+/* TABLAS */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* ENCABEZADOS */
+thead th {
+    background-color: #f4e7ea;
+    color: #5e2129;
+    font-weight: 700;
+    padding: 10px;
+    border: 1px solid #d4b5bb;
+    text-align: left;
+}
+
+/* CELDAS */
+td {
+    border: 1px solid #e2c7cd;
+    padding: 8px 10px;
+}
+
+/* FILAS ALTERNAS */
+tbody tr:nth-child(odd) {
+    background-color: #faf6f7;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+/* SUBTOTAL Y TOTAL */
+.total {
+    font-weight: 700;
+    text-align: right;
+    font-size: 15px;
+    color: #5e2129;
+}
+
+/* PIE DE TABLA TOTAL */
+tfoot td {
+    border-top: 2px solid #5e2129;
+    background: #f9f1f3;
+    font-size: 15px;
+    padding: 10px;
+}
+
+/* AJUSTE PARA PDF/IMPRESIÓN */
+@media print {
+    body {
+        margin: 0;
+    }
+    h2 {
+        margin-top: 0;
+    }
+}

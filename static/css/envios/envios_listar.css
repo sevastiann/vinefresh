@@ -1,0 +1,138 @@
+/* ----------------------------------------------------
+   VINEFRESH – Lista de Envíos
+   Estética premium vino + serif + sombras suaves
+-----------------------------------------------------*/
+
+/* TÍTULO PRINCIPAL */
+.container h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #5e2129;
+    border-left: 5px solid #5e2129;
+    padding-left: 12px;
+    margin-bottom: 18px;
+}
+
+/* BOTÓN CREAR ENVÍO */
+.btn-primary {
+    background-color: #5e2129 !important;
+    border-color: #5e2129 !important;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.95rem;
+    transition: 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #42151f !important;
+    transform: translateY(-2px);
+}
+
+/* CARD LISTA PRINCIPAL */
+.card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+}
+
+/* TABLAS PREMIUM – Vino Boutique */
+.table {
+    font-family: "Poppins", sans-serif;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead {
+    background-color: #5e2129;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.table thead th {
+    border: none !important;
+    padding: 12px;
+    letter-spacing: 0.5px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #faf6f7;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
+.table tbody td {
+    padding: 12px;
+    vertical-align: middle;
+    color: #333;
+}
+
+/* HOVER FILA */
+.table tbody tr:hover {
+    background-color: #f0e6e9;
+    transition: 0.25s;
+}
+
+/* BOTONES DE ACCIÓN */
+.btn-sm {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-family: "Poppins", sans-serif;
+    transition: 0.3s ease;
+}
+
+/* Ver */
+.btn-info {
+    background-color: #3c4cad !important;
+    border-color: #3c4cad !important;
+    color: #fff !important;
+}
+.btn-info:hover { background-color: #2e3b84 !important; transform: translateY(-2px); }
+
+/* Seguimiento */
+.btn-warning {
+    background-color: #c28b27 !important;
+    border-color: #c28b27 !important;
+    color: #fff !important;
+}
+.btn-warning:hover { background-color: #9c6e1e !important; transform: translateY(-2px); }
+
+/* Ruta */
+.btn-secondary {
+    background-color: #5e2129 !important;
+    border-color: #5e2129 !important;
+    color: #fff !important;
+}
+.btn-secondary:hover { background-color: #43151f !important; transform: translateY(-2px); }
+
+/* Eliminar */
+.btn-danger {
+    background-color: #a12020 !important;
+    border-color: #a12020 !important;
+}
+.btn-danger:hover { background-color: #7d1616 !important; transform: translateY(-2px); }
+
+/* MENSAJE SIN ENVÍOS */
+.card-body p {
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    color: #444;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* SUAVIDAD GLOBAL */
+* {
+    transition: all 0.2s ease;
+}

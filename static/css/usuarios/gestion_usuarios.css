@@ -1,0 +1,128 @@
+/* ----------------------------------------------------
+   VINEFRESH – Gestión de Usuarios
+   Estética premium vino + tabla elegante administrativa
+-----------------------------------------------------*/
+
+/* TÍTULO PRINCIPAL */
+.container h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #5e2129;
+    text-align: center;
+    letter-spacing: 0.5px;
+    margin-bottom: 30px;
+}
+
+/* ------------------------------
+   TABLA PREMIUM
+-------------------------------*/
+.table {
+    font-family: "Poppins", sans-serif;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.07);
+}
+
+.table thead th {
+    background-color: #5e2129 !important;
+    color: #fff !important;
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+}
+
+.table tbody td {
+    padding: 12px;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #faf6f7;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #f1dce0;
+    transition: 0.25s ease;
+}
+
+/* ------------------------------
+   BADGES PERSONALIZADOS
+-------------------------------*/
+.badge {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Activo */
+.bg-success {
+    background-color: #3fa168 !important;
+}
+
+/* Inactivo */
+.bg-secondary {
+    background-color: #827377 !important;
+}
+
+/* ------------------------------
+   BOTONES DE ACCIÓN
+-------------------------------*/
+
+.btn-sm {
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Ver */
+.btn-info {
+    background-color: #8b4a52 !important;
+    border-color: #8b4a52 !important;
+    color: white !important;
+}
+
+.btn-info:hover {
+    background-color: #71343b !important;
+}
+
+/* Desactivar */
+.btn-warning {
+    background-color: #c28b27 !important;
+    color: white !important;
+    border-color: #c28b27 !important;
+}
+
+.btn-warning:hover {
+    background-color: #a0701f !important;
+}
+
+/* Activar */
+.btn-success {
+    background-color: #3fa168 !important;
+    border-color: #3fa168 !important;
+}
+
+.btn-success:hover {
+    background-color: #2d7a4f !important;
+}
+
+/* SIN REGISTROS */
+.text-muted {
+    font-family: "Poppins", sans-serif;
+    color: #9b8b90 !important;
+    font-size: 1.05rem;
+}
+
+/* SUAVIDAD GLOBAL */
+* {
+    transition: 0.25s ease;
+}

@@ -1,90 +1,110 @@
-/* ===============================
-   Estilos para Política y Términos - VineFresh
-   =============================== */
+/* ==========================================
+   VINEFRESH – Política & Términos (Tema Vino)
+   Estética elegante, cálida y sofisticada
+========================================== */
 
 body {
-  background-color: #f9faf9;
-  font-family: 'Poppins', sans-serif;
-  color: #2e2e2e;
-  line-height: 1.7;
+  background: 
+      linear-gradient(rgba(247, 243, 239, 0.92), rgba(247, 243, 239, 0.92)),
+      url("../../img/bg.jpg") center/cover no-repeat;
+  font-family: "Poppins", sans-serif;
+  color: #4a3b3b; /* Marrón vino suave */
+  line-height: 1.8;
 }
 
-/* --- Contenedor principal --- */
+/* --- Contenedor general --- */
 .policy-section {
   padding-top: 80px;
   padding-bottom: 80px;
-  background-color: #ffffff;
+
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 .policy-section .container {
-  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.88);
   padding: 60px;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 22px;
+  border: 1px solid rgba(94, 33, 41, 0.15); /* Borde vino */
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
 }
 
-/* --- Encabezados principales --- */
+/* --- Título principal estilo etiqueta de vino --- */
 .policy-section h1 {
-  color: #2f7a47;
-  font-size: 2.3rem;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2.6rem;
+  color: #5e2129; /* vino tinto */
   margin-bottom: 25px;
-  border-left: 5px solid #3ea860;
-  padding-left: 15px;
+  border-left: 6px solid #b08b57; /* dorado uva */
+  padding-left: 18px;
   font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
+/* --- Subtítulos elegantes --- */
 .policy-section h2 {
-  color: #317a4c;
-  font-size: 1.5rem;
-  margin-top: 30px;
+  font-family: "Cormorant Garamond", serif;
+  color: #8b3a3f;
+  font-size: 1.8rem;
+  margin-top: 35px;
   margin-bottom: 12px;
   font-weight: 600;
+  border-bottom: 2px solid rgba(176, 139, 87, 0.35); /* dorado suave */
+  padding-bottom: 5px;
 }
 
 /* --- Párrafos --- */
 .policy-section p {
-  font-size: 1rem;
-  color: #3a3a3a;
+  font-size: 1.05rem;
+  color: #4d3e3f;
   margin-bottom: 16px;
   text-align: justify;
 }
 
-/* --- Enlaces --- */
+/* --- Enlaces (color vino + dorado al hover) --- */
 .policy-section a {
-  color: #3ea860;
+  color: #b08b57; /* dorado uva */
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
+  font-weight: 600;
+  transition: 0.3s ease;
 }
 
 .policy-section a:hover {
-  color: #256b40;
+  color: #5e2129;
   text-decoration: underline;
 }
 
-/* --- Separación entre bloques --- */
+/* --- Separador de contenido --- */
 .terms-content {
   margin-top: 40px;
+  border-left: 3px solid #b08b57;
+  padding-left: 20px;
 }
 
-/* --- Listas (si agregas en el futuro) --- */
+/* --- Listas estilo cata de vino --- */
 .policy-section ul {
-  margin-left: 20px;
+  margin-left: 25px;
   list-style: disc;
+  color: #5e2129;
+}
+
+.policy-section ul li {
+  margin-bottom: 8px;
+  font-size: 1.05rem;
 }
 
 /* --- Adaptabilidad móvil --- */
 @media (max-width: 768px) {
   .policy-section .container {
-    padding: 30px 20px;
+    padding: 30px 22px;
   }
 
   .policy-section h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 
   .policy-section h2 {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
   }
 
   .policy-section p {

@@ -1,0 +1,123 @@
+/* ----------------------------------------------------
+   VINEFRESH – Configuración del Perfil (versión premium)
+   Compatible con tu HTML actual
+-----------------------------------------------------*/
+
+/* CONTENEDOR GENERAL */
+.container {
+    max-width: 750px;
+}
+
+/* TÍTULO PRINCIPAL */
+h2.text-center {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #5e2129;
+    letter-spacing: 1px;
+    margin-bottom: 35px !important;
+}
+
+/* CARD PRINCIPAL */
+.card {
+    border-radius: 20px !important;
+    border: none !important;
+    background: #fffdfd;
+    padding: 40px !important;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12) !important;
+    border: 1px solid #e8d5d8 !important;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    transition: 0.3s ease;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.14) !important;
+}
+
+/* LABELS */
+.form-label {
+    font-weight: 600;
+    color: #5e2129;
+    font-size: 1rem;
+    font-family: "Poppins", sans-serif;
+}
+
+/* INPUTS PREMIUM */
+.form-control {
+    border-radius: 12px !important;
+    padding: 12px 14px !important;
+    font-size: 0.95rem !important;
+    font-family: "Poppins", sans-serif;
+    border: 1px solid #caaab0 !important;
+    background: #fff8fb !important;
+    transition: 0.25s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #5e2129 !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 8px rgba(94,33,41,0.25);
+}
+
+/* SEPARADOR */
+hr {
+    margin: 30px 0;
+    border-color: #d5b9bf;
+    opacity: 0.4;
+}
+
+/* SUBTÍTULO “Cambiar contraseña” */
+h5 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.6rem;
+    color: #5e2129;
+    font-weight: 700;
+    margin-bottom: 18px !important;
+    border-left: 4px solid #5e2129;
+    padding-left: 12px;
+}
+
+/* BOTÓN GUARDAR CAMBIOS */
+.btn-success {
+    background-color: #5e2129 !important;
+    border: none !important;
+    padding: 12px 35px !important;
+    font-size: 1.1rem !important;
+    font-family: "Poppins", sans-serif;
+    border-radius: 12px !important;
+    letter-spacing: 0.7px;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(94,33,41,0.25);
+    transition: 0.4s ease;
+}
+
+.btn-success:hover {
+    background-color: #43151d !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(94,33,41,0.35);
+}
+
+/* ALERTAS */
+.alert {
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+}
+
+/* Colores refinados */
+.alert-success {
+    background: #e9f6ee;
+    border-left: 5px solid #3fa168;
+}
+
+.alert-danger {
+    background: #f8e7e7;
+    border-left: 5px solid #a43a3a;
+}
+
+.alert-warning {
+    background: #fff7e0;
+    border-left: 5px solid #c9a542;
+}

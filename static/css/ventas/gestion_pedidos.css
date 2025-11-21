@@ -1,0 +1,98 @@
+/* ----------------------------------------------------
+   VINEFRESH – Gestión de Pedidos
+   Estética premium vino + serif + tabla administrativa
+-----------------------------------------------------*/
+
+/* TÍTULO PRINCIPAL */
+.container h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #5e2129;
+    letter-spacing: 0.6px;
+    margin-bottom: 25px;
+    border-left: 5px solid #5e2129;
+    padding-left: 12px;
+}
+
+/* --------------------------
+   TABLA PREMIUM
+--------------------------- */
+.table {
+    font-family: "Poppins", sans-serif;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.07);
+}
+
+.table thead th {
+    background-color: #5e2129 !important;
+    color: #fff;
+    font-weight: 600;
+    padding: 12px;
+    border: none !important;
+    letter-spacing: 0.5px;
+}
+
+.table tbody td {
+    padding: 12px;
+    vertical-align: middle;
+    font-size: 0.95rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #faf6f7;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #f0e5e9;
+    transition: 0.25s ease;
+}
+
+/* --------------------------
+   SELECT DE ESTADO
+--------------------------- */
+.form-select-sm {
+    border-radius: 10px;
+    border: 1px solid #c9a2a8 !important;
+    background-color: #fff8fb;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.form-select-sm:focus {
+    border-color: #5e2129 !important;
+    box-shadow: 0 0 8px rgba(94,33,41,0.25);
+    background-color: #ffffff;
+}
+
+/* --------------------------
+   BOTÓN VER FACTURA
+--------------------------- */
+.btn-outline-primary {
+    border-radius: 8px;
+    border-color: #5e2129 !important;
+    color: #5e2129 !important;
+    font-family: "Poppins", sans-serif;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    transition: 0.25s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #5e2129 !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+/* SUAVIDAD GLOBAL */
+* {
+    transition: all 0.25s ease;
+}

@@ -82,8 +82,11 @@
     </style>
 </head>
 <body>
+    {% load static %}
+
+<link rel="stylesheet" href="{% static 'css/usuarios/olvidar_contraseña.css' %}">
     <div class="reset-container">
-        {% load static %}
+
         <img src="{% static 'img/vinefresh.PNG' %}" alt="logo" width="150px">
         <h1 class="reset-h1">Recuperar Contraseña</h1>
 

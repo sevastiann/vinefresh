@@ -4,9 +4,9 @@
 {% block title %}Inicio | VineFresh{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/core/inicio.css' %}">
+<link rel="stylesheet" href="{% static 'css/core/home.css' %}">
 <!-- Carousel Start -->
-<div class="container mt-4">
+<div class="container-carousel-full">
     <div id="main-carousel" class="carousel slide" data-ride="carousel" data-interval="3000">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -75,10 +75,10 @@
                     De un pequeño huerto familiar nació VineFresh: una comunidad unida por la pasión por lo fresco y saludable.
                     Cada producto es fruto del respeto por la tierra, la dedicación a los procesos artesanales y el compromiso con la calidad.
                 </p>
-                <a href="#" class="btn btn-outline-primary">Leer Más</a>
+                <a href="{% url 'core:nosotros' %}" class="btn btn-outline-primary">Leer Más</a>
             </div>
             <div class="col-md-6">
-                <img src="{% static 'img/nuestra_historia.jpg' %}" class="img-fluid rounded" alt="Nuestra Historia">
+                <img src="{% static 'img/nuestra_historia.png' %}" class="img-fluid rounded" alt="Nuestra Historia">
             </div>
         </div>
     </div>

@@ -1,4 +1,5 @@
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/catalogo/eliminar_producto.css' %}">
 
 <div id="modal-eliminar-producto-{{ producto.id }}" class="modal">
     <div class="modal-content">
@@ -17,47 +18,6 @@
     </div>
 </div>
 
-<style>
-.modal {
-    display: none;
-    position: fixed; 
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.5);
-}
-.modal-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    text-align: center;
-}
-.close {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    color: #333;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-}
-.form-group.botones {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-.btn { padding: 8px 15px; border-radius: 6px; cursor: pointer; }
-.btn-danger { background-color: #c84b4b; color: #fff; border: none; }
-.btn-secondary { background-color: #ccc; color: #333; border: none; }
-.btn:hover { opacity: 0.9; }
-</style>
 
 <script>
 function abrirModalEliminar(id) {

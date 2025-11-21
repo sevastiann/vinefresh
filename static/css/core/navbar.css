@@ -1,43 +1,58 @@
-/* ===============================
-   NAVBAR - VINEFRESH
-   Archivo: static/css/core/navbar.css
-   =============================== */
+/* ============================================================
+   NAVBAR PREMIUM – VINEFRESH
+   Elegante, vino oscuro y dorado
+============================================================ */
 
-/* --- Estilo general del navbar --- */
+/* ================================
+   1) NAVBAR GENERAL
+================================ */
 .navbar {
-    background-color: #faf7f4 !important; /* tono crema */
-    border-bottom: 2px solid #a73232; /* línea inferior vino */
-    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #3b0f13, #5e1a1f);
+    border-bottom: 3px solid #c9a36a;
+    font-family: 'Cormorant Garamond', serif;
+    padding-top: 22px !important;
+    padding-bottom: 22px !important;
+    min-height: 110px;
     transition: all 0.3s ease;
 }
 
-/* --- Logo --- */
+/* ================================
+   2) LOGO
+================================ */
 .navbar-brand img {
+    height: 110px;
+    width: 110px;
+    object-fit: cover;
     transition: transform 0.3s ease;
 }
 
 .navbar-brand img:hover {
-    transform: scale(1.05);
+    transform: scale(1.07);
 }
 
-/* --- Links del menú --- */
+/* ================================
+   3) LINKS DE MENÚ
+================================ */
 .navbar-nav .nav-link {
-    color: #3b2f2f !important;
-    font-weight: 500;
-    padding: 10px 18px;
+    color: #f3e8d8 !important;
+    font-weight: 600;
+    font-size: 1.3rem;
+    font-family: 'Marcellus', serif;
+    letter-spacing: 1px;
+    padding: 18px 25px !important;
     position: relative;
     transition: color 0.3s ease;
 }
 
-/* Línea animada debajo del link */
+/* Línea animada */
 .navbar-nav .nav-link::after {
     content: "";
     position: absolute;
     left: 0;
-    bottom: 5px;
+    bottom: 10px;
     width: 0;
     height: 2px;
-    background-color: #a73232;
+    background-color: #c9a36a;
     transition: width 0.3s ease;
     border-radius: 2px;
 }
@@ -48,77 +63,97 @@
 }
 
 .navbar-nav .nav-link:hover {
-    color: #a73232 !important;
+    color: #c9a36a !important;
 }
 
-/* --- Dropdown de usuario --- */
+/* ================================
+   4) DROPDOWN DEL USUARIO (AVATAR)
+================================ */
 .nav-item.dropdown .nav-link img {
+    height: 70px;
+    width: 70px;
     border-radius: 50%;
-    border: 2px solid #a73232;
+    border: 2px solid #c9a36a;
     transition: all 0.3s ease;
 }
 
 .nav-item.dropdown .nav-link img:hover {
-    transform: scale(1.1);
-    border-color: #6d1919;
+    transform: scale(1.18);
+    border-color: #e6c48d;
 }
 
-/* --- Menú desplegable del usuario --- */
+/* Estilos del menú dropdown */
 .dropdown-menu {
     border-radius: 15px;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    background-color: #fffdfa;
-    font-size: 0.95rem;
+    border: 1px solid #d9c9b8;
+    background-color: #fff9f2;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    font-family: 'Cormorant Garamond', serif;
 }
 
 .dropdown-item {
-    color: #3b2f2f;
-    transition: all 0.2s ease;
+    color: #4a2d2d;
+    font-size: 1.05rem;
 }
 
 .dropdown-item:hover {
-    background-color: #a73232;
+    background-color: #5e1a1f;
     color: #fff;
     transform: translateX(3px);
 }
 
-.dropdown-divider {
-    border-color: #e8d8d4;
+/* ================================
+   5) CARRITO
+================================ */
+.icono-carrito {
+    height: 90px;
+    width: 90px;
+    object-fit: contain;
+    filter: brightness(90%);
+    transition: transform 0.3s ease, filter 0.3s ease;
 }
 
-/* --- Ícono del carrito --- */
-.nav-item .fa-shopping-cart {
-    color: #a73232;
-    transition: all 0.3s ease;
-}
-
-.nav-item .fa-shopping-cart:hover {
+.carrito-link:hover .icono-carrito {
     transform: scale(1.15);
-    color: #6d1919;
+    filter: brightness(115%);
 }
 
-/* --- Navbar responsive --- */
+/* ================================
+   6) BOTÓN HAMBURGUESA (MÓVIL)
+================================ */
 .navbar-toggler {
-    border-color: #a73232;
-    background-color: #fff5f3;
+    border-color: #c9a36a;
+    background-color: #f8e9d9;
     padding: 6px 10px;
 }
 
 .navbar-toggler:focus {
     outline: none;
-    box-shadow: 0 0 5px #a73232;
+    box-shadow: 0 0 5px #c9a36a;
 }
 
-/* --- Fondo al hacer scroll --- */
+/* ================================
+   7) EFECTO SCROLL
+================================ */
 .navbar.scrolled {
-    background-color: #fffdfc !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(to right, #2d0b0e, #4a1418) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.35);
 }
 
-/* --- Dropdown mejor en pantallas grandes --- */
-@media (min-width: 992px) {
-    .dropdown-menu {
-        margin-top: 10px;
-    }
+/* ============================================================
+   8) ALINEAR USUARIO + CARRITO A LA DERECHA (SIN TOCAR HTML)
+============================================================ */
+.navbar-nav.ms-auto {
+    margin-left: auto !important;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar .nav-item {
+    margin-right: 0 !important;
+}
+
+.navbar .navbar-nav {
+    margin-right: 5px !important;
 }

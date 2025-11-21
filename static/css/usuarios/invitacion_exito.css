@@ -1,0 +1,59 @@
+/* ----------------------------------------------------
+   VINEFRESH – Invitación Enviada
+   Pantalla con efecto glass + colores verdes premium
+-----------------------------------------------------*/
+
+/* Fondo pantalla completa */
+.inv-enviada-bg {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #2e7d32, #66bb6a);
+}
+
+/* Tarjeta efecto cristal (glassmorphism) */
+.inv-enviada-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(14px);
+    border-radius: 22px;
+    padding: 45px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    font-family: "Poppins", sans-serif;
+}
+
+/* Título */
+.inv-enviada-title {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* Botón volver */
+.inv-enviada-btn {
+    margin-top: 20px;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: bold;
+    background-color: #ffffff;
+    color: #2e7d32;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s ease;
+}
+
+.inv-enviada-btn:hover {
+    background-color: #d9ffd9;
+    transform: translateY(-3px);
+}
+
+/* Suavidad global */
+* {
+    transition: 0.25s ease;
+}

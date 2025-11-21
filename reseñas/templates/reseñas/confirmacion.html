@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/reseñas/confirmacion.css' %}">
 <div class="alert alert-success text-center mt-4">{{ mensaje }}</div>
 <a href="{% url 'reseñas:lista_reseñas' %}" class="btn btn-primary">Volver</a>
 {% endblock %}

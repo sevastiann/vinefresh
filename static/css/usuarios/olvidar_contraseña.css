@@ -1,0 +1,121 @@
+/* ----------------------------------------------------
+   VINEFRESH – Recuperar Contraseña
+   Glassmorphism elegante + tonos vino suaves
+-----------------------------------------------------*/
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #8b3a3f, #5e2129);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Contenedor principal */
+.reset-container {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+    border-radius: 18px;
+    padding: 40px 45px;
+    width: 380px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* Título */
+.reset-h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    color: #fff;
+}
+
+/* Campos */
+.reset-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    margin-bottom: 15px;
+    transition: 0.25s ease;
+}
+
+.reset-input::placeholder {
+    color: #f0e7e7;
+}
+
+.reset-input:focus {
+    border-color: #ffffff;
+    background: rgba(255,255,255,0.3);
+}
+
+/* Botón */
+.reset-button {
+    width: 100%;
+    padding: 12px;
+    background: #b08b57;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    margin-top: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.reset-button:hover {
+    background: #d5b173;
+    transform: translateY(-3px);
+}
+
+/* Mensajes */
+.mensaje {
+    margin-bottom: 15px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+/* Éxito */
+.exito {
+    background-color: rgba(81, 255, 134, 0.3);
+    color: #baffce;
+    border: 1px solid rgba(81, 255, 134, 0.5);
+}
+
+/* Error */
+.error {
+    background-color: rgba(255, 120, 120, 0.3);
+    color: #ffd4d4;
+    border: 1px solid rgba(255, 120, 120, 0.5);
+}
+
+/* Enlace volver */
+.volver {
+    display: inline-block;
+    margin-top: 18px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #ffe6d9;
+    transition: 0.25s ease;
+}
+
+.volver:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Suavidad global */
+* {
+    transition: 0.3s ease;
+}

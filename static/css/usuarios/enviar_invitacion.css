@@ -1,0 +1,106 @@
+/* ----------------------------------------------------
+   VINEFRESH – Invitar Administrador
+   Estética premium vino + formulario elegante
+-----------------------------------------------------*/
+
+/* Fondo pantalla completa */
+.invitar-admin-bg {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #4a0e0e, #7b1f1f);
+}
+
+/* Contenedor del formulario */
+.invitar-admin-card {
+    background-color: #fdf6f0;
+    padding: 35px;
+    width: 380px;
+    border-radius: 16px;
+    border: 2px solid #7b1f1f;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    transition: 0.3s ease;
+}
+
+.invitar-admin-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Título */
+.invitar-admin-title {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4a0e0e;
+    margin-bottom: 20px;
+}
+
+/* Campo de email */
+.invitar-admin-input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #b08b57;
+    background-color: #fff8f5;
+    font-size: 1rem;
+    transition: 0.25s ease;
+}
+
+.invitar-admin-input:focus {
+    border-color: #7b1f1f;
+    background-color: #ffffff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(123, 31, 31, 0.25);
+}
+
+/* Botón enviar */
+.invitar-admin-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #7b1f1f;
+    color: #fdf6f0;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    font-size: 1rem;
+    transition: 0.3s ease;
+}
+
+.invitar-admin-btn:hover {
+    background-color: #551414;
+    transform: translateY(-3px);
+}
+
+/* Mensaje */
+.invitar-admin-msg {
+    margin-top: 15px;
+    font-weight: 600;
+    color: #4a0e0e;
+}
+
+/* Link volver */
+.invitar-admin-back {
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    font-weight: 700;
+    color: #7b1f1f;
+    font-family: "Poppins", sans-serif;
+    transition: 0.25s ease;
+}
+
+.invitar-admin-back:hover {
+    color: #4a0e0e;
+    transform: translateX(-4px);
+}
+
+/* Suavidad */
+* {
+    transition: all 0.25s ease;
+}

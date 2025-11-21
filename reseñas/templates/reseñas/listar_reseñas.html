@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/reseñas/listar_reseñas.css' %}">
 <h2 class="text-center my-4">Reseñas de Productos</h2>
 
 {% if rol == 'cliente' %}

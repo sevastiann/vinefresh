@@ -1,0 +1,128 @@
+/* ----------------------------------------------------
+   VINEFRESH – Login Premium
+   Glassmorphism + colores vino elegantes
+-----------------------------------------------------*/
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+
+    background: 
+        linear-gradient(135deg, rgba(94,33,41,0.75), rgba(139,58,63,0.75)),
+        url("../../img/bg.jpg") center/cover no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Poppins", sans-serif;
+}
+
+
+
+/* Contenedor principal */
+.login-container {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+    border-radius: 18px;
+    padding: 40px 45px;
+    width: 380px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* Título */
+.login-h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #ffffff;
+}
+
+/* Labels */
+.login-label {
+    display: block;
+    text-align: left;
+    color: #f0e7e7;
+    font-weight: 600;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+/* Inputs */
+.login-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    margin-bottom: 10px;
+    transition: 0.25s ease;
+}
+
+.login-input::placeholder {
+    color: #f0e7e7;
+}
+
+.login-input:focus {
+    border-color: #fff;
+    background: rgba(255,255,255,0.3);
+}
+
+/* Botón */
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background: #b08b57;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    margin-top: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.login-button:hover {
+    background: #d5b173;
+    transform: translateY(-3px);
+}
+
+/* Mensajes */
+.error-msg {
+    margin-top: 10px;
+    color: #ffb3b3 !important;
+    font-weight: 600;
+}
+
+/* Enlaces */
+.olvido, .registro, .volver {
+    margin-top: 12px;
+}
+
+.olvido a,
+.registro a,
+.volver {
+    color: #ffe6d9;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.25s ease;
+}
+
+.olvido a:hover,
+.registro a:hover,
+.volver:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Suavidad Global */
+* {
+    transition: 0.3s ease;
+}

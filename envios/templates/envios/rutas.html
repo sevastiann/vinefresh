@@ -1,6 +1,8 @@
 {% extends 'core/base.html' %}
-
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/envios/rutas.css' %}">
+
 <div class="container mt-4">
     <h2>Ruta del Envío #{{ envio.id }}</h2>
 

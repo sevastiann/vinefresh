@@ -1,0 +1,91 @@
+/* ----------------------------------------------------
+   VINEFRESH – Lista de Soportes / PQRS
+   Estética premium vino + tabla elegante + serif
+-----------------------------------------------------*/
+
+/* TÍTULO PRINCIPAL */
+h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.3rem;
+    font-weight: 700;
+    color: #5e2129;
+    margin-bottom: 25px;
+    border-left: 5px solid #5e2129;
+    padding-left: 12px;
+}
+
+/* BOTÓN CREAR PQRS (solo cliente) */
+.btn-success {
+    background-color: #5e2129 !important;
+    border-color: #5e2129 !important;
+    font-family: "Poppins", sans-serif;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    transition: 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #42151f !important;
+    transform: translateY(-2px);
+}
+
+/* TABLA PREMIUM */
+.table {
+    font-family: "Poppins", sans-serif;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.07);
+}
+
+.table thead th,
+.table tr th {
+    background-color: #5e2129 !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #faf6f7;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #ffffff;
+}
+
+.table td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+/* HOVER FILA */
+.table tbody tr:hover {
+    background-color: #f1e5e8;
+    transition: all 0.25s ease;
+}
+
+/* ENLACES DE ACCIÓN */
+table a {
+    color: #5e2129;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: 0.25s ease;
+}
+
+table a:hover {
+    background-color: #5e2129;
+    color: #fff;
+    transform: translateX(3px);
+}
+
+/* SUAVIDAD GLOBAL */
+* {
+    transition: all 0.25s ease;
+}

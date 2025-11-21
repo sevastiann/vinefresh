@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/soporte/responder_soporte.css' %}">
 <div class="container mt-4">
     <h2>Responder Solicitud de Soporte #{{ soporte.id }}</h2>
 

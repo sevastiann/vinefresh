@@ -1,0 +1,77 @@
+/* ----------------------------------------
+   Tema elegante premium – VineFresh
+   Paleta: vino tinto (#5e2129), dorado suave,
+   negro carbón, blanco cálido.
+-----------------------------------------*/
+
+/* Tipografías */
+h2, h3, h4, .titulo-elegante {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    color: #5e2129;
+    letter-spacing: 0.5px;
+}
+
+/* Texto general */
+body, p, a, button, input, label {
+    font-family: "Poppins", sans-serif;
+    color: #333;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 900px;
+}
+
+/* Título principal */
+.container h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    border-left: 5px solid #5e2129;
+    padding-left: 12px;
+    color: #5e2129;
+    font-weight: 700;
+}
+
+/* Card elegante */
+.card {
+    border: none;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+/* Texto dentro de card */
+.card-body p {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.6;
+}
+
+/* Botón secundario (Volver) */
+.btn-secondary {
+    background-color: #5e2129 !important;
+    border-color: #5e2129 !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #43171e !important;
+    transform: translateY(-2px);
+}
+
+/* Suavización general */
+* {
+    transition: all 0.2s ease;
+}

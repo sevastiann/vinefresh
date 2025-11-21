@@ -1,0 +1,110 @@
+/* ----------------------------------------------------
+   VINEFRESH – Restablecer Contraseña
+   Estética glassmorphism + vino elegante
+-----------------------------------------------------*/
+
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #5e2129, #8b3a3f);
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Caja principal */
+.reset-box {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(14px);
+    padding: 40px;
+    border-radius: 20px;
+    width: 420px;
+    color: white;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+    animation: fadeIn 0.7s ease;
+}
+
+/* Título */
+.reset-title {
+    text-align: center;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2rem;
+    margin-bottom: 18px;
+}
+
+/* Inputs */
+.reset-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.25);
+    color: white;
+    outline: none;
+    font-size: 1rem;
+    transition: 0.25s ease;
+}
+
+.reset-input::placeholder {
+    color: #f0e7e7;
+}
+
+.reset-input:focus {
+    border-color: #fff;
+    background: rgba(255,255,255,0.35);
+}
+
+/* Botón */
+.reset-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #b08b57;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s ease;
+    margin-top: 5px;
+}
+
+.reset-btn:hover {
+    background: #d5b173;
+    transform: translateY(-3px);
+}
+
+/* Mensaje */
+.reset-alert {
+    background-color: rgba(255,255,255,0.25);
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Volver */
+.reset-back {
+    display: block;
+    margin-top: 18px;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    color: #ffe6d9;
+    transition: 0.25s ease;
+}
+
+.reset-back:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Animación */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

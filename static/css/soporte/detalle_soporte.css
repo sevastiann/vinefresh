@@ -1,0 +1,65 @@
+/* ----------------------------------------------------
+   VINEFRESH – Detalle de Soporte
+   Estética premium vino + serif + alertas elegantes
+-----------------------------------------------------*/
+
+/* TÍTULO PRINCIPAL */
+h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #5e2129;
+    margin-bottom: 20px;
+    border-left: 5px solid #5e2129;
+    padding-left: 12px;
+}
+
+/* TEXTOS DE DETALLE */
+p {
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    margin: 8px 0;
+    color: #333;
+}
+
+p strong {
+    color: #5e2129;
+    font-weight: 600;
+}
+
+/* MENSAJE DE ALERTA (RESPUESTA ADMIN) */
+.alert-info {
+    background: #eef6ff;
+    border-left: 5px solid #3b5fa3;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-top: 20px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.07);
+    font-family: "Poppins", sans-serif;
+}
+
+.alert-info strong {
+    color: #2c4580;
+    font-size: 1.05rem;
+}
+
+.alert-info p {
+    margin: 8px 0;
+}
+
+.alert-info small {
+    font-size: 0.85rem;
+    color: #47608f;
+}
+
+/* MENSAJE TEXTO MUTED */
+.text-muted {
+    font-family: "Poppins", sans-serif;
+    color: #8a7b7f !important;
+    font-size: 0.95rem;
+}
+
+/* SUAVIDAD GLOBAL */
+* {
+    transition: all 0.25s ease;
+}

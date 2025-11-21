@@ -1,0 +1,176 @@
+/* ============================================================
+   VINEFRESH – Formulario Agregar Vino
+   Estilo vino + gourmet + elegante
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+body {
+    background-color: #f7f2ed;
+    font-family: "Poppins", sans-serif;
+    color: #3b2f2f;
+}
+
+/* ============================================================
+   🔸 CONTENEDOR PRINCIPAL
+============================================================ */
+h2 {
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.5rem;
+    color: #5e2129;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+form {
+    max-width: 650px;
+    margin: 0 auto 40px;
+    background: #ffffff;
+    padding: 35px 45px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border: 1px solid #e6d6d3;
+}
+
+/* ============================================================
+   🔸 LABELS
+============================================================ */
+label {
+    display: block;
+    margin: 10px 0 4px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.2rem;
+    color: #5e2129;
+    font-weight: 600;
+}
+
+/* ============================================================
+   🔸 INPUTS + TEXTAREAS
+============================================================ */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #d7bfc2;
+    background: #fff8fb;
+    font-size: 1rem;
+    font-family: "Poppins", sans-serif;
+    margin-bottom: 15px;
+    transition: 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #5e2129;
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(94,33,41,0.25);
+}
+
+/* Textarea */
+textarea {
+    resize: none;
+    min-height: 110px;
+}
+
+/* ============================================================
+   🔸 INPUT FILE
+============================================================ */
+input[type="file"] {
+    background: #fffefd;
+    border: 1px solid #dcbebe;
+    cursor: pointer;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    background: #5e2129;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+    background: #381218;
+}
+
+/* ============================================================
+   🔸 CATEGORÍAS (DETAILS / SUMMARY)
+============================================================ */
+details {
+    background: #fcf7f6;
+    border: 1px solid #ead4d4;
+    padding: 12px 16px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    transition: 0.3s ease;
+}
+
+details:hover {
+    border-color: #b07e82;
+}
+
+summary {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.3rem;
+    color: #5e2129;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+select {
+    margin-top: 10px;
+}
+
+/* ============================================================
+   🔸 BOTONES
+============================================================ */
+.botones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.btn {
+    background: #5e2129;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.btn:hover {
+    background: #3b151c;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #b8a3a1 !important;
+}
+
+.btn-secondary:hover {
+    background: #7a6967 !important;
+}
+
+/* ============================================================
+   🔸 SUAVIDAD GLOBAL
+============================================================ */
+* {
+    transition: 0.25s ease;
+}
