@@ -454,7 +454,7 @@ def registro_exitoso_view(request):
     return render(request, 'usuarios/registro_exitoso.html')
 
 def configuracion_perfil(request):
-
+    
     # -------------------------
     # 1️⃣ OBTENER USUARIO LOGUEADO DESDE LA SESIÓN
     # -------------------------
@@ -465,6 +465,11 @@ def configuracion_perfil(request):
 
     usuario = Usuario.objects.get(id=user_id)
 
+
+    # 🔥 LIMPIAR mensajes pendientes que vienen de otras vistas
+    for _ in messages.get_messages(request):
+        pass
+    
     # -------------------------
     # 2️⃣ SI VIENE UN POST → EDITAR PERFIL
     # -------------------------

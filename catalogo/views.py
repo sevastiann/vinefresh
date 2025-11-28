@@ -55,21 +55,42 @@ def agregar_producto(request):
 
 def agregar_combo(request):
     seccion = 'combos'
+
     if request.method == 'POST':
-        categorias = request.POST.getlist('categoria')
+
+        categorias = request.POST.getlist('categoria')  # si decides usar categorías futuras
+
+        festividades = request.POST.getlist("fest")
+        premium = request.POST.getlist("prem")
+        regalo = request.POST.getlist("reg")
+
         combo = Combo(
             nombre=request.POST.get('nombre'),
             precio=request.POST.get('precio'),
             descripcion=request.POST.get('descripcion', ''),
+
+            # 🔥 IMPORTANTÍSIMO
             categoria=", ".join(categorias),
+            subcategoria=request.POST.get('subcategoria', ''),
+
+            unidades=request.POST.get('unidades', 1),
+
+            festividad=", ".join(festividades),
+            premium=", ".join(premium),
+            regalo=", ".join(regalo),
+
             activo=request.POST.get('activo') == 'on'
         )
+
         if request.FILES.get('imagen'):
             combo.imagen = request.FILES.get('imagen')
+
         combo.save()
-        return HttpResponseRedirect(reverse('catalogo:inventario') + f'?seccion={seccion}')
-    
-    return render(request, 'catalogo/agregar_combo.html', {'seccion': seccion})
+
+        return HttpResponseRedirect(reverse('catalogo:inventario') + "?seccion=combos")
+
+    return render(request, 'catalogo/agregar_combo.html', {'seccion': 'combos'})
+
 
 # --------------------------
 # EDITAR PRODUCTO/COMBO
@@ -123,35 +144,57 @@ def editar_producto(request, producto_id):
 def editar_combo(request, combo_id):
     combo = get_object_or_404(Combo, id=combo_id)
 
-    # Listas para checkboxes
+    # Listas de opciones para los checkboxes
     festividades = ["Navidad", "Año Nuevo", "San Valentín", "Día del Padre", "Día de la Madre"]
-    premium = ["Gold", "Platinum", "Black Label"]
-    regalo = ["Amistad", "Cumpleaños", "Pareja", "Corporativo"]
+    premium = ["premium_gold", "premium_platinum", "premium_black_label"]
+    regalo = ["regalo_amistad", "regalo_cumpleaños", "regalo_pareja", "regalo_corporativo"]
 
-    if request.method == 'POST':
-        categorias = request.POST.getlist('categoria')
-        combo.nombre = request.POST.get('nombre')
-        combo.precio = request.POST.get('precio')
-        combo.descripcion = request.POST.get('descripcion', '')
-        combo.categoria = ", ".join(categorias)
-        combo.unidades = request.POST.get('unidades', 1)
+    if request.method == "POST":
 
-        if request.FILES.get('imagen'):
-            combo.imagen = request.FILES.get('imagen')
+        combo.nombre = request.POST.get("nombre")
+        combo.precio = request.POST.get("precio")
+        combo.descripcion = request.POST.get("descripcion", "")
 
-        combo.activo = request.POST.get('activo') == 'on'
+        # Festividades seleccionadas
+        fest_list = request.POST.getlist("fest")
+        combo.festividad = ", ".join(fest_list) if fest_list else ""
+
+        # Premium seleccionadas
+        prem_list = request.POST.getlist("prem")
+        combo.premium = ", ".join(prem_list) if prem_list else ""
+
+        # Regalos seleccionados
+        reg_list = request.POST.getlist("reg")
+        combo.regalo = ", ".join(reg_list) if reg_list else ""
+
+        # Actualizar imagen si se sube una nueva
+        imagen_nueva = request.FILES.get("imagen")
+        if imagen_nueva:
+            combo.imagen = imagen_nueva
+
+        # Activación / desactivación del combo
+        combo.activo = request.POST.get("activo") == "on"
+
         combo.save()
-        return HttpResponseRedirect(reverse('catalogo:inventario') + '?seccion=combos')
 
+        from django.urls import reverse
+        return redirect(f"{reverse('catalogo:inventario')}?seccion=combos")
+
+    # Pasar las opciones y estado actual para marcar los checkboxes
     context = {
-        'combo': combo,
-        'seccion': 'combos',
-        'festividades': festividades,
-        'premium': [f"premium_{p.lower()}" for p in premium],
-        'regalo': [f"regalo_{r.lower()}" for r in regalo],
+        "combo": combo,
+        "seccion": "combos",
+        "festividades": festividades,
+        "premium": premium,
+        "regalo": regalo,
+
+        "fest_selected": combo.festividad.split(", ") if combo.festividad else [],
+        "premium_selected": combo.premium.split(", ") if combo.premium else [],
+        "reg_selected": combo.regalo.split(", ") if combo.regalo else [],
     }
 
-    return render(request, 'catalogo/editar_combo.html', context)
+    return render(request, "catalogo/editar_combo.html", context)
+
 
 
 # --------------------------
@@ -162,8 +205,12 @@ def eliminar_producto(request, producto_id):
     return HttpResponseRedirect(reverse('catalogo:inventario') + '?seccion=vinos')
 
 def eliminar_combo(request, combo_id):
-    get_object_or_404(Combo, id=combo_id).delete()
-    return HttpResponseRedirect(reverse('catalogo:inventario') + '?seccion=combos')
+    combo = get_object_or_404(Combo, id=combo_id)
+    combo.activo = False
+    combo.save()
+
+    return HttpResponseRedirect(reverse("catalogo:inventario") + "?seccion=combos")
+
 
 # --------------------------
 # DETALLE PRODUCTO/COMBO
@@ -186,7 +233,7 @@ from .models import Producto, Combo
 def inventario(request):
     seccion = request.GET.get('seccion', 'vinos')
     if seccion == 'combos':
-        productos = Combo.objects.all()
+        productos = Combo.objects.filter(activo=True)
     else:
         productos = Producto.objects.all()
     return render(request, 'catalogo/inventario.html', {
@@ -198,15 +245,19 @@ def inventario(request):
 # Vista de productos (Cliente)
 # --------------------------
 def productos(request):
-    seccion = request.GET.get('seccion', 'vinos')
-    if seccion == 'combos':
-        productos = Combo.objects.filter(activo=True)
+    seccion = request.GET.get("seccion", "vinos")
+
+    if seccion == "combos":
+        productos_qs = Combo.objects.filter(activo=True)
     else:
-        productos = Producto.objects.filter(activo=True)
-    return render(request, 'catalogo/productos.html', {
-        'productos': productos,
-        'seccion': seccion,
+        # No reasignes seccion, ya viene como "vinos" por defecto
+        productos_qs = Producto.objects.filter(activo=True)
+
+    return render(request, "catalogo/productos.html", {
+        "productos": productos_qs,
+        "seccion": seccion,
     })
+
 
 # --------------------------
 # Detalle Producto/Combo
@@ -363,5 +414,86 @@ def filtrar_inventarios(request):
         "seccion": "vinos",
     })
 
+def filtrar_combos(request):
+    combos = Combo.objects.filter(activo=True)
 
+    # BUSCAR
+    buscar = request.GET.get("buscar", "").strip()
+    if buscar:
+        combos = combos.filter(nombre__icontains=buscar)
 
+    # PRECIO
+    precio_min = request.GET.get("precio_min")
+    precio_max = request.GET.get("precio_max")
+
+    if precio_min:
+        combos = combos.filter(precio__gte=precio_min)
+    if precio_max:
+        combos = combos.filter(precio__lte=precio_max)
+
+    # FESTIVIDAD
+    fest = request.GET.get("fest")
+    if fest:
+        combos = combos.filter(festividad__in=fest.split(","))
+
+    # PREMIUM
+    prem = request.GET.get("prem")
+    if prem:
+        combos = combos.filter(premium__in=prem.split(","))
+
+    # REGALO
+    reg = request.GET.get("reg")
+    if reg:
+        combos = combos.filter(regalo__in=reg.split(","))
+
+    # RETORNAR PARCIAL
+    return render(request, "catalogo/combos_grid.html", {
+        "combos": combos
+    })
+
+def filtrar_combos_cliente(request):
+    combos = Combo.objects.filter(activo=True)
+
+    # Buscar
+    buscar = request.GET.get("buscar")
+    if buscar:
+        combos = combos.filter(nombre__icontains=buscar)
+
+    # Precio
+    pmin = request.GET.get("precio_min")
+    pmax = request.GET.get("precio_max")
+    if pmin:
+        combos = combos.filter(precio__gte=pmin)
+    if pmax:
+        combos = combos.filter(precio__lte=pmax)
+
+    # Filtros
+    for campo in ["festividad", "premium", "regalo"]:
+        valores = request.GET.get(campo[:4])  # fest, prem, reg
+        if valores:
+            combos = combos.filter(**{f"{campo}__in": valores.split(",")})
+
+    return render(request, "catalogo/grids/combos_cliente_grid.html", {
+        "combos": combos
+    })
+
+def agregar_combo_al_carrito(request, combo_id):
+    combo = get_object_or_404(Combo, id=combo_id)
+    usuario = get_current_usuario(request)
+
+    if usuario:
+        carrito_obj, creado = CarritoCombo.objects.get_or_create(
+            usuario=usuario,
+            combo=combo,
+            defaults={"cantidad": 1}
+        )
+        if not creado:
+            carrito_obj.cantidad += 1
+            carrito_obj.save()
+    else:
+        carrito_sesion = request.session.get("carrito_combos", {})
+        cid = str(combo.id)
+        carrito_sesion[cid] = carrito_sesion.get(cid, 0) + 1
+        request.session["carrito_combos"] = carrito_sesion
+
+    return redirect("ventas:carrito")

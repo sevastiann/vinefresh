@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/catalogo/editar_combo.css' %}">
+<link rel="stylesheet" href="{% static 'css/catalogo/agregar_combo.css' %}">
 
 <div class="form-container">
     <h2>Editar Combo</h2>
 
-    <form id="form-combos" method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
         <!-- Nombre -->
@@ -28,77 +28,87 @@
             <textarea name="descripcion" rows="3">{{ combo.descripcion }}</textarea>
         </div>
 
-        <!-- Imagen -->
+        <!-- Imagen Actual -->
         <div class="form-group">
-            <label>Foto del Combo (opcional):</label>
-            <input type="file" name="imagen" accept="image/*">
+            <label>Imagen actual:</label>
             {% if combo.imagen %}
-                <p>Imagen actual: <img src="{{ combo.imagen.url }}" width="100"></p>
+                <img src="{{ combo.imagen.url }}" style="width: 130px; border-radius: 10px; display:block; margin-bottom:10px;">
+            {% else %}
+                <p>No hay imagen cargada.</p>
             {% endif %}
         </div>
 
+        <!-- Subir nueva imagen -->
+        <div class="form-group">
+            <label>Subir nueva imagen (opcional):</label>
+            <input type="file" name="imagen" accept="image/*">
+        </div>
+
+        <!-- ACTIVAR / DESACTIVAR -->
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="activo" {% if combo.activo %}checked{% endif %}>
+                Combo activo
+            </label>
+        </div>
+
         <!-- Categorías -->
-        <div class="form-group">
-            <label>Categorías:</label>
+        <h3>Categorías</h3>
 
-            <!-- Festividad -->
-            <details open>
-                <summary>Festividad</summary>
-                <ul class="lista-filtro">
-                    {% for fest in festividades %}
-                        <li>
-                            <input type="checkbox" name="categoria" value="{{ fest }}" id="fest{{ forloop.counter }}"
-                                   {% if fest in combo.categoria %}checked{% endif %}>
-                            <label for="fest{{ forloop.counter }}">{{ fest }}</label>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </details>
+        <!-- FESTIVIDAD -->
+        <details open>
+            <summary>Festividad</summary>
+            <ul class="lista-filtro">
+                {% for f in festividades %}
+                <li>
+                    <input type="checkbox" 
+                           name="fest" 
+                           value="{{ f }}"
+                           {% if f in fest_selected %}checked{% endif %}>
+                    <label>{{ f }}</label>
+                </li>
+                {% endfor %}
+            </ul>
+        </details>
 
-            <!-- Premium -->
-            <details>
-                <summary>Premium</summary>
-                <ul class="lista-filtro">
-                    {% for p in premium %}
-                        <li>
-                            <input type="checkbox" name="categoria" value="{{ p }}" id="prem{{ forloop.counter }}"
-                                   {% if p in combo.categoria %}checked{% endif %}>
-                            <label for="prem{{ forloop.counter }}">{{ p|title }}</label>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </details>
+        <!-- PREMIUM -->
+        <details>
+            <summary>Premium</summary>
+            <ul class="lista-filtro">
+                {% for p in premium %}
+                <li>
+                    <input type="checkbox" 
+                           name="prem" 
+                           value="{{ p }}"
+                           {% if p in premium_selected %}checked{% endif %}>
+                    <label>{{ p|title }}</label>
+                </li>
+                {% endfor %}
+            </ul>
+        </details>
 
-            <!-- Regalo -->
-            <details>
-                <summary>Regalo</summary>
-                <ul class="lista-filtro">
-                    {% for r in regalo %}
-                        <li>
-                            <input type="checkbox" name="categoria" value="{{ r }}" id="reg{{ forloop.counter }}"
-                                   {% if r in combo.categoria %}checked{% endif %}>
-                            <label for="reg{{ forloop.counter }}">{{ r|title }}</label>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </details>
-        </div>
-
-
-
-        <!-- Activo -->
-        <div class="form-group">
-            <label>Activo:</label>
-            <input type="checkbox" name="activo" {% if combo.activo %}checked{% endif %}>
-        </div>
+        <!-- REGALO -->
+        <details>
+            <summary>Regalo</summary>
+            <ul class="lista-filtro">
+                {% for r in regalo %}
+                <li>
+                    <input type="checkbox" 
+                           name="reg" 
+                           value="{{ r }}"
+                           {% if r in reg_selected %}checked{% endif %}>
+                    <label>{{ r|title }}</label>
+                </li>
+                {% endfor %}
+            </ul>
+        </details>
 
         <!-- Botones -->
         <div class="form-group botones">
-            <button type="submit" class="btn">Guardar cambios</button>
+            <button type="submit" class="btn">Guardar Cambios</button>
             <a href="{% url 'catalogo:inventario' %}?seccion=combos" class="btn btn-secondary">Cancelar</a>
         </div>
     </form>
 </div>
-
 
 {% endblock %}

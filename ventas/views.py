@@ -1,24 +1,32 @@
-# ventas/views.py (VERSIÓN CORREGIDA)
+# ventas/views.py
 from datetime import date
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.db import transaction
 
-# Modelos de esta app y relacionados
-from .models import CarritoCompra, Pedido, PedidoItem, Factura, Cupon
-from catalogo.models import Producto
+# Modelos
+from .models import (
+    CarritoCompra,
+    CarritoCombo,
+    Pedido,
+    PedidoItem,
+    PedidoComboItem,
+    Factura,
+    Cupon
+)
+from catalogo.models import Producto, Combo
 from usuarios.models import Usuario
 
-# Librería para PDF
+# PDF
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 
 
-# ---------------------------
-# Helper: obtener usuario actual (por sesión)
-# ---------------------------
+# ============================================================
+# 🔑 Helper: Usuario actual desde la sesión
+# ============================================================
 def get_current_usuario(request):
     usuario_id = request.session.get("usuario_id")
     if not usuario_id:
@@ -26,8 +34,9 @@ def get_current_usuario(request):
     return Usuario.objects.filter(id=usuario_id).first()
 
 
+
 # ============================================================
-# 🛒 VER CARRITO EN HTML
+# 🛒 VER CARRITO
 # ============================================================
 def carrito(request):
     carrito_items = []
@@ -36,100 +45,150 @@ def carrito(request):
     usuario = get_current_usuario(request)
 
     if usuario:
-        # Carrito desde DB para usuarios logueados
-        carrito = CarritoCompra.objects.filter(usuario=usuario)
-        for item in carrito:
+        # ---------- Productos ----------
+        carrito_productos = CarritoCompra.objects.filter(usuario=usuario)
+        for item in carrito_productos:
             subtotal = item.producto.precio * item.cantidad
             carrito_items.append({
-                "id": item.id,
+                "id": f"prod-{item.id}",
                 "producto": item.producto,
                 "cantidad": item.cantidad,
-                "subtotal": subtotal
+                "subtotal": subtotal,
+                "es_combo": False
             })
             total += subtotal
+
+        # ---------- Combos ----------
+        carrito_combos = CarritoCombo.objects.filter(usuario=usuario)
+        for item in carrito_combos:
+            subtotal = item.combo.precio * item.cantidad
+            carrito_items.append({
+                "id": f"combo-{item.id}",
+                "producto": item.combo,
+                "cantidad": item.cantidad,
+                "subtotal": subtotal,
+                "es_combo": True
+            })
+            total += subtotal
+
     else:
-        # Carrito desde sesión para usuarios no logueados
+        # ---------- Productos en sesión ----------
         carrito_sesion = request.session.get("carrito", {})
         for pid, cantidad in carrito_sesion.items():
             producto = get_object_or_404(Producto, id=pid)
             subtotal = producto.precio * cantidad
             carrito_items.append({
-                "id": pid,
+                "id": f"prod-{pid}",
                 "producto": producto,
                 "cantidad": cantidad,
-                "subtotal": subtotal
+                "subtotal": subtotal,
+                "es_combo": False
             })
             total += subtotal
 
-    context = {
-        "carrito": carrito_items,
-        "total": total,
-    }
+        # ---------- Combos en sesión ----------
+        carrito_sesion_combos = request.session.get("carrito_combos", {})
+        for cid, cantidad in carrito_sesion_combos.items():
+            combo = get_object_or_404(Combo, id=cid)
+            subtotal = combo.precio * cantidad
+            carrito_items.append({
+                "id": f"combo-{cid}",
+                "producto": combo,
+                "cantidad": cantidad,
+                "subtotal": subtotal,
+                "es_combo": True
+            })
+            total += subtotal
 
-    return render(request, "ventas/carrito.html", context)
+    return render(request, "ventas/carrito.html", {
+        "carrito": carrito_items,
+        "total": total
+    })
+
 
 
 # ============================================================
-# 🛒 AGREGAR PRODUCTO AL CARRITO
+# 🛒 AGREGAR PRODUCTO
 # ============================================================
 def agregar_al_carrito(request, producto_id):
-    producto = get_object_or_404(Producto, id=producto_id)
     usuario = get_current_usuario(request)
+    producto = get_object_or_404(Producto, id=producto_id)
 
     if usuario:
-        # Usuario logueado → carrito en DB (evita duplicados por unique_together)
-        carrito_obj, creado = CarritoCompra.objects.get_or_create(
+        obj, creado = CarritoCompra.objects.get_or_create(
             usuario=usuario,
             producto=producto,
             defaults={"cantidad": 1}
         )
         if not creado:
-            carrito_obj.cantidad += 1
-            carrito_obj.save()
+            obj.cantidad += 1
+            obj.save()
     else:
-        # Usuario anónimo → carrito en sesión
-        carrito_sesion = request.session.get("carrito", {})
+        carrito = request.session.get("carrito", {})
         pid = str(producto.id)
-        carrito_sesion[pid] = carrito_sesion.get(pid, 0) + 1
-        request.session["carrito"] = carrito_sesion
+        carrito[pid] = carrito.get(pid, 0) + 1
+        request.session["carrito"] = carrito
+
+    return redirect("ventas:carrito")
+
+# ============================================================
+# 🛒 AGREGAR COMBO AL CARRITO
+# ============================================================
+def agregar_combo_al_carrito(request, combo_id):
+    combo = get_object_or_404(Combo, id=combo_id)
+    usuario = get_current_usuario(request)
+
+    if usuario:
+        item, creado = CarritoCombo.objects.get_or_create(
+            usuario=usuario,
+            combo=combo,
+            defaults={"cantidad": 1}
+        )
+        if not creado:
+            item.cantidad += 1
+            item.save()
+    else:
+        carrito_sesion = request.session.get("carrito_combos", {})
+        cid = str(combo_id)
+        carrito_sesion[cid] = carrito_sesion.get(cid, 0) + 1
+        request.session["carrito_combos"] = carrito_sesion
 
     return redirect("ventas:carrito")
 
 
 # ============================================================
-# 🛒 ACTUALIZAR CANTIDAD
+# 🛒 ACTUALIZAR CANTIDAD PRODUCTO
 # ============================================================
 def actualizar_cantidad(request, item_id):
     if request.method != "POST":
         return JsonResponse({"error": "Método no permitido"}, status=405)
 
-    nueva_cantidad = request.POST.get("cantidad", None)
-    if nueva_cantidad is None:
-        return JsonResponse({"error": "No se recibió cantidad"}, status=400)
+    cantidad = request.POST.get("cantidad")
 
     try:
-        nueva_cantidad = int(nueva_cantidad)
-        if nueva_cantidad <= 0:
-            return JsonResponse({"error": "La cantidad debe ser mayor que 0"}, status=400)
-    except ValueError:
-        return JsonResponse({"error": "La cantidad debe ser un número válido"}, status=400)
+        cantidad = int(cantidad)
+        if cantidad <= 0:
+            return JsonResponse({"error": "Cantidad inválida"}, status=400)
+    except:
+        return JsonResponse({"error": "Cantidad inválida"}, status=400)
 
     usuario = get_current_usuario(request)
-    if usuario:
-        carrito_item = get_object_or_404(CarritoCompra, id=item_id, usuario=usuario)
-        carrito_item.cantidad = nueva_cantidad
-        carrito_item.save()
-    else:
-        # Usuario anónimo → actualizar cantidad en sesión
-        carrito_sesion = request.session.get("carrito", {})
-        pid = str(item_id)
-        if pid in carrito_sesion:
-            carrito_sesion[pid] = nueva_cantidad
-            request.session["carrito"] = carrito_sesion
-        else:
-            return JsonResponse({"error": "Producto no encontrado en el carrito"}, status=404)
 
-    return JsonResponse({"mensaje": "Cantidad actualizada", "item_id": item_id, "cantidad_total": nueva_cantidad})
+    if usuario:
+        item = get_object_or_404(CarritoCompra, id=item_id, usuario=usuario)
+        item.cantidad = cantidad
+        item.save()
+    else:
+        carrito = request.session.get("carrito", {})
+        pid = str(item_id)
+        if pid in carrito:
+            carrito[pid] = cantidad
+            request.session["carrito"] = carrito
+        else:
+            return JsonResponse({"error": "No encontrado"}, status=404)
+
+    return JsonResponse({"mensaje": "OK"})
+
 
 
 # ============================================================
@@ -140,147 +199,151 @@ def eliminar_del_carrito(request, item_id):
         return JsonResponse({"error": "Método no permitido"}, status=405)
 
     usuario = get_current_usuario(request)
-    if usuario:
-        carrito_item = get_object_or_404(CarritoCompra, id=item_id, usuario=usuario)
-        carrito_item.delete()
-    else:
-        carrito_sesion = request.session.get("carrito", {})
-        pid = str(item_id)
-        if pid in carrito_sesion:
-            carrito_sesion.pop(pid)
-            request.session["carrito"] = carrito_sesion
+
+    # Determinar tipo
+    if str(item_id).startswith("prod-"):
+        real_id = item_id.replace("prod-", "")
+
+        if usuario:
+            item = get_object_or_404(CarritoCompra, id=real_id, usuario=usuario)
+            item.delete()
         else:
-            return JsonResponse({"error": "Producto no encontrado en el carrito"}, status=404)
+            carrito = request.session.get("carrito", {})
+            if real_id in carrito:
+                carrito.pop(real_id)
+                request.session["carrito"] = carrito
 
-    return JsonResponse({"mensaje": "Producto eliminado del carrito", "item_id": item_id})
+    elif str(item_id).startswith("combo-"):
+        real_id = item_id.replace("combo-", "")
 
+        if usuario:
+            item = get_object_or_404(CarritoCombo, id=real_id, usuario=usuario)
+            item.delete()
+        else:
+            carrito = request.session.get("carrito_combos", {})
+            if real_id in carrito:
+                carrito.pop(real_id)
+                request.session["carrito_combos"] = carrito
+
+    else:
+        return JsonResponse({"error": "ID inválido"}, status=400)
+
+    return JsonResponse({"mensaje": "OK"})
 
 # ============================================================
-# 📦 CREAR PEDIDO (FUNCIONAL Y LIMPIO)
+# 📦 CREAR PEDIDO (PRODUCTOS + COMBOS)
 # ============================================================
 def pedido_crear(request):
     usuario = get_current_usuario(request)
 
     if not usuario:
-        messages.error(request, "Debes iniciar sesión para realizar un pedido.")
+        messages.error(request, "Debes iniciar sesión.")
         return redirect("ventas:carrito")
 
-    carrito = CarritoCompra.objects.filter(usuario=usuario)
+    carrito_prod = CarritoCompra.objects.filter(usuario=usuario)
+    carrito_combo = CarritoCombo.objects.filter(usuario=usuario)
 
-    if not carrito.exists():
-        messages.error(request, "Tu carrito está vacío.")
+    if not carrito_prod.exists() and not carrito_combo.exists():
+        messages.error(request, "El carrito está vacío.")
         return redirect("ventas:carrito")
 
-    # GET → Mostrar formulario de compra
+    # GET → mostrar resumen
     if request.method == "GET":
-        total_carrito = sum(item.producto.precio * item.cantidad for item in carrito)
+        total = sum(i.producto.precio * i.cantidad for i in carrito_prod)
+        total += sum(i.combo.precio * i.cantidad for i in carrito_combo)
+
         return render(request, "ventas/comprar.html", {
-            "carrito_items": carrito,
-            "total_carrito": total_carrito,
+            "carrito_items": carrito_prod,
+            "carrito_combos": carrito_combo,
+            "total_carrito": total
+        })
+
+    # POST → crear pedido
+    try:
+        with transaction.atomic():
+            pedido = Pedido.objects.create(usuario=usuario)
+
+            # Productos
+            for item in carrito_prod:
+                PedidoItem.objects.create(
+                    pedido=pedido,
+                    producto=item.producto,
+                    cantidad=item.cantidad,
+                    precio=item.producto.precio
+                )
+
+            # Combos
+            for item in carrito_combo:
+                PedidoComboItem.objects.create(
+                    pedido=pedido,
+                    combo=item.combo,
+                    cantidad=item.cantidad,
+                    precio=item.combo.precio
+                )
+
+            pedido.estado = "Pendiente"
+            pedido.save()
+
+            Factura.objects.create(
+                pedido=pedido,
+                total_pagado=pedido.total()
+            )
+
+            carrito_prod.delete()
+            carrito_combo.delete()
+
+        # 💥 ESTE ERA EL RETURN QUE FALTABA 💥
+        return render(request, "ventas/pedido_confirmado.html", {
+            "pedido": pedido,
             "user": usuario
         })
 
-    # POST → Procesar pedido
-    if request.method == "POST":
-        metodo_pago = request.POST.get("metodo_pago")
-        codigo_pago = request.POST.get("codigo_pago", "")
 
-        if not metodo_pago:
-            messages.error(request, "Debes seleccionar un método de pago.")
-            return redirect("ventas:pedido_crear")  # nombre de la vista
-
-        try:
-            with transaction.atomic():
-                # Crear pedido
-                pedido = Pedido.objects.create(usuario=usuario)
-
-                # Crear items del pedido
-                for item in carrito:
-                    PedidoItem.objects.create(
-                        pedido=pedido,
-                        producto=item.producto,
-                        cantidad=item.cantidad,
-                        precio=item.producto.precio
-                    )
-
-                # Marcar pedido como pagado si hubo método de pago (simple lógica)
-                # Aquí podrías integrar con pasarela real y verificar el pago
-                pedido.estado = "Pagado"
-                pedido.save()
-
-                # Crear factura asociada
-                factura_total = pedido.total()
-                Factura.objects.create(
-                    pedido=pedido,
-                    metodo_pago=metodo_pago,
-                    fecha=date.today(),
-                    total_pagado=factura_total
-                )
-
-                # Vaciar carrito del usuario
-                carrito.delete()
-
-                messages.success(request, "✅ Pedido realizado correctamente.")
-                return redirect("ventas:pago_exitoso")
-
-        except Exception as e:
-            # Registramos el error (en producción sería logger)
-            messages.error(request, "Ocurrió un error al procesar el pedido.")
-            return redirect("ventas:carrito")
+    except Exception as e:
+        print("ERROR PEDIDO:", e)
+        messages.error(request, "Ocurrió un error procesando el pedido.")
+        return redirect("ventas:carrito")
 
 
-# Páginas de resultado
-def pago_exitoso(request):
-    return render(request, "ventas/pago_exitoso.html")
-
-
-def pago_rechazado(request):
-    return render(request, "ventas/pago_rechazado.html")
 
 
 # ============================================================
-# 🧾 LISTADO DE PEDIDOS - Cliente
+# ✔ PÁGINAS ESTADO
+# ============================================================
+
+
+
+
+# ============================================================
+# 🧾 LISTA DE PEDIDOS
 # ============================================================
 def pedidos_cliente(request):
     usuario = get_current_usuario(request)
     if not usuario:
-        messages.error(request, "Debes iniciar sesión para ver tus pedidos.")
-        return redirect("usuarios:login")  # o donde tengas la vista de login
+        messages.error(request, "Debes iniciar sesión.")
+        return redirect("usuarios:login")
 
     pedidos = Pedido.objects.filter(usuario=usuario).order_by("-id")
     return render(request, "ventas/pedidos.html", {"pedidos": pedidos})
 
 
-# ============================================================
-# 🧾 GESTIÓN DE PEDIDOS - Admin
-# ============================================================
-from usuarios.utils import get_current_usuario
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from ventas.models import Pedido
 
-
-# 📌 Página donde el admin ve TODOS los pedidos
+# ============================================================
+# 🛠 ADMIN - GESTIÓN DE PEDIDOS
+# ============================================================
 def admin_pedidos(request):
     usuario = get_current_usuario(request)
-
-    # Validar que sea admin
     if not usuario or usuario.rol != "admin":
         messages.error(request, "Acceso denegado.")
         return redirect("core:home")
 
     pedidos = Pedido.objects.all().order_by("-id")
-
-    return render(request, "ventas/gestion_pedidos.html", {
-        "pedidos": pedidos
-    })
+    return render(request, "ventas/gestion_pedidos.html", {"pedidos": pedidos})
 
 
-# 📌 Actualizar estado del pedido
+
 def actualizar_estado(request, pedido_id):
     usuario = get_current_usuario(request)
-
-    # Validar rol admin
     if not usuario or usuario.rol != "admin":
         messages.error(request, "Acceso denegado.")
         return redirect("core:home")
@@ -288,87 +351,72 @@ def actualizar_estado(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
 
     if request.method == "POST":
-        nuevo_estado = request.POST.get("estado")
-
-        if nuevo_estado:
-            pedido.estado = nuevo_estado
+        estado = request.POST.get("estado")
+        if estado:
+            pedido.estado = estado
             pedido.save()
-            messages.success(request, f"El estado del pedido #{pedido.id} ha sido actualizado a {nuevo_estado}.")
+            messages.success(request, "Estado actualizado.")
 
     return redirect("ventas:gestion_pedidos")
 
 
 
 # ============================================================
-# 🧾 FACTURA (PDF)
+# 🧾 FACTURA PDF (PRODUCTOS + COMBOS)
 # ============================================================
 def factura_pdf(request, pedido_id):
     usuario = get_current_usuario(request)
     pedido = get_object_or_404(Pedido, id=pedido_id)
 
-    # Validar que el usuario puede ver esa factura (propietario o admin)
-    if not usuario:
-        messages.error(request, "Debes iniciar sesión para ver la factura.")
-        return redirect("usuarios:login")
-
-    if pedido.usuario != usuario and usuario.rol != "admin":
-        messages.error(request, "No tienes permiso para ver esta factura.")
+    if not usuario or (usuario != pedido.usuario and usuario.rol != "admin"):
+        messages.error(request, "Acceso denegado.")
         return redirect("core:home")
 
-    # Preparar el response como PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="Factura_{pedido.id}.pdf"'
 
-    # Crear PDF
     p = canvas.Canvas(response, pagesize=letter)
     width, height = letter
 
     # Título
     p.setFont("Helvetica-Bold", 16)
-    p.drawString(1 * inch, height - 1 * inch, f"Factura #{pedido.id}")
+    p.drawString(70, height - 60, f"Factura #{pedido.id}")
 
-    # Datos del usuario
     p.setFont("Helvetica", 12)
-    nombre_usuario = pedido.usuario.nombre_usuario if hasattr(pedido.usuario, "nombre_usuario") else str(pedido.usuario)
-    p.drawString(1 * inch, height - 1.4 * inch, f"Cliente: {nombre_usuario}")
-    p.drawString(1 * inch, height - 1.7 * inch, f"Fecha: {pedido.fecha_pedido.strftime('%Y-%m-%d %H:%M')}")
+    p.drawString(70, height - 90, f"Cliente: {pedido.usuario.nombre_usuario}")
+    p.drawString(70, height - 110, f"Fecha: {pedido.fecha_pedido.strftime('%Y-%m-%d %H:%M')}")
 
-    # Línea separadora
-    p.line(1 * inch, height - 1.9 * inch, width - 1 * inch, height - 1.9 * inch)
+    y = height - 150
 
-    # Encabezado
-    y = height - 2.2 * inch
     p.setFont("Helvetica-Bold", 12)
-    p.drawString(1 * inch, y, "Producto")
-    p.drawString(3.5 * inch, y, "Cantidad")
-    p.drawString(5 * inch, y, "Precio")
-    p.drawString(6.2 * inch, y, "Subtotal")
+    p.drawString(70, y, "Descripción")
+    p.drawString(300, y, "Cantidad")
+    p.drawString(380, y, "Precio")
+    p.drawString(460, y, "Subtotal")
 
-    y -= 0.3 * inch
+    y -= 30
     p.setFont("Helvetica", 12)
 
-    # Items del pedido
+    # Productos
     for item in pedido.items.all():
-        # nombre, cantidad, precio individual y subtotal
-        p.drawString(1 * inch, y, str(item.producto.nombre)[:30])
-        p.drawString(3.5 * inch, y, str(item.cantidad))
-        p.drawString(5 * inch, y, f"${item.precio:.2f}")
-        p.drawString(6.2 * inch, y, f"${item.subtotal():.2f}")
+        p.drawString(70, y, item.producto.nombre[:30])
+        p.drawString(300, y, str(item.cantidad))
+        p.drawString(380, y, f"${item.precio}")
+        p.drawString(460, y, f"${item.subtotal()}")
+        y -= 20
 
-        y -= 0.25 * inch
+    # Combos
+    for item in pedido.items_combos.all():
+        p.drawString(70, y, f"{item.combo.nombre} (Combo)")
+        p.drawString(300, y, str(item.cantidad))
+        p.drawString(380, y, f"${item.precio}")
+        p.drawString(460, y, f"${item.subtotal()}")
+        y -= 20
 
-        # Evitar que el texto salga de la página
-        if y < 1 * inch:
-            p.showPage()
-            y = height - 1 * inch
-
-    # Total final
-    y -= 0.2 * inch
+    y -= 20
     p.setFont("Helvetica-Bold", 13)
-    p.drawString(1 * inch, y, f"Total a pagar: ${pedido.total():.2f}")
+    p.drawString(70, y, f"Total: ${pedido.total()}")
 
-    # Finalizar
     p.showPage()
     p.save()
-
     return response

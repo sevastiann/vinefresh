@@ -152,7 +152,7 @@
             </div>
 
             <!-- 🔸 Grid de productos -->
-             <div id="productos-container" data-filtrar-url="{% url 'catalogo:filtrar_inventarios' %}">
+             <div id="productos-container" data-filtrar-url="{% if seccion == 'combos' %}{% url 'catalogo:filtrar_combos' %}{% else %}{% url 'catalogo:filtrar_inventarios' %}{% endif %}">
 
                 <div class="productos-grid">
                 {% for item in productos %}
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(`${url}?${params.toString()}`)
             .then(response => response.text())
             .then(html => {
-                document.querySelector("#productos-container").innerHTML = html;
+                document.querySelector("#productos-grid").innerHTML = html;
             })
             .catch(err => console.error("Error en filtrado:", err));
     }
@@ -277,20 +277,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Modal JS //
 function abrirModal(id) {
     const modal = document.getElementById(id);
-    if(modal) modal.style.display = 'block';
+    if (modal) modal.style.display = 'flex';  // AHORA SÍ CENTRA
 }
 
 function cerrarModal(id) {
     const modal = document.getElementById(id);
-    if(modal) modal.style.display = 'none';
+    if (modal) modal.style.display = 'none';
 }
 
-// Cerrar modal al hacer click fuera
 window.addEventListener('click', function(event) {
-    if(event.target.classList.contains('modal')) {
+    if (event.target.classList.contains('modal')) {
         event.target.style.display = 'none';
     }
 });
+
 
 
 </script>

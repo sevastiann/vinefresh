@@ -1,0 +1,104 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Pedido Confirmado{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/ventas/pedido_confirmado.css' %}">
+
+<div class="confirm-container">
+
+    <div class="confirm-card">
+
+        <!-- Ícono -->
+        <div class="icon-wrapper">
+            <img src="{% static 'img/icons/check-gold.png' %}" alt="Éxito">
+        </div>
+
+        <h2>✨ ¡Pedido Confirmado! ✨</h2>
+
+        <p class="text-main">
+            Gracias por tu compra, <strong>{{ user.nombre_usuario }}</strong>.
+            Tu pedido fue registrado correctamente.
+        </p>
+
+        <p class="text-secondary">
+            Recibirás actualizaciones cuando el estado del pedido cambie
+            (Pendiente → Enviado → Entregado).
+        </p>
+
+        <div class="info-box">
+            <p><strong>ID del Pedido:</strong> #{{ pedido.id }}</p>
+            <p><strong>Total Pagado:</strong> ${{ pedido.total }}</p>
+            <p><strong>Fecha:</strong> {{ pedido.fecha_pedido|date:"d/m/Y H:i" }}</p>
+        </div>
+
+        <div class="buttons">
+            <a href="{% url 'ventas:pedidos' %}" class="btn-main">📦 Ver Mis Pedidos</a>
+            <a href="{% url 'core:home' %}" class="btn-secondary">🏠 Volver al Inicio</a>
+        </div>
+
+    </div>
+</div>
+
+<!-- CONFETTI PREMIUM VINEFRESH -->
+<canvas id="confettiCanvas"></canvas>
+
+<script>
+const canvas = document.getElementById("confettiCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const confetti = [];
+const colors = ["#c7b37c", "#b49c63", "#5e1a1f", "#3b0f13"]; // dorado + vino
+
+function createConfettiPiece() {
+    return {
+        x: Math.random() * canvas.width,
+        y: -20,
+        size: Math.random() * 6 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speedY: Math.random() * 2 + 1,
+        speedX: (Math.random() - 0.5) * 1.5,
+        rotation: Math.random() * 360,
+        rotationSpeed: Math.random() * 4 - 2
+    };
+}
+
+// Crear confetti inicial
+for (let i = 0; i < 90; i++) {
+    confetti.push(createConfettiPiece());
+}
+
+function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    confetti.forEach((c) => {
+        c.x += c.speedX;
+        c.y += c.speedY;
+        c.rotation += c.rotationSpeed;
+
+        if (c.y > canvas.height) {
+            c.y = -20;
+            c.x = Math.random() * canvas.width;
+        }
+
+        ctx.save();
+        ctx.translate(c.x, c.y);
+        ctx.rotate((c.rotation * Math.PI) / 180);
+        ctx.fillStyle = c.color;
+
+        ctx.fillRect(-c.size / 2, -c.size / 2, c.size, c.size * 0.6);
+        ctx.restore();
+    });
+
+    requestAnimationFrame(drawConfetti);
+}
+
+drawConfetti();
+</script>
+
+
+{% endblock %}

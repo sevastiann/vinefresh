@@ -1,5 +1,2 @@
 # Entorno virtual
 .venv/
-
-# Base de datos local
-*.sqlite3

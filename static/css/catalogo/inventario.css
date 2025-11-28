@@ -148,6 +148,7 @@ details summary {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 25px;
+    min-height: 300px; 
 }
 
 @media (max-width: 1200px) {
@@ -306,11 +307,28 @@ details summary {
 }
 
 /* Sin productos */
-.no-productos {
-    font-style: italic;
-    color: #7a4b4b;
-    font-size: 1.2rem;
-    text-align: center;
-    margin-top: 40px;
-    font-family: "Cormorant Garamond", serif;
+#productos-container {
+    min-height: 450px; /* para que no se colapse al no haber productos */
+    display: block;
 }
+
+.no-productos {
+    display: block;
+    text-align: center;
+    padding-top: 120px;
+    font-size: 1.3rem;
+    font-family: "Cormorant Garamond", serif;
+    color: #5e2129;
+    width: 100%;
+    min-height: 300px; /* lo mantiene firme */
+}
+
+
+/* 🔥 FIJA LA ALTURA DEL ÁREA CENTRAL PARA EVITAR QUE LA NAVBAR SE MUEVA */
+.productos-section {
+    min-height: 650px;   /* espacio seguro para vinos y combos */
+    display: block;
+    position: relative;  /* asegura un flujo estable */
+}
+
+

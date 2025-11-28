@@ -16,7 +16,7 @@
         <!-- Contenido del menú -->
         <div class="collapse navbar-collapse" id="navbarContent">
             <!-- Sección izquierda -->
-            <ul class="navbar-nav mr-auto">
+            <ul class="navbar-nav {% if request.session.usuario_rol == 'admin' %}mx-auto{% else %}mr-auto{% endif %}">
 {% if request.session.usuario_id %}
     {% if request.session.usuario_rol == 'admin' %}
         <!-- Si el usuario es admin -->
@@ -43,18 +43,15 @@
 
             <!-- Sección derecha: carrito y usuario -->
             <ul class="navbar-nav ml-auto align-items-center">
-<!-- Icono de carrito -->
+                
+<!-- Icono de carrito: solo visible para clientes -->
+{% if request.session.usuario_id and request.session.usuario_rol == 'cliente' %}
 <li class="nav-item mr-3">
-    {% if request.session.usuario_id and request.session.usuario_rol == 'cliente' %}
-        <a class="nav-link" href="{% url 'ventas:carrito' %}">
-            <img src="{% static 'img/carritoo.png' %}" alt="Carrito" class="icono-carrito">
-        </a>
-    {% else %}
-        <a class="nav-link" href="{% url 'usuarios:login' %}">
-            <img src="{% static 'img/carritoo.png' %}" alt="Carrito" class="icono-carrito">
-        </a>
-    {% endif %}
+    <a class="nav-link" href="{% url 'ventas:carrito' %}">
+        <img src="{% static 'img/carritoo.png' %}" alt="Carrito" class="icono-carrito">
+    </a>
 </li>
+{% endif %}
 
 
 
@@ -73,13 +70,12 @@
                                 <a class="dropdown-item" href="{% url 'soporte:panel_admin_soporte' %}">Gestión PQRS</a>
                             {% elif request.session.usuario_rol == 'cliente' %}
                                 <a class="dropdown-item" href="{% url 'usuarios:configuracion_perfil' %}">Configuración de Perfil</a>
-                                <a class="dropdown-item" href="">Historial de Compras</a>
                                 <!-- Soporte desplegable para cliente -->
                                 <div class="dropdown-divider"></div>
                                 <div class="dropdown-item-text font-weight-bold">Soporte / PQRS</div>
                                 <a class="dropdown-item" href="{% url 'soporte:lista_soporte' %}">Mis PQRS</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{% url 'ventas:pedidos' %}">mis pedidos</a>
+                                <a class="dropdown-item" href="{% url 'ventas:pedidos' %}">Mis pedidos</a>
                             {% endif %}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item text-danger" href="{% url 'usuarios:logout' %}">

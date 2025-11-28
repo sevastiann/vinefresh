@@ -23,4 +23,6 @@ urlpatterns = [
     path('combos/<int:combo_id>/editar/', views.editar_combo, name='editar_combo'),
     path('combos/<int:combo_id>/detalle/', views.detalle_combo, name='detalle_combo'),
     path('combos/<int:combo_id>/eliminar/', views.eliminar_combo, name='eliminar_combo'),
+    path("filtrar-combos/", views.filtrar_combos, name="filtrar_combos"),
+    path("filtrar-combos-cliente/", views.filtrar_combos_cliente, name="filtrar_combos_cliente"),
 ]

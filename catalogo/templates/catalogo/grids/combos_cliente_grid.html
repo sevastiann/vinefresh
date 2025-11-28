@@ -1,0 +1,69 @@
+{% load static %}
+
+<div class="productos-grid">
+
+    {% for item in combos %}
+    <div class="card-producto">
+
+        {% if item.imagen %}
+            <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
+        {% else %}
+            <img src="{% static 'img/default.png' %}" alt="Sin imagen">
+        {% endif %}
+
+        <h4>{{ item.nombre }}</h4>
+        <p class="precio">${{ item.precio }}</p>
+
+        <div class="acciones-producto">
+            <button class="btn-detalle"
+                    onclick="abrirModal('modal-detalle-combos-{{ item.id }}')">
+                👁️ Detalle
+            </button>
+
+            <!-- Botón carrito -->
+            {% if request.session.usuario_id and request.session.usuario_rol == 'cliente' %}
+            <form action="{% url 'ventas:agregar_combo_al_carrito' combo_id=item.id %}"
+                  method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-carrito">🛒 Agregar al carrito</button>
+            </form>
+            {% else %}
+            <a href="{% url 'usuarios:login' %}" class="btn-carrito">🛒 Agregar al carrito</a>
+            {% endif %}
+        </div>
+    </div>
+
+    
+
+    <!-- Modal Detalle -->
+    <div id="modal-detalle-combos-{{ item.id }}" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('modal-detalle-combos-{{ item.id }}')">&times;</span>
+
+            {% if item.imagen %}
+                <img src="{{ item.imagen.url }}" class="modal-img">
+            {% endif %}
+
+            <h2>{{ item.nombre }}</h2>
+            <p><strong>Precio:</strong> ${{ item.precio }}</p>
+
+            {% if item.descripcion %}
+                <p><strong>Descripción:</strong> {{ item.descripcion }}</p>
+            {% endif %}
+            {% if item.festividad %}
+                <p><strong>Festividad:</strong> {{ item.festividad }}</p>
+            {% endif %}
+            {% if item.premium %}
+                <p><strong>Premium:</strong> {{ item.premium }}</p>
+            {% endif %}
+            {% if item.regalo %}
+                <p><strong>Regalo:</strong> {{ item.regalo }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% empty %}
+        <p class="no-productos">No hay combos disponibles.</p>
+    {% endfor %}
+
+</div>
