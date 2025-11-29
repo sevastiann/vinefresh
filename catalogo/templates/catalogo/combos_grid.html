@@ -1,84 +1,56 @@
 {% load static %}
 
-<div class="productos-grid">
+{% for item in combos %}
+<div class="card-producto">
+    {% if item.imagen %}
+        <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
+    {% else %}
+        <img src="{% static 'img/default.png' %}" alt="Sin imagen">
+    {% endif %}
 
-    {% for item in combos %}
-    <div class="card-producto">
+    <h4>{{ item.nombre }}</h4>
+    <p class="precio">${{ item.precio }}</p>
+
+    <div class="acciones-producto">
+        <button class="btn-detalle" onclick="abrirModal('modal-detalle-combos-{{ item.id }}')">👁️ Detalle</button>
+        <a class="btn-editar" href="{% url 'catalogo:editar_combo' item.id %}">✏️ Editar</a>
+        <button class="btn-eliminar" onclick="abrirModal('modal-eliminar-combos-{{ item.id }}')">🗑️Eliminar</button>
+    </div>
+</div>
+
+<!-- MODAL DETALLE -->
+<div id="modal-detalle-combos-{{ item.id }}" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModal('modal-detalle-combos-{{ item.id }}')">&times;</span>
 
         {% if item.imagen %}
-            <img src="{{ item.imagen.url }}" alt="{{ item.nombre }}">
-        {% else %}
-            <img src="{% static 'img/default.png' %}" alt="Sin imagen">
+            <img src="{{ item.imagen.url }}" class="modal-img">
         {% endif %}
 
-        <h4>{{ item.nombre }}</h4>
-        <p class="precio">${{ item.precio }}</p>
-
-        <div class="acciones-producto">
-            <button class="btn-detalle"
-                    onclick="abrirModal('modal-detalle-combos-{{ item.id }}')">
-                👁️ Detalle
-            </button>
-
-            <a class="btn-editar" href="{% url 'catalogo:editar_combo' item.id %}">✏️ Editar</a>
-
-            <button class="btn-eliminar"
-                    onclick="abrirModal('modal-eliminar-combos-{{ item.id }}')">
-                🗑️Eliminar
-            </button>
-        </div>
+        <h2>{{ item.nombre }}</h2>
+        <p><strong>Precio:</strong> ${{ item.precio }}</p>
+        {% if item.descripcion %}<p><strong>Descripción:</strong> {{ item.descripcion }}</p>{% endif %}
+        {% if item.festividad %}<p><strong>Festividad:</strong> {{ item.festividad }}</p>{% endif %}
+        {% if item.premium %}<p><strong>Premium:</strong> {{ item.premium }}</p>{% endif %}
+        {% if item.regalo %}<p><strong>Regalo:</strong> {{ item.regalo }}</p>{% endif %}
     </div>
-
-
-    <!-- 🟣 MODAL DETALLE -->
-    <div id="modal-detalle-combos-{{ item.id }}" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="cerrarModal('modal-detalle-combos-{{ item.id }}')">&times;</span>
-
-            {% if item.imagen %}
-                <img src="{{ item.imagen.url }}" class="modal-img">
-            {% endif %}
-
-            <h2>{{ item.nombre }}</h2>
-            <p><strong>Precio:</strong> ${{ item.precio }}</p>
-
-            {% if item.descripcion %}
-            <p><strong>Descripción:</strong> {{ item.descripcion }}</p>
-            {% endif %}
-
-            {% if item.festividad %}
-            <p><strong>Festividad:</strong> {{ item.festividad }}</p>
-            {% endif %}
-
-            {% if item.premium %}
-            <p><strong>Premium:</strong> {{ item.premium }}</p>
-            {% endif %}
-
-            {% if item.regalo %}
-            <p><strong>Regalo:</strong> {{ item.regalo }}</p>
-            {% endif %}
-
-        </div>
-    </div>
-
-
-    <!-- 🔴 MODAL ELIMINAR -->
-    <div id="modal-eliminar-combos-{{ item.id }}" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="cerrarModal('modal-eliminar-combos-{{ item.id }}')">&times;</span>
-            <p>¿Eliminar combo <strong>{{ item.nombre }}</strong>?</p>
-
-            <form action="{% url 'catalogo:eliminar_combo' item.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn-eliminar">Eliminar</button>
-                <button type="button" class="btn-secundario" onclick="cerrarModal('modal-eliminar-combos-{{ item.id }}')">Cancelar</button>
-            </form>
-
-        </div>
-        
-    </div>
-    {% empty %}
-        <p class="no-productos">No hay {{ seccion }} registrados aún.</p>
-    {% endfor %}
-
 </div>
+
+<!-- MODAL ELIMINAR -->
+<div id="modal-eliminar-combos-{{ item.id }}" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModal('modal-eliminar-combos-{{ item.id }}')">&times;</span>
+
+        <p>¿Eliminar combo <strong>{{ item.nombre }}</strong>?</p>
+
+        <form action="{% url 'catalogo:eliminar_combo' item.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn-eliminar">Eliminar</button>
+            <button type="button" class="btn-secundario" onclick="cerrarModal('modal-eliminar-combos-{{ item.id }}')">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+{% empty %}
+<p class="no-productos">No hay combos disponibles.</p>
+{% endfor %}

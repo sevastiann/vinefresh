@@ -152,7 +152,7 @@
         </div>
 
         <!-- GRID productos -->
-        <div id="productos-container"data-filtrar-url="{% if seccion == 'combos' %}{% url 'catalogo:filtrar_combos_cliente' %}{% else %}{% url 'catalogo:filtrar_productos' %}{% endif %}">
+        <div id="productos-container" data-filtrar-url="http://{{ request.get_host }}{% if seccion == 'combos' %}{% url 'catalogo:filtrar_combos_cliente' %}{% else %}{% url 'catalogo:filtrar_productos' %}{% endif %}">
             <div class="productos-grid">
 
                 {% for item in productos %}
@@ -273,10 +273,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const url = document.querySelector("#productos-container").dataset.filtrarUrl;
 
-        fetch(`${url}?${params.toString()}`)
+        fetch(url + "?" + params.toString())
             .then(r => r.text())
             .then(html => {
-                document.querySelector("#productos-container").innerHTML = html;
+                document.querySelector("#productos-container .productos-grid").innerHTML = html;
             })
             .catch(err => console.error("Error en filtrado:", err));
     }

@@ -1,2 +1,22 @@
 # Entorno virtual
 .venv/
+
+# Variables secretas
+.env
+
+# Archivos de base de datos
+*.sqlite3
+
+# Archivos de migraciones compilados
+**/__pycache__/
+*.pyc
+
+# Archivos de medios
+media/
+
+# Archivos de configuración locales
+*.log
+
+# Archivos del editor
+.vscode/
+.idea/

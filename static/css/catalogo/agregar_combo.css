@@ -114,27 +114,6 @@ summary {
     outline: none;
 }
 
-.lista-filtro {
-    padding-left: 18px;
-    margin-top: 10px;
-}
-
-.lista-filtro li {
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.lista-filtro label {
-    font-weight: 500;
-    cursor: pointer;
-}
-
-/* Inputs checkbox */
-.lista-filtro input[type="checkbox"] {
-    accent-color: #5e2129;
-}
 
 /* ============================================================
    🔸 BOTONES
@@ -177,4 +156,38 @@ summary {
 ============================================================ */
 * {
     transition: all 0.25s ease;
+}
+
+.lista-filtro {
+    list-style: none !important;
+}
+
+.opcion-filtro {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    background: #fff8fb !important;
+    padding: 10px 14px !important;
+    margin: 6px 0 !important;
+    border: 1px solid #e6d6d3 !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+}
+
+.opcion-filtro input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    accent-color: #5e2129 !important;
+}
+
+.opcion-filtro label {
+    font-family: "Cormorant Garamond", serif !important;
+    font-size: 1.15rem !important;
+    color: #5e2129 !important;
+    font-weight: 600 !important;
+}
+
+
+.lista-filtro li.opcion-filtro {
+    display: flex !important;
 }
