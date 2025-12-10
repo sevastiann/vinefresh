@@ -1,0 +1,163 @@
+/* ============================================================
+   VINEFRESH – Editar Producto
+   Estética premium vino + formulario elegante
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Poppins:wght@300;400;500&display=swap');
+
+/* TÍTULO */
+.titulo {
+    font-family: "Cormorant Garamond", serif;
+    text-align: center;
+    font-size: 2.7rem;
+    margin-top: 20px;
+    color: #5e2129;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* FORMULARIO */
+.formulario {
+    max-width: 650px;
+    margin: 35px auto;
+    background: #ffffff;
+    padding: 35px 40px;
+    border-radius: 20px;
+    border: 1px solid #e9d7db;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+    animation: fadeIn 0.5s ease;
+}
+
+/* Animación */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* LABELS */
+.formulario label {
+    display: block;
+    margin-bottom: 6px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.2rem;
+    color: #5e2129;
+    font-weight: 600;
+}
+
+/* INPUTS */
+.formulario input[type="text"],
+.formulario input[type="number"],
+.formulario input[type="file"],
+.formulario textarea,
+.formulario select {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid #d6b9bd;
+    background: #fdf7f8;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    transition: 0.25s ease;
+}
+
+/* Inputs focus */
+.formulario input:focus,
+.formulario textarea:focus,
+.formulario select:focus {
+    border-color: #5e2129;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(94,33,41,0.25);
+}
+
+/* Textarea */
+textarea {
+    min-height: 90px;
+    resize: none;
+}
+
+/* Imagen actual */
+.formulario img {
+    margin: 8px 0 12px;
+    border-radius: 10px;
+    border: 1px solid #d6c3c5;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* ------- DETALLES (acordeones) ------- */
+details {
+    margin-bottom: 15px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: #fcf8f9;
+    border: 1px solid #e3cdd1;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+details:hover {
+    background: #f7eef1;
+}
+
+summary {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.25rem;
+    color: #5e2129;
+    font-weight: 700;
+    list-style: none;
+    cursor: pointer;
+}
+
+details[open] summary {
+    color: #7a2a32;
+}
+
+/* Select dentro del acordeón */
+details select {
+    margin-top: 10px;
+}
+
+/* -------- BOTONES -------- */
+
+/* Guardar */
+.btn-guardar {
+    display: inline-block;
+    background: #5e2129;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 14px;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.05rem;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s ease;
+    margin-top: 18px;
+}
+
+.btn-guardar:hover {
+    background: #3c1318;
+    transform: translateY(-3px);
+}
+
+/* Cancelar */
+.btn-cancelar {
+    display: inline-block;
+    background: #8e8484;
+    color: #fff;
+    padding: 12px 26px;
+    border-radius: 14px;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.05rem;
+    margin-left: 10px;
+    transition: 0.3s ease;
+}
+
+.btn-cancelar:hover {
+    background: #6f6666;
+    transform: translateY(-3px);
+}
+
+/* Suavidad general */
+* {
+    transition: all 0.25s ease;
+}

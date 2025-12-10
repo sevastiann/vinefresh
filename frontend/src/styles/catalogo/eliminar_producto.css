@@ -1,0 +1,115 @@
+/* ============================================================
+   VINEFRESH – Modal Eliminar Producto
+   Estilo elegante, premium y consistente con la marca
+============================================================ */
+
+/* Fondo del modal */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 0, 0, 0.65); /* vino oscuro */
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenido principal */
+.modal-content {
+    background: #ffffff;
+    width: 430px;
+    padding: 30px;
+    border-radius: 18px;
+    position: relative;
+    text-align: center;
+
+    border: 1px solid #dec1c7;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+
+    animation: modalPop 0.35s ease;
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* Botón Cerrar (X) */
+.close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #5e2129;
+    transition: 0.25s;
+}
+
+.close:hover {
+    color: #2d0a0d;
+    transform: scale(1.25);
+}
+
+/* Título */
+.modal-content h2 {
+    font-family: "Cormorant Garamond", serif;
+    color: #5e2129;
+    font-size: 2.1rem;
+    margin-bottom: 10px;
+}
+
+/* Texto confirmación */
+.modal-content p {
+    font-family: "Poppins", sans-serif;
+    color: #3b2f2f;
+    font-size: 1.05rem;
+    margin-bottom: 22px;
+}
+
+/* Contenedor de botones */
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+}
+
+/* Botón eliminar */
+.btn-danger {
+    background-color: #8d1a1a !important;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    color: #fff;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-danger:hover {
+    background-color: #5e0f0f !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(94, 15, 15, 0.35);
+}
+
+/* Botón cancelar */
+.btn-secondary {
+    background-color: #b6b6b6;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    color: #fff;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #8c8c8c;
+    transform: translateY(-2px);
+}

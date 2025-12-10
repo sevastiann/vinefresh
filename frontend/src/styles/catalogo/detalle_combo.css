@@ -1,0 +1,133 @@
+/* ============================================================
+   VINEFRESH – Modal Detalle Combo
+   Estética premium vino + card elegante
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Poppins:wght@300;400;500&display=swap');
+
+/* Fondo del modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+/* Contenido del modal (la tarjeta) */
+.modal-content {
+    background: #ffffff;
+    width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px 32px;
+    border-radius: 20px;
+    box-shadow: 0px 12px 28px rgba(0,0,0,0.20);
+    position: relative;
+    animation: fadeIn 0.3s ease;
+    border: 1px solid #e4d5d5;
+}
+
+/* Animación suave */
+@keyframes fadeIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* Botón de cerrar */
+.close {
+    position: absolute;
+    right: 18px;
+    top: 12px;
+    font-size: 28px;
+    color: #5e2129;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-weight: bold;
+}
+
+.close:hover {
+    color: #2e0f14;
+    transform: scale(1.2);
+}
+
+/* Título */
+.modal-content h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2rem;
+    color: #5e2129;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+/* Formulario dentro del modal */
+.modal-content form {
+    font-family: "Poppins", sans-serif;
+}
+
+/* Labels */
+.modal-content label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #5e2129;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.1rem;
+}
+
+/* Inputs y textarea */
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid #d6b9bd;
+    background: #fcf7f8;
+    color: #4a3737;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    transition: 0.3s ease;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    border-color: #5e2129;
+    background: #ffffff;
+    box-shadow: 0 0 6px rgba(94,33,41,0.25);
+    outline: none;
+}
+
+/* Textarea exclusivo */
+.modal-content textarea {
+    resize: none;
+    min-height: 90px;
+}
+
+/* Imagen dentro del modal */
+.modal-img {
+    width: 100%;
+    border-radius: 16px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    object-fit: cover;
+}
+
+/* Checkbox de estado */
+.modal-content input[type="checkbox"] {
+    transform: scale(1.3);
+    accent-color: #5e2129;
+    margin-top: 6px;
+}
+
+/* Suavidad global */
+* {
+    transition: 0.25s ease;
+}

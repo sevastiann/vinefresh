@@ -1,0 +1,186 @@
+/* ============================================================
+   VINEFRESH – Editar Combo
+   Estética premium vino + formulario elegante y moderno
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Poppins:wght@300;400;500&display=swap');
+
+/* CONTENEDOR PRINCIPAL */
+.form-container {
+    max-width: 650px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 35px 40px;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+    border: 1px solid #e9d7db;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Animación suave */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* TÍTULO */
+.form-container h2 {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    text-align: center;
+    color: #5e2129;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+/* FORM GROUP */
+.form-group {
+    margin-bottom: 18px;
+}
+
+/* LABEL */
+.form-group label {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.2rem;
+    color: #5e2129;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+}
+
+/* INPUTS */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid #d6b9bd;
+    background: #fdf7f8;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.98rem;
+    transition: 0.25s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #5e2129;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(94,33,41,0.25);
+}
+
+/* TEXTAREA */
+textarea {
+    resize: none;
+    min-height: 90px;
+}
+
+/* Imagen actual */
+.form-group img {
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #d6c3c5;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+/* ======= DETALLES (acordeones) ======= */
+
+details {
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: #fcf8f9;
+    border: 1px solid #e3cdd1;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+details:hover {
+    background: #f7eef1;
+}
+
+/* Título del acordeón */
+summary {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.25rem;
+    color: #5e2129;
+    font-weight: 700;
+    outline: none;
+    list-style: none;
+    cursor: pointer;
+}
+
+details[open] summary {
+    color: #7a2a32;
+}
+
+/* Checklist */
+.lista-filtro {
+    padding-left: 10px;
+    margin-top: 10px;
+}
+
+.lista-filtro li {
+    margin: 6px 0;
+    font-family: "Poppins", sans-serif;
+}
+
+.lista-filtro input[type="checkbox"] {
+    transform: scale(1.2);
+    accent-color: #5e2129;
+    cursor: pointer;
+}
+
+.lista-filtro label {
+    margin-left: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: #443131;
+}
+
+/* Checkbox “activo” */
+input[type="checkbox"] {
+    accent-color: #5e2129;
+    transform: scale(1.3);
+}
+
+/* ======= BOTONES ======= */
+.botones {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Botón guardar */
+.btn {
+    background: #5e2129;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn:hover {
+    background: #3c1318;
+    transform: translateY(-2px);
+}
+
+/* Botón cancelar */
+.btn-secondary {
+    background: #8e8484 !important;
+    margin-left: 10px;
+}
+
+.btn-secondary:hover {
+    background: #6f6666 !important;
+}
+
+/* Suavidad general */
+* {
+    transition: 0.25s ease;
+}
